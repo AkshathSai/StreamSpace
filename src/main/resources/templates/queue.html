@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Queue</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .torrent-name {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        a {
+            color: #eb5282;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #eb5282;
+            transition: width 0.5s;
+        }
+
+        .progress-bar::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0.2) 0%,
+                    rgba(255, 255, 255, 0.6) 50%,
+                    rgba(255, 255, 255, 0.2) 100%
+            );
+            animation: glareAnimation 2s linear infinite;
+        }
+
+        @keyframes glareAnimation {
+            0%, 100% {
+                transform: translateX(-100%);
+            }
+            50% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .progress-bar {
+                height: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1 style="font-weight: 100">Download Queue</h1>
+</div>
+<div id="progress-bars-container">
+    <!-- Progress bars will be dynamically created here -->
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var tasks = /*[[${tasks}]]*/ ['default'];
+
+    tasks.forEach(function (task, index) {
+        console.log(task);
+        // Create a new progress bar for this torrent
+        var progressBarsContainer = document.getElementById('progress-bars-container');
+
+        // Create a new div for the torrent name
+        var nameDiv = document.createElement('div');
+        nameDiv.className = "torrent-name";
+        nameDiv.textContent = task.torrentName;
+        progressBarsContainer.appendChild(nameDiv);
+
+        var newDiv = document.createElement('div');
+        newDiv.className = "progress-bar progress-bar-" + task.torrentHash;
+
+        var progressDiv = document.createElement('div');
+        progressDiv.className = "progress";
+        newDiv.appendChild(progressDiv);
+
+        var playButton = document.createElement('a');
+        playButton.className = "playButton";
+        playButton.textContent = 'Play';
+        playButton.style.display = 'none';
+        nameDiv.appendChild(playButton);
+
+        progressBarsContainer.appendChild(newDiv);
+
+        // Initiate WebSocket connection
+        var socketUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+            window.location.host +
+            '/download-progress?torrentHash=' + task.torrentHash;
+        var socket = new WebSocket(socketUrl, 'echo-protocol');
+
+        socket.onmessage = function (event) {
+            // Update download progress
+            var progress = parseFloat(event.data);
+            console.log("Progress: " + progress); // Log for debug
+            var progressBar = document.querySelector(".progress-bar-" + task.torrentHash + " .progress");
+            progressBar.style.width = progress + "%";
+
+            if (progress >= 5) {
+                document.getElementsByClassName('playButton')[index].style.display = 'block';
+            }
+
+            if (progress >= 99.5) { //Precision error fix
+                progressBar.parentNode.style.display = 'none';
+                socket.close();
+            }
+        };
+
+        playButton.onclick = (function(task) {
+            return function () {
+                var mediaElement;
+                var source = document.createElement('source');
+                var host = window.location.protocol + '//' + window.location.host;
+                source.setAttribute('src', host + '/movies/' + task.movieCode + '/content');
+
+                if (task.mediaType === 'VIDEO') {
+                    mediaElement = document.getElementById('myVideo') || document.createElement('video');
+                    mediaElement.width = 400;
+                } else if (task.mediaType === 'AUDIO') {
+                    mediaElement = document.getElementById('myAudio') || document.createElement('audio');
+                } else {
+                    // Handle unexpected mediaType here
+                    console.error('Unexpected mediaType: ' + task.mediaType);
+                    return;
+                }
+
+                mediaElement.id = task.mediaType === 'VIDEO' ? 'myVideo' : 'myAudio';
+                mediaElement.controls = true;
+                //mediaElement.innerHTML = ''; // Clear old source elements
+                mediaElement.appendChild(source);
+
+                if (!mediaElement.parentNode) {
+                    document.body.appendChild(mediaElement);
+                }
+
+                mediaElement.play();
+
+                // Enter full screen mode
+                if (mediaElement.requestFullscreen) {
+                    mediaElement.requestFullscreen();
+                } else if (mediaElement.webkitRequestFullscreen) { // Safari
+                    mediaElement.webkitRequestFullscreen();
+                } else if (mediaElement.msRequestFullscreen) { // Internet Explorer
+                    mediaElement.msRequestFullscreen();
+                }
+            };
+        })(task);
+
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

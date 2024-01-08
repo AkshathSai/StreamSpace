@@ -1,0 +1,19 @@
+<div th:fragment="youtubeTrailer" th:remove="tag">
+
+    <div class="fade-me-in" hx-swap="outerHTML settle:1s">
+
+        <h1 class="display-6 text-muted">Trailers & More</h1>
+
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-interval="false">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="ratio ratio-16x9">
+                        <iframe th:src="@{'https://www.youtube.com/embed/' + ${youtubeTrailers.url}}" title="Official Trailer from YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

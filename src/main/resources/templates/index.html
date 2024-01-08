@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Space</title>
+    <!-- Bootstrap CSS -->
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <!-- Bootstrap JS -->
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- HTMX -->
+    <script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+    <!-- Hyperscript for fancier stuff -->
+    <script type="text/javascript" th:src="@{/webjars/hyperscript.org/dist/_hyperscript.js}"></script>
+    <!-- Bootstrap ICONS -->
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
+    <style>
+        .thumbnail
+        {
+            width: 200px;
+            height: 310px;
+            overflow: hidden;
+            margin: auto;
+        }
+        .thumbnail img {
+            width: 164px;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .globalProgress {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            height: 4px;
+            width: 100%;
+            border-radius: 2px;
+            background-clip: padding-box;
+            overflow: hidden;
+        }
+        .globalProgress .indeterminate:before {
+            content: "";
+            position: absolute;
+            background-color: inherit;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            will-change: left, right;
+            -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395)
+            infinite;
+            animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+        }
+        .globalProgress .indeterminate:after {
+            content: "";
+            position: absolute;
+            background-color: inherit;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            will-change: left, right;
+            -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1)
+            infinite;
+            animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1)
+            infinite;
+            -webkit-animation-delay: 1.15s;
+            animation-delay: 1.15s;
+        }
+        .globalProgress {
+            display: none;
+        }
+        .htmx-request .globalProgress {
+            display: inline;
+        }
+        .htmx-request.globalProgress {
+            display: inline;
+        }
+        @-webkit-keyframes indeterminate {
+            0% {
+                left: -35%;
+                right: 100%;
+            }
+            60% {
+                left: 100%;
+                right: -90%;
+            }
+            100% {
+                left: 100%;
+                right: -90%;
+            }
+        }
+        @keyframes indeterminate {
+            0% {
+                left: -35%;
+                right: 100%;
+            }
+            60% {
+                left: 100%;
+                right: -90%;
+            }
+            100% {
+                left: 100%;
+                right: -90%;
+            }
+        }
+        @-webkit-keyframes indeterminate-short {
+            0% {
+                left: -200%;
+                right: 100%;
+            }
+            60% {
+                left: 107%;
+                right: -8%;
+            }
+            100% {
+                left: 107%;
+                right: -8%;
+            }
+        }
+        @keyframes indeterminate-short {
+            0% {
+                left: -200%;
+                right: 100%;
+            }
+            60% {
+                left: 107%;
+                right: -8%;
+            }
+            100% {
+                left: 107%;
+                right: -8%;
+            }
+        }
+
+        /* Featurettes ------------------------- */
+        .featurette-divider {
+            margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+        }
+        /* Thin out the marketing headings */
+        .featurette-heading {
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -.05rem;
+        }
+
+        /* RESPONSIVE CSS-------------------------------------------------- */
+        @media (min-width: 40em) {
+            .featurette-heading {
+                font-size: 50px;
+            }
+        }
+
+        @media (min-width: 62em) {
+            .featurette-heading {
+                margin-top: 7rem;
+            }
+        }
+
+        .fade-me-in.htmx-added {
+            opacity: 0;
+        }
+        .fade-me-in {
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        .dark {
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+
+<!--<body data-bs-theme="dark" class="dark">-->
+<body data-bs-theme="light">
+
+<div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">
+    <div class="indeterminate" style="background-color: red;"></div>
+</div>
+
+<!--<div id="globalProgress" class="globalProgress" style="height: 3px; background-color: black;">
+    <div class="indeterminate" style="background-color: white;"></div>
+</div>-->
+
+
+<div class="container">
+
+    <div class="row align-items-center" style="min-height: 80vh;">
+
+        <div class="col">
+
+            <div class="input-group mb-3 sticky-top navbar bg-transparent">
+                <input type="search"
+                       class="form-control"
+                       placeholder="Active Search"
+                       aria-label="Active Search"
+                       aria-describedby="basic-addon2"
+                       id="active-search"
+                       name="term"
+                       hx-trigger="input changed delay:500ms, search"
+                       hx-get="/search/yts"
+                       hx-target="#search-results"
+                       hx-indicator=".globalProgress"
+                       hx-push-url="true"
+                       hx-swap-oob="true"
+                       hx-boost="true"
+                       autofocus
+                >
+                <!-- <span class="input-group-text" id="basic-addon2">search</span> -->
+                <!--<img id="spinner" class="htmx-indicator" src="/images/loader.svg" alt="Request In Flight..."/>-->
+                <!--<div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">
+                    <div class="indeterminate" style="background-color: red;"></div>
+                </div>-->
+            </div>
+
+            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="bi bi-search"></i> Search</button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="movies-tab" data-bs-toggle="tab" data-bs-target="#movies" type="button"
+                            role="tab" aria-controls="movies" aria-selected="false" hx-trigger="click">
+                        <!-- hx-get="/v2/movies"
+                         hx-target="#movies"
+                         hx-indicator=".htmx-indicator">-->
+                        <i class="bi bi-film"></i>
+                        Movies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="music-tab" data-bs-toggle="tab" data-bs-target="#music" type="button"
+                            role="tab" aria-controls="music" aria-selected="false">
+                        <i class="bi bi-music-note-beamed"></i>
+                        Music
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link disabled" id="tv-tab" data-bs-toggle="tab" data-bs-target="#tv"
+                            type="button"
+                            role="tab" aria-controls="tv" aria-selected="false" aria-disabled="true"><i
+                            class="bi bi-tv"></i>
+                        TV
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="localmedia-tab" data-bs-toggle="tab" data-bs-target="#localmedia"
+                            type="button"
+                            role="tab" aria-controls="localmedia" aria-selected="false"><i class="bi bi-phone"></i>
+                        Local
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="playlist-tab" data-bs-toggle="tab" data-bs-target="#playlist"
+                            type="button"
+                            role="tab" aria-controls="playlist" aria-selected="false"><i
+                            class="bi bi-collection-play"></i> Shelf
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <!-- Search results -->
+                    <div id="search-results" hx-swap-oob="true">
+                        <div th:if="${results} != null" th:fragment="search-results" class="search-results">
+                            <div class="card border-0" th:each="result: ${results.movies}">
+                                <div class="card-body">
+                                    <a class="card-title card-link primary"
+                                       style="cursor: pointer"
+                                       hx:get="@{/yts/movies/{id}(id=${result.id()})}"
+                                       hx-boost="true"
+                                       hx-target="#search-results"
+                                       hx-swap="transition:true"
+                                       hx-push-url="true"
+                                       hx-indicator=".globalProgress"
+                                       th:text="${result.title_long}"></a>
+                                    <p class="card-text" th:text="${#strings.arrayJoin(result.genres, ' ')}"><small class="text-muted"></small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="movies" role="tabpanel" aria-labelledby="movies-tab">
+
+                    <!--This is movies content-->
+
+                    <div id="most-watched-movies" hx-get="/v2/movies/ytsMostWatched" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading most watched movies...-->
+                    </div>
+
+                    <div id="latest-movies" hx-get="/v2/movies/ytsLatest" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading Latest movies...-->
+                    </div>
+
+                    <div id="most-liked-movies" hx-get="/v2/movies/ytsMostLiked" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading Most Liked movies...-->
+                    </div>
+
+                    <div id="imdb-highest-rated-movies" hx-get="/v2/movies/ytsImdbRating" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading IMDB Highest Rated movies...-->
+                    </div>
+
+                    <div id="latest-comedy-movies" hx-get="/v2/movies/ytsLatestComedies" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading Latest Comedies...-->
+                    </div>
+
+                    <div id="must-watch-movies" hx-get="/v2/movies/ytsMustWatch" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                        <!--Loading Must Watch movies...-->
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+
+                    This is music content
+
+                </div>
+                <div class="tab-pane fade" id="tv" role="tabpanel" aria-labelledby="tv-tab">
+
+                    Coming soon
+
+                </div>
+                <div class="tab-pane fade" id="localmedia" role="tabpanel" aria-labelledby="localmedia-tab">
+
+                    <div id="local-media" class="row" hx-get="/local/media" hx-trigger="click from:#localmedia-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="playlist" role="tabpanel" aria-labelledby="playlist-tab">
+
+                    Coming soon
+
+                </div>
+            </div>
+
+
+            <footer class="row d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                    <span class="mb-3 mb-md-0 text-body-secondary">© 2023 Akshath Sai, Pittala</span>
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
+<script>
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        // Check if the updated content is the search results
+        if (event.detail.target.id === 'search-results') {
+            // Switch to the "Search" tab
+            var searchTab = document.getElementById('home-tab');
+            searchTab.click();
+        }
+    });
+</script>
+</body>
+
+</html>

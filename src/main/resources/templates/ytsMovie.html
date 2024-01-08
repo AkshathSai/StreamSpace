@@ -1,0 +1,114 @@
+<div th:fragment="ytsMovieOverview" th:remove="tag">
+
+  <div id="ytsMovieOverview">
+
+    <!--  <hr class="featurette-divider">-->
+
+    <div id="movieFeaturette" class="row featurette">
+
+      <a class="mdl-button mdl-js-button mdl-button--icon" href="javascript:window.history.back();">
+        <i class="bi bi-arrow-left h2" style="color: #000000;"></i>
+      </a>
+
+      <div id="downloadForm" class="col-md-7 order-md-2">
+
+        <h3 id="movie-title" class="featurette-heading" th:text="${ytsMovieRecord.data().movie().title_long()}"></h3>
+
+        <span class="lead text-muted" th:text="${ytsMovieRecord.data().movie().language()}"></span>
+
+        <p class="lead text-muted" th:text="${#strings.arrayJoin(ytsMovieRecord.data().movie().genres(), ' ')}">
+        </p>
+
+        <p class="text-muted">
+          IMDB: <span th:text="${ytsMovieRecord.data.movie.rating}"></span>
+        </p>
+
+        <form class="mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
+
+          <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
+            <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
+                    th:value="${url.hash()}"
+                    th:text="${url.quality() + ' [' + url.size() + ']'}"></option>
+            <!-- th:text="${url.quality() + ' [' + url.size() + ']' + ' Peers ' + url.peers() + ' Seeds ' + url.seeds()}"></option>-->
+          </select>
+
+          <div class="form-check text-muted">
+            <input class="form-check-input" type="checkbox" id="sequentialCheck" name="sequentialCheck">
+            <label class="form-check-label" for="sequentialCheck">
+              Sequential
+            </label>
+          </div>
+
+          <button type="submit" hx-on="htmx:afterSwap" class="btn btn-primary">Download</button>
+
+        </form>
+
+      </div>
+      <div id="poster" class="col-md-5 order-md-1">
+        <img class="featurette-image img-fluid mx-auto shadow-lg" th:src="${ytsMovieRecord.data().movie().large_cover_image()}" alt="500x500" data-holder-rendered="true">
+      </div>
+
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row">
+
+      <div class="col"
+           hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
+           hx-boost="true"
+           hx-trigger="load delay:100ms"
+           hx-indicator=".globalProgress"
+      >
+
+        <!--<div class="col"
+             hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
+             hx-trigger="load delay:100ms"
+             hx-indicator=".htmx-indicator"
+        >
+
+        <span class="htmx-indicator text-center justify-center">
+            <img id="spinner" class="htmx-indicator" src="/images/loader.svg" alt="Request In Flight..."/>
+        </span>-->
+
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="col">
+
+        <h4>
+          <small class="text-body-secondary">Suggested Movies</small>
+        </h4>
+
+        <a th:each="movie: ${ytsSuggestedRecord.data().movies()}"
+           hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#ytsMovieOverview" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">
+          <!--hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#search-results" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">-->
+          <!--hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">-->
+          <img class="thumbnail img-thumbnail img-fluid"
+               th:src="${movie.medium_cover_image()}"
+               th:alt="${movie.title_long()}"
+          />
+        </a>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      document.getElementById("downloadForm").addEventListener('htmx:afterSwap', function (event) {
+        var torrentHash = document.getElementById('torrentHash').value;
+        console.log(torrentHash);
+        var connectUrl = '/download-progress?torrentHash=' + torrentHash;
+        document.getElementById('ws-connect').setAttribute('ws-connect', connectUrl);
+      });
+
+    </script>
+
+  </div>
+
+</div>
+

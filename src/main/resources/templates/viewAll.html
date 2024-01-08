@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View All</title>
+    <link rel="stylesheet" href="/css/viewall.css" th:href="@{/css/viewall.css}">
+    <link rel="stylesheet" href="/css/material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+
+<section class="movies">
+
+    <div>
+        <a class="mdl-button mdl-js-button mdl-button--icon" href="/">
+            <i class="material-icons">home</i>
+        </a>
+        <a class="mdl-button mdl-js-button mdl-button--icon" href="javascript:window.history.back();">
+            <i class="material-icons">arrow_back</i>
+        </a>
+    </div>
+
+    <h2 style="font-weight: 100" th:text="${category}"></h2>
+
+    <div class="movie-grid">
+        <!--<div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}" th:style="'background: url('+ ${movie.background_image} +');'">-->
+        <!--<div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}">
+            <a th:href="@{/yts/movies/{id}(id=${movie.id})}">
+                <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}">
+            </a>
+        </div>-->
+
+        <div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}">
+            <a th:href="@{/yts/movies/{id}(id=${movie.id})}">
+                <picture>
+                    <source media="(max-width: 600px)" th:srcset="${movie.small_cover_image}">
+                    <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}">
+                </picture>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<div class="back-icon-button-container" style="display: flex; justify-content: center;">
+    <a class="mdl-button mdl-js-button mdl-button--icon"
+       th:href="'/movies/' + ${category} + '?page=' + ${currentPage + 1}">
+        <i class="material-icons">arrow_forward</i>
+    </a>
+</div>
+
+<footer class="footer">
+    <p>© 2023 Akshath Sai Pittala</p>
+</footer>
+
+</body>
+</html>

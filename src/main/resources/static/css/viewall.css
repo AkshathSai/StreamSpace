@@ -1,0 +1,109 @@
+/* Movies Section Styles */
+/* ... (previous CSS rules) ... */
+
+/* Movies Section Styles */
+.movies {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+}
+
+/* Movie Card Styles */
+.movie-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+.movie-card img {
+    max-width: 100%; /* Ensure the image doesn't exceed the width of the card */
+    max-height: 300px; /* Set a maximum height for the image */
+    object-fit: cover; /* Preserve the image aspect ratio and cover the card */
+}
+
+footer {
+    text-align: center;
+    padding: 3px;
+    color: black;
+    margin-top: 25px;
+}
+
+
+/*Windows 8 style */
+/*
+.movie-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+}
+
+@media screen and (min-width: 500px) {
+    .movie-card {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .movie-card {
+        flex: 0 0 calc(33.33% - 20px);
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .movie-card {
+        flex: 0 0 calc(25% - 30px);
+    }
+}*/
+
+
+/*.movie-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+}*/
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); /* Decreased from 200px to 150px */
+    grid-gap: 20px;
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .movie-card img {
+        max-width: 100px; /* Decreased from 100% to 100px */
+    }
+}
+
+
+@media screen and (min-width: 500px) {
+    .movie-card {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .movie-card {
+        flex: 0 0 calc(33.33% - 20px);
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .movie-card {
+        flex: 0 0 calc(25% - 30px);
+    }
+}
+

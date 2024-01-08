@@ -1,0 +1,37 @@
+<div th:fragment="local-media-player" th:remove="tag" xmlns:hx="http://www.w3.org/1999/xhtml">
+
+    <div id="local-media-player" class="col text-left fade-me-in">
+
+        <p class="display-6 card-title lead mb-0 text-muted">Library</p>
+
+        <ul id="local-media-files" class="text-left">
+
+            <li th:each="url: ${videos}">
+                <a th:text="${url}"
+                   hx:get="@{/movie/{contentId}(contentId=${url})}"
+                   hx-boost="true"
+                   hx-indicator=".globalProgress"
+                   hx-target="#mini-player"
+                   hx-push-url="true"
+                ></a>
+            </li>
+
+            <li th:each="url: ${music}">
+                <a th:text="${url}"
+                   hx:get="@{/music/{contentId}(contentId=${url})}"
+                   hx-boost="true"
+                   hx-indicator=".globalProgress"
+                   hx-target="#mini-player"
+                   hx-push-url="true"
+                ></a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div id="mini-player" class="col">
+
+    </div>
+
+</div>

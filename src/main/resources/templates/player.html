@@ -1,0 +1,17 @@
+<div th:fragment="videoPlayer" th:remove="tag">
+
+<div class="fade-me-in" hx-swap="outerHTML settle:1s">
+    <p class="display-6 text-muted">Now Playing</p>
+    <video class="img-fluid shadow-lg" th:src="@{'/movies/' + ${contentId} + '/content'}" type="video/mp4" controls="" controlslist="nodownload" frameborder="0" allowfullscreen=""></video>
+</div>
+
+</div>
+
+<div th:fragment="musicPlayer" th:remove="tag">
+
+    <div class="fade-me-in" hx-swap="outerHTML settle:1s">
+        <p class="display-6 text-muted">Now Playing</p>
+        <audio class="img-fluid shadow-lg" th:src="@{'/music/' + ${contentId} + '/content'}" controls></audio>
+    </div>
+
+</div>

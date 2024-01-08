@@ -1,0 +1,113 @@
+<div th:fragment="ytsMostWatched" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">Most Watched</p>
+    <a th:href="@{/movies/{category}(category='mostwatched')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsMostWatchedRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>
+
+<div th:fragment="ytsLatest" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">Latest Movies</p>
+    <a th:href="@{/movies/{category}(category='latest')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsLatestRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>
+
+<div th:fragment="ytsMostLiked" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">Most Liked</p>
+    <a th:href="@{/movies/{category}(category='mostliked')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsMostLikedRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>
+
+<div th:fragment="ytsImdbRating" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">IMDB Highest Rated</p>
+    <a th:href="@{/movies/{category}(category='imdbrating')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsIMDBHighestRatedRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>
+
+<div th:fragment="ytsLatestComedies" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">Latest Comedies</p>
+    <a th:href="@{/movies/{category}(category='latestcomedies')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsLatestComedyRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>
+
+<div th:fragment="ytsMustWatch" th:remove="tag">
+
+  <div class="card-body d-flex align-items-center custom-icon">
+    <p class="card-title lead mb-0">Must Watch</p>
+    <a th:href="@{/movies/{category}(category='mustwatch')}">
+      <i class="bi bi-chevron-compact-right"></i>
+    </a>
+  </div>
+
+  <a th:each="movie: ${ytsMustWatchRecord.data().movies()}"
+     hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+    <img class="thumbnail img-thumbnail img-fluid"
+         th:src="${movie.large_cover_image()}"
+         th:alt="${movie.title_long()}"
+    />
+  </a>
+
+</div>

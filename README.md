@@ -115,6 +115,11 @@ Encountered an issue? Please [open a new issue](https://github.com/AkshathSai/St
 ## Screenshots
 
 
+### Download Movies
+
+<img width="1512" alt="Screenshot 2024-01-09 at 10 42 08 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/c55d7531-dac3-4891-bdfd-d1d9cdb50c8a">
+
+
 
 ## License
 

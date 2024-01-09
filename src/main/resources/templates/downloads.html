@@ -4,8 +4,26 @@
 
     <div hx-ext="ws" id="ws-connect">
         Progress
-        <div id="progress" class="progress" style="height: 5px;">
+        <div id="download-stats">
             <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+            <div id="torrent-stats" class="container">
+                <div class="row">
+                    <div class="col">
+                        <p class="text-body-secondary"></p>
+                    </div>
+                    <div class="col">
+                        <p class="text-body-secondary"><i class="bi bi-arrow-down"></i> </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-body-secondary"><i class="bi bi-arrow-up"></i> </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-body-secondary">P</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

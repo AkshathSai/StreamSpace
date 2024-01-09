@@ -31,9 +31,6 @@ public class TorrentDownloadService {
     final RandomizedDownloader randomizedDownloader;
     final SequentialDownloader sequentialDownloader;
 
-    private static final String RATE_FORMAT = "%4.1f %s/s";
-    private static final String SESSION_INFO = "Peers: %2d\t\tDown: " + RATE_FORMAT + "\t\tUp: " + RATE_FORMAT + "\t\t";
-
     @Async
     public void startDownload(DownloadTask downloadTask) {
         BtClient client;
@@ -46,7 +43,6 @@ public class TorrentDownloadService {
         }
 
         if (downloadTask.getDownloadType().equals(DOWNLOADTYPE.SEQUENTIAL)) {
-            //client = sequentialDownloader.createSequentialDownloadClient(downloadTask, storage);
             client = sequentialDownloader.createSequentialDownloadClient(downloadTask, storage);
         } else {
             client = randomizedDownloader.createRandomSelectorClient(downloadTask, storage);
@@ -58,18 +54,18 @@ public class TorrentDownloadService {
         client.startAsync(state -> {
             if (state.getPiecesRemaining() == 0) {
                 log.info("Started as Seed: {}", state.startedAsSeed());
-                //log.info("Download finished!");
-                //downloadTaskRepository.delete(downloadTask);  // remove task from database
+                log.debug("Download finished!");
+                downloadTaskRepository.delete(downloadTask);  // remove task from database
 
-                log.info("{}", state.getConnectedPeers());
+                log.debug("{}", state.getConnectedPeers());
                 int completed = state.getPiecesComplete();
                 double completePercents = getCompletePercentage(state.getPiecesTotal(), completed);
-                log.info("{}", completePercents);
+                log.debug("{}", completePercents);
 
                 long downloaded = state.getDownloaded();
                 long uploaded = state.getUploaded();
                 int peerCount = state.getConnectedPeers().size();
-                log.info("Downloaded {}, Uploaded {}, Peer Count {}", readableSize(downloaded), readableSize(uploaded), peerCount);
+                log.debug("Downloaded {}, Uploaded {}, Peer Count {}", readableSize(downloaded), readableSize(uploaded), peerCount);
 
                 try {
 
@@ -87,20 +83,20 @@ public class TorrentDownloadService {
             } else {
                 //task.setProgress(percentage);  // update task progress
                 try {
-                    log.info("{}", state.getConnectedPeers());
+                    //log.debug("{}", state.getConnectedPeers());
                     int completed = state.getPiecesComplete();
                     double completePercents = getCompletePercentage(state.getPiecesTotal(), completed);
-                    log.info("{}", completePercents);
+                    //log.debug("{}", completePercents);
 
                     long downloaded = state.getDownloaded();
                     long uploaded = state.getUploaded();
                     int peerCount = state.getConnectedPeers().size();
-                    log.info("Downloaded {}, Uploaded {}, Peer Count {}", readableSize(downloaded), readableSize(uploaded), peerCount);
+                    //log.debug("Downloaded {}, Uploaded {}, Peer Count {}", readableSize(downloaded), readableSize(uploaded), peerCount);
 
                     //String remainingTime = getRemainingTime(downloaded, state.getPiecesRemaining(), state.getPiecesNotSkipped());
-                    //log.info("{}", remainingTime);
+                    //log.debug("{}", remainingTime);
 
-                    torrentProgressHandler.sendProgressUpdate(downloadTask.getTorrentHash(), String.format("%.2f%%", completePercents));
+                    torrentProgressHandler.sendProgressUpdate(downloadTask.getTorrentHash(), String.format("%.2f%%", completePercents), readableSize(downloaded), readableSize(uploaded), peerCount);
                 } catch (IOException e) {
                     log.error("Error occurred during download " + e);
                 }

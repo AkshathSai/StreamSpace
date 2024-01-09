@@ -22,14 +22,4 @@ public class WebAPI {
         }
     }
 
-    @GetMapping("/search/v1/yts")
-    public String ytsSearchV2(@RequestParam("term") String term, Model model) {
-        if(term == null) {
-            return "";
-        } else {
-            model.addAttribute("results", ytsapiClient.ytsSearchV2(term).data());
-            return "browse :: showResults";
-        }
-    }
-
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.thymeleaf.context.LazyContextVariable;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -63,7 +65,7 @@ public class WebController {
     @HxRequest
     @GetMapping("/movie/{contentId}")
     public String getVideoPlayer(@PathVariable("contentId") String contentId, Model model) {
-        model.addAttribute("contentId", contentId);
+        model.addAttribute("contentId", URLEncoder.encode(contentId, StandardCharsets.UTF_8));
         return "player :: videoPlayer";
     }
 

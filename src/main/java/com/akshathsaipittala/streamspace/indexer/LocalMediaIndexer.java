@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -94,13 +94,11 @@ public class LocalMediaIndexer {
             String contentStoreDir;
             if (parentFolderName.equals("Movies")) {
                 // If the parent folder is also /Music, use the SPRING_CONTENT_MUSIC_STORE directly
-                //contentStoreDir = RuntimeHelper.SPRING_CONTENT_MOVIES_STORE + file.getName();
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
 
             } else {
                 // Construct storeDir by appending parentFolderName and file.getName()
-                //contentStoreDir = RuntimeHelper.SPRING_CONTENT_MOVIES_STORE + parentFolderName + "/" + file.getName();
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + parentFolderName + "/" + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + parentFolderName + "/" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
             }
 
             String userDir = runtimeHelper.USER_HOME + File.separator + contentStoreDir;
@@ -114,7 +112,7 @@ public class LocalMediaIndexer {
             String contentType = MediaTypeFactory.getMediaType(new FileSystemResource(entry)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
             movie.setContentMimeType(contentType);
             //movie.setMovieCode(entry.getFileName().toString());
-            movie.setMovieCode(URLDecoder.decode(entry.getFileName().toString(), StandardCharsets.UTF_8));
+            movie.setMovieCode(URLEncoder.encode(entry.getFileName().toString(), StandardCharsets.UTF_8));
             movie.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
             moviesList.add(movie);
         }

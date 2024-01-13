@@ -6,9 +6,9 @@
 
         <ul id="local-media-files" class="text-left">
 
-            <li th:each="url: ${videos}">
-                <a th:text="${url}"
-                   hx:get="@{/movie/{contentId}(contentId=${url})}"
+            <li th:each="video: ${videos}">
+                <a th:text="${video.name}"
+                   hx:get="@{/movie/{contentId}(contentId=${video.name})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress"
                    hx-target="#mini-player"
@@ -16,9 +16,9 @@
                 ></a>
             </li>
 
-            <li th:each="url: ${music}">
-                <a th:text="${url}"
-                   hx:get="@{/music/{contentId}(contentId=${url})}"
+            <li th:each="music: ${music}">
+                <a th:text="${music.name}"
+                   hx:get="@{/music/{contentId}(contentId=${music.name})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress"
                    hx-target="#mini-player"

@@ -1,7 +1,5 @@
 package com.akshathsaipittala.streamspace.web.api;
 
-import com.akshathsaipittala.streamspace.entity.Movie;
-import com.akshathsaipittala.streamspace.entity.Music;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
@@ -25,17 +23,8 @@ public class LocalMediaAPI {
     @GetMapping("/media")
     HtmxResponse getTitles(Model model) {
 
-        model.addAttribute("videos", movieRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA)
-                .stream()
-                .map(Movie::getName)
-                .toList()
-        );
-
-        model.addAttribute("music", musicRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA)
-                .stream()
-                .map(Music::getName)
-                .toList()
-        );
+        model.addAttribute("videos", movieRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA));
+        model.addAttribute("music", musicRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA));
 
         return HtmxResponse.builder()
                 .view("localmedia :: local-media-player")

@@ -312,7 +312,11 @@
                 </div>
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
 
-                    This is music content
+                    <div id="audio-media" class="row" hx-get="/api/music" hx-trigger="click from:#music-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+
+                        This is music content
+
+                    </div>
 
                 </div>
                 <div class="tab-pane fade" id="tv" role="tabpanel" aria-labelledby="tv-tab">

@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Component
 public class RuntimeHelper {
 
-    public String USER_HOME = System.getProperty("user.home");
+    public final String USER_HOME = System.getProperty("user.home");
     public String DOWNLOADS_FOLDER;
     public String MUSIC_FOLDER;
     public String MOVIES_FOLDER;
@@ -31,8 +30,8 @@ public class RuntimeHelper {
         return UUID.randomUUID().toString();
     }
 
-    @EventListener
-    void onApplicationStartup(ApplicationReadyEvent applicationReadyEvent) {
+    @EventListener(ApplicationReadyEvent.class)
+    void onApplicationStartup() {
         String os = System.getProperty("os.name").toLowerCase();
         log.info("OS {}", os);
         String downloadsFolder;
@@ -43,16 +42,16 @@ public class RuntimeHelper {
 
         if (os.contains("win")) {
             downloadsFolder = USER_HOME + File.separator + "Downloads";
-            musicFolder = USER_HOME + File.separator + "Music";
+            musicFolder = USER_HOME + File.separator + ApplicationConstants.MUSIC;
             moviesFolder = USER_HOME + File.separator + "Videos";
-            musicStore = "Music" + File.separator;
+            musicStore = ApplicationConstants.MUSIC + File.separator;
             movieStore = "Videos" + File.separator;
         } else if (os.contains("mac") || os.contains("nix") || os.contains("nux") || os.contains("bsd")) {
             //Need to revisit for linux
             downloadsFolder = USER_HOME + File.separator + "Downloads";
-            musicFolder = USER_HOME + File.separator + "Music";
+            musicFolder = USER_HOME + File.separator + ApplicationConstants.MUSIC;
             moviesFolder = USER_HOME + File.separator + "Movies";
-            musicStore = "Music" + File.separator;
+            musicStore = ApplicationConstants.MUSIC + File.separator;
             movieStore = "Movies" + File.separator;
         } else {
             log.info("Unknown OS file folder structure! Using user.home");

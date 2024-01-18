@@ -9,7 +9,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
+@Async
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -17,12 +19,11 @@ public class ForegroundServices {
 
     final LocalMediaIndexer localMediaIndexer;
 
-    @Async
-    @EventListener
-    public void onApplicationReadyEvent(ApplicationReadyEvent readyEvent) throws IOException {
-        log.info("Started LocalMediaIndexer");
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReadyEvent() throws IOException, ExecutionException, InterruptedException {
+        log.info("Indexing Local Media");
         localMediaIndexer.indexMedia();
-        log.info("Stopped Media Indexer");
+        log.info("Finished Indexing");
     }
 
      /*@Async

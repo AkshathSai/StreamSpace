@@ -11,17 +11,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+@Async
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,15 +37,15 @@ public class LocalMediaIndexer {
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
-    public MediaLibrary indexMedia() throws IOException {
+    public void indexMedia() throws IOException, ExecutionException, InterruptedException {
 
-        List<Path> paths = findLocalMediaFiles(runtimeHelper.MOVIES_FOLDER, runtimeHelper.MUSIC_FOLDER);
+        CompletableFuture<List<Path>> paths = findLocalMediaFiles(runtimeHelper.MOVIES_FOLDER, runtimeHelper.MUSIC_FOLDER);
 
-        List<Path> musicPaths = paths.stream()
-                .filter(path -> path.toString().endsWith(".mp3"))
+        List<Path> musicPaths = paths.get().parallelStream()
+                .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
                 .toList();
 
-        List<Path> moviePaths = paths.stream()
+        List<Path> moviePaths = paths.get().parallelStream()
                 .filter(path -> path.toString().endsWith(".mp4") || path.toString().endsWith(".mkv") || path.toString().endsWith(".avi") || path.toString().endsWith(".mpeg"))
                 .toList();
 
@@ -51,11 +56,10 @@ public class LocalMediaIndexer {
 
         movieRepository.saveAll(movies);
         musicRepository.saveAll(music);
-        return mediaLibrary;
     }
 
-    public List<Path> findLocalMediaFiles(String... locations) throws IOException {
-        String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv}";
+    public CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
+        String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
 
         List<Path> matchingPaths = new ArrayList<>();
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
@@ -74,7 +78,7 @@ public class LocalMediaIndexer {
             });
         }
 
-        return matchingPaths;
+        return CompletableFuture.completedFuture(matchingPaths);
     }
 
     private List<Movie> createMovieEntities(List<Path> paths) throws IOException {
@@ -86,7 +90,7 @@ public class LocalMediaIndexer {
             Movie movie = new Movie();
 
             File file = new File(entry.toString());
-            log.info(entry.toString());
+            log.debug(entry.toString());
 
             // Get the immediate parent folder name
             String parentFolderName = entry.getParent().getFileName().toString();
@@ -94,25 +98,24 @@ public class LocalMediaIndexer {
             String contentStoreDir;
             if (parentFolderName.equals("Movies")) {
                 // If the parent folder is also /Music, use the SPRING_CONTENT_MUSIC_STORE directly
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
 
             } else {
                 // Construct storeDir by appending parentFolderName and file.getName()
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + parentFolderName + "/" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MOVIES_STORE + parentFolderName + "/" + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
             }
 
             String userDir = runtimeHelper.USER_HOME + File.separator + contentStoreDir;
-            log.info("Content Store {}", contentStoreDir);
-            log.info("Local Directory {}", userDir);
+            log.debug("Content Store {}", contentStoreDir);
+            log.debug("Local Directory {}", userDir);
 
             movie.setName(entry.getFileName().toString());
             movie.setContentLength(Files.size(entry));
             movie.setSummary(entry.getFileName().toString());
-            movie.setContentId(contentStoreDir);
+            movie.setContentId(URLDecoder.decode(contentStoreDir, StandardCharsets.UTF_8));
             String contentType = MediaTypeFactory.getMediaType(new FileSystemResource(entry)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
             movie.setContentMimeType(contentType);
-            //movie.setMovieCode(entry.getFileName().toString());
-            movie.setMovieCode(URLEncoder.encode(entry.getFileName().toString(), StandardCharsets.UTF_8));
+            movie.setMovieCode(URLDecoder.decode(entry.getFileName().toString(), StandardCharsets.UTF_8));
             movie.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
             moviesList.add(movie);
         }
@@ -127,36 +130,43 @@ public class LocalMediaIndexer {
         for (Path entry : paths) {
             Music music = new Music();
             File file = new File(entry.toString());
-            log.info(entry.toString());
+            log.debug(entry.toString());
 
             // Get the immediate parent folder name
             String parentFolderName = entry.getParent().getFileName().toString();
 
+            String encodedFileName = decodePathSegment(entry.getFileName().toString());
             String contentStoreDir;
             if (parentFolderName.equals("Music")) {
                 // If the parent folder is also /Music, use the SPRING_CONTENT_MUSIC_STORE directly
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + file.getName();
+                //contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + encodedFileName;
             } else {
                 // Construct storeDir by appending parentFolderName and file.getName()
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + "/" + file.getName();
+                //contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + "/" + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + "/" + encodedFileName;
             }
 
             String userDir = runtimeHelper.USER_HOME + File.separator + contentStoreDir;
-            log.info("Content Store {}", contentStoreDir);
-            log.info("Local Directory {}", userDir);
+            log.debug("Content Store {}", contentStoreDir);
+            log.debug("Local Directory {}", userDir);
 
-            music.setName(entry.getFileName().toString());
+            music.setName(decodePathSegment(entry.getFileName().toString()));
             music.setContentLength(Files.size(entry));
             music.setSummary(entry.getFileName().toString());
-            music.setContentId(contentStoreDir);
+            music.setContentId(decodePathSegment(contentStoreDir));
             String contentType = MediaTypeFactory.getMediaType(new FileSystemResource(entry)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
             music.setContentMimeType(contentType);
             music.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
-            music.setMusicId(entry.getFileName().toString());
+            music.setMusicId(decodePathSegment(entry.getFileName().toString()));
             musicList.add(music);
         }
 
         return musicList;
+    }
+
+    private String decodePathSegment(String pathSegment) {
+        return UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
     }
 
 }

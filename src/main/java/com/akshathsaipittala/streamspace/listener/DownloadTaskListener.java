@@ -11,7 +11,7 @@ public class DownloadTaskListener {
 
     @Async
     @PostPersist
-    public void onReceivingDownlohadTask(DownloadTask downloadTask) {
+    public void onReceivingDownloadTask(DownloadTask downloadTask) {
         TorrentDownloadService torrentDownloadService = ApplicationContextProvider.getApplicationContext().getBean(TorrentDownloadService.class);
         torrentDownloadService.startDownload(downloadTask);
     }

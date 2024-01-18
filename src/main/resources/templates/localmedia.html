@@ -8,7 +8,7 @@
 
             <li th:each="video: ${videos}">
                 <a th:text="${video.name}"
-                   hx:get="@{/movie/{contentId}(contentId=${video.name})}"
+                   hx:get="@{/stream/movie/{contentId}(contentId=${video.name})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress"
                    hx-target="#mini-player"
@@ -18,7 +18,7 @@
 
             <li th:each="music: ${music}">
                 <a th:text="${music.name}"
-                   hx:get="@{/music/{contentId}(contentId=${music.name})}"
+                   hx:get="@{/stream/music/{contentId}(contentId=${music.name})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress"
                    hx-target="#mini-player"

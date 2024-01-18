@@ -1,0 +1,22 @@
+<div th:fragment="featured-lossless-audio" th:remove="tag">
+
+    <div id="featured-lossless-audio" class="col text-left fade-me-in">
+
+        <p class="display-6 card-title lead mb-0 text-muted"><i class="bi bi-soundwave"></i>LossLess Audio</p>
+
+        <ul class="text-left">
+
+            <li th:each="url: ${music}">
+                <a th:text="${url.name}"
+                   hx:post="@{/download/torrent/{torrentHash}(torrentHash=${url.info_hash})}"
+                   hx-boost="true"
+                   hx-indicator=".globalProgress"
+                   hx-push-url="true"
+                ></a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>

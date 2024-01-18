@@ -10,7 +10,7 @@ import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
-public class APIClientConfig {
+public class APIClientBuilder {
 
     @Bean
     RestClient restClient(RestClient.Builder builder) {

@@ -41,11 +41,11 @@ public class LocalMediaIndexer {
 
         CompletableFuture<List<Path>> paths = findLocalMediaFiles(runtimeHelper.MOVIES_FOLDER, runtimeHelper.MUSIC_FOLDER);
 
-        List<Path> musicPaths = paths.get().stream()
+        List<Path> musicPaths = paths.get().parallelStream()
                 .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
                 .toList();
 
-        List<Path> moviePaths = paths.get().stream()
+        List<Path> moviePaths = paths.get().parallelStream()
                 .filter(path -> path.toString().endsWith(".mp4") || path.toString().endsWith(".mkv") || path.toString().endsWith(".avi") || path.toString().endsWith(".mpeg"))
                 .toList();
 
@@ -135,7 +135,7 @@ public class LocalMediaIndexer {
             // Get the immediate parent folder name
             String parentFolderName = entry.getParent().getFileName().toString();
 
-            String encodedFileName = encodePathSegment(entry.getFileName().toString());
+            String encodedFileName = decodePathSegment(entry.getFileName().toString());
             String contentStoreDir;
             if (parentFolderName.equals("Music")) {
                 // If the parent folder is also /Music, use the SPRING_CONTENT_MUSIC_STORE directly
@@ -151,22 +151,22 @@ public class LocalMediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
-            music.setName(URLDecoder.decode(entry.getFileName().toString(), StandardCharsets.UTF_8));
+            music.setName(decodePathSegment(entry.getFileName().toString()));
             music.setContentLength(Files.size(entry));
             music.setSummary(entry.getFileName().toString());
-            music.setContentId(URLDecoder.decode(contentStoreDir, StandardCharsets.UTF_8));
+            music.setContentId(decodePathSegment(contentStoreDir));
             String contentType = MediaTypeFactory.getMediaType(new FileSystemResource(entry)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
             music.setContentMimeType(contentType);
             music.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
-            music.setMusicId(URLDecoder.decode(entry.getFileName().toString(), StandardCharsets.UTF_8));
+            music.setMusicId(decodePathSegment(entry.getFileName().toString()));
             musicList.add(music);
         }
 
         return musicList;
     }
 
-    private String encodePathSegment(String pathSegment) {
-        return UriUtils.encodePathSegment(pathSegment, StandardCharsets.UTF_8.name());
+    private String decodePathSegment(String pathSegment) {
+        return UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
     }
 
 }

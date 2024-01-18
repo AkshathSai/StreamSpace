@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Async
 @Controller
-@RequestMapping("yt")
+@RequestMapping("/yt")
 @RequiredArgsConstructor
 public class YouTubeAPI {
 

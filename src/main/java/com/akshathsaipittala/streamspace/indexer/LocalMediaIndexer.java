@@ -84,14 +84,15 @@ public class LocalMediaIndexer {
 
                     // Save entities to the database asynchronously
                     CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
-                            movieRepository.saveAll(finalMovies));
+                            movieRepository.saveAll(finalMovies))
+                            .thenRun(() -> log.info("Finished Indexing Movies"));
                     CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
-                            musicRepository.saveAll(finalMusic));
+                            musicRepository.saveAll(finalMusic))
+                            .thenRun(() -> log.info("Finished Indexing Music"));
 
                     // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete
                     return CompletableFuture.allOf(moviesFuture, musicFuture);
                 })
-                .thenAccept(voidCompletableFuture -> log.info("Finished Indexing"))
                 .exceptionally(throwable -> {
                     log.error("Error indexing media", throwable);
                     return null;
@@ -99,7 +100,7 @@ public class LocalMediaIndexer {
     }
 
     public CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
-        String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
+        final String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
 
         List<Path> matchingPaths = new ArrayList<>();
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);

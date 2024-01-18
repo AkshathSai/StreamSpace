@@ -24,7 +24,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Async
 @Slf4j
@@ -37,7 +36,7 @@ public class LocalMediaIndexer {
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
-    public void indexMedia() throws IOException, ExecutionException, InterruptedException {
+    /*public void indexMedia() throws IOException, ExecutionException, InterruptedException {
 
         CompletableFuture<List<Path>> paths = findLocalMediaFiles(runtimeHelper.MOVIES_FOLDER, runtimeHelper.MUSIC_FOLDER);
 
@@ -56,6 +55,47 @@ public class LocalMediaIndexer {
 
         movieRepository.saveAll(movies);
         musicRepository.saveAll(music);
+    }*/
+
+    /**
+     * Concurrent indexer
+     */
+    public void indexMedia() throws IOException {
+        findLocalMediaFiles(runtimeHelper.MOVIES_FOLDER, runtimeHelper.MUSIC_FOLDER)
+                .thenApply(paths -> {
+                    List<Path> musicPaths = paths.parallelStream()
+                            .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
+                            .toList();
+
+                    List<Path> moviePaths = paths.parallelStream()
+                            .filter(path -> path.toString().endsWith(".mp4") || path.toString().endsWith(".mkv") || path.toString().endsWith(".avi") || path.toString().endsWith(".mpeg"))
+                            .toList();
+
+                    List<Movie> finalMovies;
+                    List<Music> finalMusic;
+                    try {
+                        finalMovies = createMovieEntities(moviePaths);
+                        finalMusic = createMusicEntities(musicPaths);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    mediaLibrary.setMovies(finalMovies);
+                    mediaLibrary.setMusic(finalMusic);
+
+                    // Save entities to the database asynchronously
+                    CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
+                            movieRepository.saveAll(finalMovies));
+                    CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
+                            musicRepository.saveAll(finalMusic));
+
+                    // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete
+                    return CompletableFuture.allOf(moviesFuture, musicFuture);
+                })
+                .thenAccept(voidCompletableFuture -> log.info("Finished Indexing"))
+                .exceptionally(throwable -> {
+                    log.error("Error indexing media", throwable);
+                    return null;
+                });
     }
 
     public CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
@@ -129,7 +169,7 @@ public class LocalMediaIndexer {
 
         for (Path entry : paths) {
             Music music = new Music();
-            File file = new File(entry.toString());
+            //File file = new File(entry.toString());
             log.debug(entry.toString());
 
             // Get the immediate parent folder name
@@ -144,7 +184,7 @@ public class LocalMediaIndexer {
             } else {
                 // Construct storeDir by appending parentFolderName and file.getName()
                 //contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + "/" + URLDecoder.decode(file.getName(), StandardCharsets.UTF_8);
-                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + "/" + encodedFileName;
+                contentStoreDir = runtimeHelper.SPRING_CONTENT_MUSIC_STORE + parentFolderName + File.separator + encodedFileName;
             }
 
             String userDir = runtimeHelper.USER_HOME + File.separator + contentStoreDir;

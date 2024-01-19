@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/music")
 @RequiredArgsConstructor
 public class MusicController {
 
     final APIBayClient apiBayClient;
 
     @HxRequest
-    @GetMapping("/music")
+    @GetMapping("/featured/flac")
     public HtmxResponse getFeaturedFLAC(Model model) {
         model.addAttribute("music", apiBayClient.getLosslessFLACAudio());
         return HtmxResponse.builder()

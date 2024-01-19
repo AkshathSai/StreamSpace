@@ -278,6 +278,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div th:if="${musicResults} != null">
+                            <div class="card border-0" th:each="musicResult: ${musicResults}">
+                                <div class="card-body">
+                                    <a class="card-title card-link primary"
+                                       style="cursor: pointer"
+                                       hx-boost="true"
+                                       hx-swap="transition:true"
+                                       hx-push-url="true"
+                                       hx-indicator=".globalProgress"
+                                       th:text="${musicResult.name}"></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -312,7 +325,7 @@
                 </div>
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
 
-                    <div id="audio-media" class="row" hx-get="/api/music" hx-push-url="true" hx-trigger="click from:#music-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="audio-media" class="row" hx-get="/music/featured/flac" hx-push-url="true" hx-trigger="click from:#music-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
 
                         This is music content
 

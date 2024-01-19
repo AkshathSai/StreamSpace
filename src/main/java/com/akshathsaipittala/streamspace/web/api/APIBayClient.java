@@ -22,4 +22,10 @@ public interface APIBayClient {
     @GetExchange("q.php?q={term}&&cat=101")
     APIBayTorrent[] searchMusic(@PathVariable String term);
 
+    @GetExchange("q.php?q={term}&&cat=207")
+    APIBayTorrent[] getHDMovies(@PathVariable String term);
+
+    @GetExchange("q.php?q={term}&&cat=208")
+    APIBayTorrent[] getHDTVShows(@PathVariable String term);
+
 }

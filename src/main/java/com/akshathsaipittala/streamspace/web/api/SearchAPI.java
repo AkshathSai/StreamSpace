@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SearchAPI {
 
     final YTSAPIClient ytsapiClient;
+    final APIBayClient apiBayClient;
 
     @GetMapping("/search/yts")
     public String ytsSearch(@RequestParam("term") String term, Model model) {
@@ -30,6 +31,7 @@ public class SearchAPI {
             return "";
         } else {
             model.addAttribute("results", ytsapiClient.ytsSearchV2(term).data());
+            model.addAttribute("musicResults", apiBayClient.searchMusic(term));
             return "index :: search-results";
         }
     }

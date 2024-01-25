@@ -7,9 +7,9 @@
         <!-- Pagination -->
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Previous</a></li>
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true" th:text="${currentPage}"></a></li>
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Next</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">Previous</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true" th:text="${currentPage}"></a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">Next</a></li>
             </ul>
         </nav>
 
@@ -18,7 +18,7 @@
             <!-- Example of a single movie card -->
             <div class="col" th:each="movie: ${ytsMoviesRecord.data.movies}">
                 <div class="card h-100">
-                    <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-swap="transition:true" hx-push-url="true">
+                    <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
                         <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}" class="card-img-top">
                     </a>
                 </div>
@@ -29,9 +29,9 @@
         <!-- Pagination -->
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Previous</a></li>
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true" th:text="${currentPage}"></a></li>
-                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Next</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">Previous</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true" th:text="${currentPage}"></a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-boost="true" hx-indicator=".globalProgress" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">Next</a></li>
             </ul>
         </nav>
 

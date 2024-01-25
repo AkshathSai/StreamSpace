@@ -33,7 +33,7 @@ public class YouTubeAPI {
             }
         });
 
-        return CompletableFuture.completedFuture("youtubeTrailer");
+        return CompletableFuture.completedFuture("youtubetrailer");
     }
 
 }

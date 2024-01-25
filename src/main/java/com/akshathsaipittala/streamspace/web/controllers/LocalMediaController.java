@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.web.api;
+package com.akshathsaipittala.streamspace.web.controllers;
 
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/local")
 @RequiredArgsConstructor
-public class LocalMediaAPI {
+public class LocalMediaController {
 
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;

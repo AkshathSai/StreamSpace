@@ -18,7 +18,7 @@ public class SpringContentStorageConfig {
 
     @Bean
     File filesystemRoot() {
-        return new File(runtimeHelper.USER_HOME);
+        return new File(runtimeHelper.getUserHomePath());
     }
 
     @Bean

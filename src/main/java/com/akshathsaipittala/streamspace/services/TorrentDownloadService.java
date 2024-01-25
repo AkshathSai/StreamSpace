@@ -8,10 +8,13 @@ import com.akshathsaipittala.streamspace.entity.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
 import com.akshathsaipittala.streamspace.entity.STATUS;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
+import com.akshathsaipittala.streamspace.repository.MovieRepository;
+import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+@Lazy
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class TorrentDownloadService {
     final TorrentProgressHandler torrentProgressHandler;
     final RandomizedDownloader randomizedDownloader;
     final SequentialDownloader sequentialDownloader;
+    final MovieRepository movieRepository;
+    final MusicRepository musicRepository;
 
     @Async
     public void startDownload(DownloadTask downloadTask) {
@@ -37,9 +43,9 @@ public class TorrentDownloadService {
         Storage storage;
 
         if (downloadTask.getMediaType().equals(CONTENTTYPE.VIDEO)) {
-            storage = new FileSystemStorage(new File(runtimeHelper.MOVIES_FOLDER).toPath());
+            storage = new FileSystemStorage(new File(runtimeHelper.getMoviesFolderPath()).toPath());
         } else {
-            storage = new FileSystemStorage(new File(runtimeHelper.MUSIC_FOLDER).toPath());
+            storage = new FileSystemStorage(new File(runtimeHelper.getMusicFolderPath()).toPath());
         }
 
         if (downloadTask.getDownloadType().equals(DOWNLOADTYPE.SEQUENTIAL)) {

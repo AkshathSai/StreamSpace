@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.entity;
 
-import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
+import com.akshathsaipittala.streamspace.utils.HelperFunctions;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
@@ -26,14 +26,14 @@ public class Music {
     private long contentLength;
     private String summary;
     @MimeType
-    private String contentMimeType = "audio/mpeg";
+    private String contentMimeType;
     private String mediaSource;
 
     @PrePersist
     public void randomGenerateMusicIdIfNotSet() {
         if (musicId == null || musicId.isEmpty()) {
             // Generate a unique movieCode here (e.g., using UUID)
-            musicId = RuntimeHelper.generateUniqueCode();
+            musicId = HelperFunctions.generateUniqueCode();
         }
     }
 

@@ -29,26 +29,32 @@ Dive into the world of StreamSpace, where entertainment meets innovation, and su
 
 ### Simple Straight forward call-to-action UI 
 
-<img width="1512" alt="Screenshot 2024-01-09 at 11 09 54 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a9c000e9-4f9c-4822-acf1-2b4a24938527">
+<img width="1512" alt="Homapage UI shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a9c000e9-4f9c-4822-acf1-2b4a24938527">
 
 ### Lightning Fast⚡ Active Search 💨(Type ahead suggestions Sweet 🥹)
 
-<img width="1512" alt="Screenshot 2024-01-09 at 11 08 05 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/8b801bd1-f498-4b31-afdd-a17978d16d68">
+<img width="1512" alt="Active Search demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/8b801bd1-f498-4b31-afdd-a17978d16d68">
 
 ### Instant movie Details, stream uncompressed eye-candy 🥹 upto 4K Quality!!
-<img width="1512" alt="Screenshot 2024-01-09 at 11 08 18 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/9e765ad5-00c2-4245-ac10-e0057de282ca">
+<img width="1512" alt="Movie Streaming demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/9e765ad5-00c2-4245-ac10-e0057de282ca">
 
 ### Not sure? Watch Trailers😃
 
-<img width="1512" alt="Screenshot 2024-01-09 at 11 08 50 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a6bf8775-aa4a-4319-b0d0-966bd88867d0">
+<img width="1512" alt="Youtube Trailers demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a6bf8775-aa4a-4319-b0d0-966bd88867d0">
 
 ### Download Movies
 
-<img width="1512" alt="Screenshot 2024-01-09 at 10 42 08 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/c55d7531-dac3-4891-bdfd-d1d9cdb50c8a">
+<img width="1512" alt="Download a Movie demo Screenshot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/c55d7531-dac3-4891-bdfd-d1d9cdb50c8a">
 
 ### Get Suggested & Related Movies 
 
-<img width="1512" alt="Screenshot 2024-01-09 at 11 09 31 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/ad8ba5ae-75a9-45da-aa0b-e4a85a1f424e">
+<img width="1512" alt="Suggested Movies Screenshot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/ad8ba5ae-75a9-45da-aa0b-e4a85a1f424e">
+
+### View All Page with Pagination
+
+<img width="1512" alt="View All Page Screenshot-1" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/88190f52-3394-4311-bd6b-05c1d315ec0e">
+
+<img width="1512" alt="View All Page Screenshot-2" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/6587d8ab-fe4a-436a-b8b4-668072da3ffe">
 
 
 ## The Challenge

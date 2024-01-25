@@ -1,7 +1,6 @@
 package com.akshathsaipittala.streamspace.web.controllers;
 
 import com.akshathsaipittala.streamspace.dto.yts.YTSMoviesRecord;
-import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
 import com.akshathsaipittala.streamspace.web.api.YTSAPIClient;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
@@ -12,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.context.LazyContextVariable;
 
 @Slf4j
@@ -21,7 +21,6 @@ import org.thymeleaf.context.LazyContextVariable;
 public class YTSMoviesController {
 
     final YTSAPIClient ytsapiClient;
-    final DownloadTaskRepository downloadTaskRepository;
 
     @HxRequest
     @GetMapping("/movies/{id}")
@@ -52,6 +51,64 @@ public class YTSMoviesController {
         });
 
         return "ytsMovie";
+    }
+
+    @GetMapping("/movies/cat/{category}")
+    public HtmxResponse viewAllPage(Model model,
+                              @RequestParam(defaultValue = "1") int page,
+                              @PathVariable("category") String category) {
+
+        model.addAttribute("category", category);
+
+        if (category.equals("latest")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getLatestMovies(page);
+                }
+            });
+        } else if (category.equals("mostliked")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getMostLiked(page);
+                }
+            });
+        } else if (category.equals("imdbrating")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getIMDBHighestRated(page);
+                }
+            });
+        } else if (category.equals("mostwatched")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getMostWatchedMovies(page);
+                }
+            });
+        } else if (category.equals("latestcomedies")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getLatestComedyMovies(page);
+                }
+            });
+        } else if (category.equals("mustwatch")) {
+            model.addAttribute("ytsMoviesRecord", new LazyContextVariable<YTSMoviesRecord>() {
+                @Override
+                protected YTSMoviesRecord loadValue() {
+                    return ytsapiClient.getMustWatch(page);
+                }
+            });
+        }
+
+        model.addAttribute("currentPage", page);
+
+        return HtmxResponse.builder()
+                .view("viewAll :: gallery")
+                .build();
     }
 
     @HxRequest

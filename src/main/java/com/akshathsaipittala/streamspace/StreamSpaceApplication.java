@@ -17,8 +17,9 @@ public class StreamSpaceApplication {
 	public static void main(String[] args) {
 
 		Security.setProperty("crypto.policy", "unlimited");
-		if (System.getProperty("os.name").toLowerCase().startsWith("win"))
+		if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
 			System.setProperty("java.net.preferIPv4Stack", "true");
+		}
 
 		SpringApplication.run(StreamSpaceApplication.class, args);
 	}

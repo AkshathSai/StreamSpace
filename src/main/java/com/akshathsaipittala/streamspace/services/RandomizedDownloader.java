@@ -14,6 +14,7 @@ import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.io.IOException;
 // This class is used for
 // Downloading torrents non-sequentially
 // for faster download speed
+@Lazy
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class RandomizedDownloader {
 
         return Bt
                 .client()
-                .magnet(TorrentUtils.getMagnetUri(task.getTorrentHash()))
+                .magnet(TorrentUtils.createMagnetUri(task.getTorrentHash()))
                 .storage(storage)
                 .afterTorrentFetched(torrent -> {
                     // Your existing code...
@@ -50,8 +52,8 @@ public class RandomizedDownloader {
                                         movie.setName(fileName);
                                         movie.setSummary(fileName);
                                         movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-                                        log.info(runtimeHelper.SPRING_CONTENT_MOVIES_STORE + torrentName + "/" + fileName);
-                                        movie.setContentId(runtimeHelper.SPRING_CONTENT_MOVIES_STORE + torrentName + "/" + fileName);
+                                        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+                                        movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
                                         //movie.setMovieCode(task.getTorrentHash());
                                         movie.setMovieCode(task.getMovieCode());
                                         movieRepository.save(movie);

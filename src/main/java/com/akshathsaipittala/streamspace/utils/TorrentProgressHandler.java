@@ -3,6 +3,7 @@ package com.akshathsaipittala.streamspace.utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,13 +14,14 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Lazy
 @Slf4j
 @Getter
 @Setter
 @Component
 public class TorrentProgressHandler extends TextWebSocketHandler {
 
-    public Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {

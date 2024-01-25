@@ -31,7 +31,7 @@ public class SearchAPI {
             return "";
         } else {
             model.addAttribute("results", ytsapiClient.ytsSearchV2(term).data());
-            model.addAttribute("musicResults", apiBayClient.searchMusic(term));
+            //model.addAttribute("musicResults", apiBayClient.searchMusic(term));
             return "index :: search-results";
         }
     }

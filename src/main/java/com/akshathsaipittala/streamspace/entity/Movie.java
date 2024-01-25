@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.entity;
 
-import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
+import com.akshathsaipittala.streamspace.utils.HelperFunctions;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
@@ -36,7 +36,7 @@ public class Movie {
     public void generateMovieCodeIfNotSet() {
         if (movieCode == null || movieCode.isEmpty()) {
             // Generate a unique movieCode here (e.g., using UUID)
-            movieCode = RuntimeHelper.generateUniqueCode();
+            movieCode = HelperFunctions.generateUniqueCode();
         }
     }
 

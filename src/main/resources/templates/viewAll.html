@@ -1,57 +1,40 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>View All</title>
-    <link rel="stylesheet" href="/css/viewall.css" th:href="@{/css/viewall.css}">
-    <link rel="stylesheet" href="/css/material.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
-<body>
+<div th:fragment="gallery" th:remove="tag">
 
-<section class="movies">
+    <div id="movie-gallery" class="container mt-5">
 
-    <div>
-        <a class="mdl-button mdl-js-button mdl-button--icon" href="/">
-            <i class="material-icons">home</i>
-        </a>
-        <a class="mdl-button mdl-js-button mdl-button--icon" href="javascript:window.history.back();">
-            <i class="material-icons">arrow_back</i>
-        </a>
-    </div>
+        <h1 class="mb-4" th:text="${category}"></h1>
 
-    <h2 style="font-weight: 100" th:text="${category}"></h2>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Previous</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true" th:text="${currentPage}"></a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Next</a></li>
+            </ul>
+        </nav>
 
-    <div class="movie-grid">
-        <!--<div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}" th:style="'background: url('+ ${movie.background_image} +');'">-->
-        <!--<div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}">
-            <a th:href="@{/yts/movies/{id}(id=${movie.id})}">
-                <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}">
-            </a>
-        </div>-->
-
-        <div class="movie-card" th:each="movie: ${ytsMoviesRecord.data.movies}">
-            <a th:href="@{/yts/movies/{id}(id=${movie.id})}">
-                <picture>
-                    <source media="(max-width: 600px)" th:srcset="${movie.small_cover_image}">
-                    <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}">
-                </picture>
-            </a>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+            <!-- Dynamic movie cards will go here -->
+            <!-- Example of a single movie card -->
+            <div class="col" th:each="movie: ${ytsMoviesRecord.data.movies}">
+                <div class="card h-100">
+                    <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-swap="transition:true" hx-push-url="true">
+                        <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}" class="card-img-top">
+                    </a>
+                </div>
+            </div>
+            <!-- Repeat movie cards for each movie -->
         </div>
 
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage - 1}" tabindex="-1" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Previous</a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true" th:text="${currentPage}"></a></li>
+                <li class="page-item"><a class="page-link" hx:get="'/yts/movies/cat/' + ${category} + '?page=' + ${currentPage + 1}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movie-gallery" hx-push-url="true">Next</a></li>
+            </ul>
+        </nav>
+
     </div>
-</section>
 
-<div class="back-icon-button-container" style="display: flex; justify-content: center;">
-    <a class="mdl-button mdl-js-button mdl-button--icon"
-       th:href="'/yts/movies/' + ${category} + '?page=' + ${currentPage + 1}">
-        <i class="material-icons">arrow_forward</i>
-    </a>
 </div>
-
-<footer class="footer">
-    <p>© 2023 Akshath Sai Pittala</p>
-</footer>
-
-</body>
-</html>

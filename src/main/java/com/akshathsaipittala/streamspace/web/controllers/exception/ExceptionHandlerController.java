@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.exception;
+package com.akshathsaipittala.streamspace.web.controllers.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class ExceptionHandlerController {
     public final ResponseEntity<ErrorDetails> handleNullPointerException(Exception ex, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(),
                 webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(HttpServerErrorException.class)

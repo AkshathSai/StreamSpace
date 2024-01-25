@@ -1,9 +1,10 @@
 package com.akshathsaipittala.streamspace.services;
 
 import com.akshathsaipittala.streamspace.indexer.LocalMediaIndexer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,11 @@ import java.io.IOException;
 @Async
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class ForegroundServices {
 
-    final LocalMediaIndexer localMediaIndexer;
+    @Lazy
+    @Autowired
+    private LocalMediaIndexer localMediaIndexer;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() throws IOException {

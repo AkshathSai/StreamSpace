@@ -1,8 +1,8 @@
 # 🎬 StreamSpace - Your Gateway to Entertainment 🎬🎉
 
+[![Java CI with Maven](https://github.com/AkshathSai/StreamSpace/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/AkshathSai/StreamSpace/actions/workflows/ci-build.yml)
 ![Maven](https://badgen.net/badge/icon/maven?icon=maven&label)
 ![GitHub](https://img.shields.io/github/license/akshathsai/TuneTrip)
-[![Build Status](https://travis-ci.com/your-username/project-name.svg?branch=master)](https://travis-ci.com/your-username/project-name)
 [![Coverage Status](https://coveralls.io/repos/github/your-username/project-name/badge.svg?branch=master)](https://coveralls.io/github/your-username/project-name?branch=master)
 
 Dive into the world of StreamSpace, where entertainment meets innovation, and subscription fatigue becomes a thing of the past [^1] 

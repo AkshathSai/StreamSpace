@@ -2,9 +2,10 @@
 
     <div class="fade-me-in" hx-swap="outerHTML settle:1s">
         <p class="display-6 text-muted">Now Playing</p>
-        <video class="img-fluid shadow-lg" controls controlslist="nodownload">
-            <source th:src="@{'/movies/' + ${contentId} + '/content'}" type="video/mp4">
-            <source th:src="@{'/movies/' + ${contentId} + '/content'}" type="video/webm">
+        <video class="img-fluid shadow-lg" controls preload="auto">
+            <source th:src="@{'/movies/' + ${contentId}}" type="video/mp4">
+            <source th:src="@{'/movies/' + ${contentId}}" type="video/webm">
+            <source th:src="@{'/movies/' + ${contentId}}" type="video/ogg">
             <p>
                 Your browser doesn't support this video. Here is a
                 <a th:href="'/movies/' + ${contentId}">link to the video</a> instead.

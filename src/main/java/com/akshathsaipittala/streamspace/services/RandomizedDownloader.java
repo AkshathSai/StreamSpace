@@ -14,16 +14,13 @@ import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 
 // This class is used for
 // Downloading torrents non-sequentially
 // for faster download speed
-@Lazy
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -73,14 +70,14 @@ public class RandomizedDownloader {
                         return Runtime.getRuntime().availableProcessors();
                     }
 
-                    @Override
+                    /*@Override
                     public int getAcceptorPort() {
                         try {
                             return TorrentUtils.getRandomFreePort();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    }
+                    }*/
                 })
                 .autoLoadModules()
                 .module(dhtModule())

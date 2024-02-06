@@ -15,11 +15,9 @@ import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-@Lazy
 @Slf4j
 @Service
 @RequiredArgsConstructor

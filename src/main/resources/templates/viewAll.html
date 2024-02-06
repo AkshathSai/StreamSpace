@@ -19,7 +19,7 @@
             <div class="col" th:each="movie: ${ytsMoviesRecord.data.movies}">
                 <div class="card h-100">
                     <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
-                        <img th:src="${movie.large_cover_image}" th:alt="${movie.title_long}" class="card-img-top">
+                        <img th:src="@{${movie.large_cover_image}}" th:alt="${movie.title_long}" class="card-img-top">
                     </a>
                 </div>
             </div>

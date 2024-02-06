@@ -11,16 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
 @Slf4j
 @Controller
+@RequestMapping("/download")
 @RequiredArgsConstructor
 public class DownloadsController {
 
@@ -33,7 +31,7 @@ public class DownloadsController {
     }
 
     @HxRequest
-    @PostMapping("/download/torrent")
+    @PostMapping("/torrent")
     public HtmxResponse downloadTorrent(
             @RequestParam("selectedOption") String torrentHash,
             @RequestParam(value = "sequentialCheck", required = false) String sequentialCheck,
@@ -61,7 +59,7 @@ public class DownloadsController {
     }
 
     @HxRequest
-    @PostMapping("/download/torrent/{torrentHash}")
+    @PostMapping("/torrent/{torrentHash}")
     public HtmxResponse downloadTorrent(@PathVariable String torrentHash) {
 
         log.info("Selected Option: {}", torrentHash);

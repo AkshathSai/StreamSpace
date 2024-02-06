@@ -49,7 +49,7 @@
 
       </div>
       <div id="poster" class="col-md-5 order-md-1">
-        <img class="featurette-image img-fluid mx-auto shadow-lg" th:src="${ytsMovieRecord.data().movie().large_cover_image()}" alt="500x500" data-holder-rendered="true">
+        <img class="featurette-image img-fluid mx-auto shadow-lg" th:src="@{${ytsMovieRecord.data().movie().large_cover_image()}}" alt="500x500" data-holder-rendered="true">
       </div>
 
     </div>
@@ -60,42 +60,26 @@
 
       <div class="col"
            hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
-           hx-boost="true"
+           hx-swap="transition: true"
            hx-trigger="load delay:100ms"
            hx-indicator=".globalProgress"
-      >
-
-        <!--<div class="col"
-             hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
-             hx-trigger="load delay:100ms"
-             hx-indicator=".htmx-indicator"
-        >
-
-        <span class="htmx-indicator text-center justify-center">
-            <img id="spinner" class="htmx-indicator" src="/images/loader.svg" alt="Request In Flight..."/>
-        </span>-->
-
-      </div>
+      ></div>
 
     </div>
 
-    <div class="row">
+    <h4>
+      <small class="text-body-secondary">Suggested Movies</small>
+    </h4>
 
-      <div class="col">
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
 
-        <h4>
-          <small class="text-body-secondary">Suggested Movies</small>
-        </h4>
+      <div class="col" th:each="movie: ${ytsSuggestedRecord.data.movies}">
 
-        <a th:each="movie: ${ytsSuggestedRecord.data().movies()}"
-           hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#ytsMovieOverview" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">
-          <!--hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#search-results" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">-->
-          <!--hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true" hx-indicator=".globalProgress">-->
-          <img class="thumbnail img-thumbnail img-fluid"
-               th:src="${movie.medium_cover_image()}"
-               th:alt="${movie.title_long()}"
-          />
-        </a>
+        <div class="card h-100">
+          <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
+            <img th:src="@{${movie.medium_cover_image}}" th:alt="${movie.title_long}" class="card-img-top">
+          </a>
+        </div>
 
       </div>
 

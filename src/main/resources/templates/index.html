@@ -294,31 +294,51 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="movies" role="tabpanel" aria-labelledby="movies-tab">
+                <div class="tab-pane fade" id="movies" role="tabpanel" aria-labelledby="movies-tab"
+                     hx-boost="true"
+                     hx-swap="transition:true">
 
                     <!--This is movies content-->
 
-                    <div id="most-watched-movies" hx-get="/yts/ytsMostWatched" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="most-watched-movies"
+                         hx-get="/yts/ytsMostWatched"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading most watched movies...-->
                     </div>
 
-                    <div id="latest-movies" hx-get="/yts/ytsLatest" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="latest-movies"
+                         hx-get="/yts/ytsLatest"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading Latest movies...-->
                     </div>
 
-                    <div id="most-liked-movies" hx-get="/yts/ytsMostLiked" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="most-liked-movies"
+                         hx-get="/yts/ytsMostLiked"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading Most Liked movies...-->
                     </div>
 
-                    <div id="imdb-highest-rated-movies" hx-get="/yts/ytsImdbRating" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="imdb-highest-rated-movies"
+                         hx-get="/yts/ytsImdbRating"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading IMDB Highest Rated movies...-->
                     </div>
 
-                    <div id="latest-comedy-movies" hx-get="/yts/ytsLatestComedies" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="latest-comedy-movies"
+                         hx-get="/yts/ytsLatestComedies"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading Latest Comedies...-->
                     </div>
 
-                    <div id="must-watch-movies" hx-get="/yts/ytsMustWatch" hx-trigger="click from:#movies-tab" hx-indicator=".globalProgress" hx-swap="innerHTML transition:true">
+                    <div id="must-watch-movies"
+                         hx-get="/yts/ytsMustWatch"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
                         <!--Loading Must Watch movies...-->
                     </div>
 

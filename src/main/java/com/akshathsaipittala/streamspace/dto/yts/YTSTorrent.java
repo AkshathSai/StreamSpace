@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.dto.yts;
 
-record YTSTorrent(
+public record YTSTorrent(
         String url,
         String hash,
         String quality,

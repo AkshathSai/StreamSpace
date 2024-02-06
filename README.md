@@ -8,7 +8,7 @@
 Dive into the world of StreamSpace, where entertainment meets innovation, and subscription fatigue becomes a thing of the past [^1] 
 
 <p align="center">
-<img src="https://upload.wikimedia.org/wikipedia/de/e/e1/Java-Logo.svg" width="200" height="200" alt="Java">
+<img src="https://upload.wikimedia.org/wikipedia/de/e/e1/Java-Logo.svg" alt="Java">
 <img src="https://github.com/AkshathSai/CinemaPass/assets/89769614/57bd7d6f-871c-4c22-adb8-9fdf27728f30" width="200" height="200" alt="Spring">
 </p>
 

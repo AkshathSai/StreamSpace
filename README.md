@@ -14,6 +14,7 @@ Dive into the world of StreamSpace, where entertainment meets innovation, and su
 
 ## Contents
 
+- [Screenshots](#screenshots) 
 - [The Challenge](#the-challenge)
 - [Our Solution](#solution)
 - [Key Features](#key-features)
@@ -23,7 +24,6 @@ Dive into the world of StreamSpace, where entertainment meets innovation, and su
 - [Contribute](#contribute)
 - [Bug Reports](#bug-reports)
 - [License](#license)
-- [Screenshots](#screenshots)
 
 ## Screenshots
 

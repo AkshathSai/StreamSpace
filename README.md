@@ -118,7 +118,7 @@ mvn clean install
 cd target
 ```
 ```
-java -jar StreamSpace-0.0.1-SNAPSHOT
+java -jar StreamSpace-0.0.1-SNAPSHOT.jar
 ```
 or Just double clik on the jar to run ;)
 

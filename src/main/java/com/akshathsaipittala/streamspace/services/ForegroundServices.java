@@ -1,42 +1,47 @@
 package com.akshathsaipittala.streamspace.services;
 
-import com.akshathsaipittala.streamspace.indexer.LocalMediaIndexer;
+import com.akshathsaipittala.streamspace.entity.CONTENTTYPE;
+import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
+import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Async
 @Slf4j
-@Component
+@Service
 public class ForegroundServices {
 
     @Lazy
     @Autowired
-    private LocalMediaIndexer localMediaIndexer;
+    private RuntimeHelper runtimeHelper;
+
+    @Lazy
+    @Autowired
+    private MediaIndexer mediaIndexer;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void onApplicationReadyEvent() throws IOException {
-        log.info("Indexing Local Media");
-        localMediaIndexer.indexMedia();
+    public void onApplicationReadyEvent() {
+
+        Thread.startVirtualThread(() -> {
+            try {
+                log.info("Indexing Local Media");
+                mediaIndexer.indexLocalMedia(
+                        runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
+                        runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        // 3C88F31D82729DBF83A702BD536A376B23DB5EC6
     }
-
-     /*@Async
-    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.MINUTES)
-    public void printHeapUsage() {
-        log.info(Stats.printHeapMemoryUsage());
-    }*/
-
-    /*@Async
-    @CacheEvict(allEntries = true, value = {"getMostWatchedMovies"})
-    @Scheduled(fixedDelay = 45, timeUnit = TimeUnit.MINUTES)
-    public void clearCache() {
-        log.info("Cache cleared");
-    }*/
 
 }

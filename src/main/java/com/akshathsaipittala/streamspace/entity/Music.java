@@ -7,6 +7,7 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.content.commons.annotations.ContentId;
 import org.springframework.content.commons.annotations.ContentLength;
 import org.springframework.content.commons.annotations.MimeType;
@@ -14,6 +15,7 @@ import org.springframework.content.commons.annotations.MimeType;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Music {
 

@@ -38,10 +38,10 @@ public class TorrentProgressHandler extends TextWebSocketHandler {
         super.afterConnectionClosed(session, status);
     }
 
-    public void sendProgressUpdate(String torrentId, String message, String downloaded, String uploaded, int peerCount) throws IOException {
+    public void sendProgressUpdate(String torrentId, String message, String downloaded, String uploaded, int peerCount, String remainingTime, String elapsedTime) throws IOException {
         WebSocketSession session = sessions.get(torrentId);
         if (session != null && session.isOpen()) {
-            String webResponse = "<div id=\"progress-bar\" class=\"progress progress-bar\" role=\"progressbar\" hx-swap-oob=\"true\" style=\"width: " + message + ";height:5px;\" aria-valuenow=\""+ message +"\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div><div id=\"torrent-stats\" class=\"container\"> <div class=\"row\"> <div class=\"col\"> <p class=\"text-body-secondary\">" + message + "</p></div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-down\"></i> "+ downloaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-up\"></i> "+ uploaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">"+peerCount+"P</p> </div> </div> </div>";
+            String webResponse = "<div id=\"progress-bar\" class=\"progress progress-bar\" role=\"progressbar\" hx-swap-oob=\"true\" style=\"width: " + message + ";height:5px;\" aria-valuenow=\""+ message +"\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div><div id=\"torrent-stats\" class=\"container\"> <div class=\"row\"> <div class=\"col\"> <p class=\"text-body-secondary\">" + message + "</p></div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-down\"></i> "+ downloaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-up\"></i> "+ uploaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">"+peerCount+"P</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">ETA "+remainingTime+"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">Elapsed "+elapsedTime+"</p> </div> </div> </div>";
             session.sendMessage(new TextMessage(webResponse));
             if (message.equals("100%")) {
                 session.close();

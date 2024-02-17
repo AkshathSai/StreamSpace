@@ -21,6 +21,12 @@
                     <div class="col">
                         <p class="text-body-secondary">P</p>
                     </div>
+                    <div class="col">
+                        <p class="text-body-secondary">ETA</p>
+                    </div>
+                    <div class="col">
+                        <p class="text-body-secondary">Elapsed</p>
+                    </div>
                 </div>
             </div>
 
@@ -39,3 +45,41 @@
     </a>
 
 </div>
+
+
+<div th:fragment="downloadTorrent" id="downloadTorrent">
+
+    <form id="submit-torrentHash" class="mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
+
+        <div class="form-group">
+            <label for="selectedOption">Torrent Hash</label>
+            <input type="text" class="form-control" id="selectedOption" name="selectedOption" aria-describedby="torrentHashHelp" placeholder="Torrent Hash">
+            <small id="torrentHashHelp" class="form-text text-muted">Please enter the TorrentHash/InfoHash to begin the torrent download.</small>
+        </div>
+
+        <div class="form-check text-muted">
+            <input class="form-check-input" type="checkbox" id="sequentialCheck" name="sequentialCheck">
+            <label class="form-check-label" for="sequentialCheck">
+                Sequential
+            </label>
+            <!-- CSRF Token -->
+            <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+        </div>
+
+        <button type="submit" hx-on="htmx:afterSwap" class="btn btn-primary">Download</button>
+    </form>
+
+    <script>
+
+        document.getElementById("downloadTorrent").addEventListener('htmx:afterSwap', function (event) {
+            var torrentHash = document.getElementById('torrentHash').value;
+            console.log(torrentHash);
+            var connectUrl = '/download-progress?torrentHash=' + torrentHash;
+            document.getElementById('ws-connect').setAttribute('ws-connect', connectUrl);
+        });
+
+    </script>
+
+</div>
+
+

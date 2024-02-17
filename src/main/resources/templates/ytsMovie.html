@@ -30,7 +30,7 @@
           <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
             <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
                     th:value="${url.hash()}"
-                    th:text="${url.quality() + ' [' + url.size() + ']'}"></option>
+                    th:text="${url.quality() + '.' + url.video_codec() + ' [' + url.size() + '] - ' + url.audio_channels() + ' - ' + url.bit_depth() + 'bit'}"></option>
             <!-- th:text="${url.quality() + ' [' + url.size() + ']' + ' Peers ' + url.peers() + ' Seeds ' + url.seeds()}"></option>-->
           </select>
 

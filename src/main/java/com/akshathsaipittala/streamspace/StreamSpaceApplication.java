@@ -6,8 +6,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.security.Security;
-
 @EnableAsync
 @EnableCaching
 @EnableScheduling
@@ -16,7 +14,6 @@ public class StreamSpaceApplication {
 
 	public static void main(String[] args) {
 
-		Security.setProperty("crypto.policy", "unlimited");
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
 			System.setProperty("java.net.preferIPv4Stack", "true");
 		}

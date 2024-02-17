@@ -1,5 +1,7 @@
 package com.akshathsaipittala.streamspace.indexer;
 
+import bt.metainfo.TorrentFile;
+import bt.metainfo.TorrentId;
 import com.akshathsaipittala.streamspace.entity.Movie;
 import com.akshathsaipittala.streamspace.entity.Music;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
@@ -30,22 +32,57 @@ import java.util.function.UnaryOperator;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LocalMediaIndexer {
+public class MediaIndexer {
+
+    private final UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
+    private final Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
 
     final MediaLibrary mediaLibrary;
     final RuntimeHelper runtimeHelper;
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
+    public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
+        log.info("FileName {}", fileName);
+        log.info("TorrentName {}", torrentName);
+        Movie movie = new Movie();
+        log.info("Size {}", file.getSize());
+        movie.setContentLength(file.getSize());
+        movie.setName(fileName);
+        movie.setSummary(fileName);
+        movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        movie.setMovieCode(torrentId.toString().toUpperCase());
+        movie.setMediaSource(ApplicationConstants.TORRENT);
+        mediaLibrary.getMovies().add(movie);
+        movieRepository.save(movie);
+        log.info("{}", movie);
+    }
+
+    public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
+        log.info("FileName {}", fileName);
+        log.info("TorrentName {}", torrentName);
+        Music music = new Music();
+        log.info("Size {}", file.getSize());
+        music.setContentLength(file.getSize());
+        music.setName(fileName);
+        music.setSummary(fileName);
+        music.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        music.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        music.setMusicId(torrentId.toString().toUpperCase());
+        music.setMediaSource(ApplicationConstants.TORRENT);
+        mediaLibrary.getMusic().add(music);
+        musicRepository.save(music);
+        log.info("{}", music);
+    }
+
     /**
      * Concurrent indexer
      */
-    public void indexMedia() throws IOException {
-
-        findLocalMediaFiles(
-                runtimeHelper.getMoviesFolderPath(),
-                runtimeHelper.getMusicFolderPath()
-        )
+    public void indexLocalMedia(String... locations) throws IOException {
+        findLocalMediaFiles(locations)
                 .thenApply(paths -> {
                     List<Path> musicPaths = paths.parallelStream()
                             .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
@@ -83,7 +120,7 @@ public class LocalMediaIndexer {
                 });
     }
 
-    public CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
+    private CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
         final String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
 
         List<Path> matchingPaths = new ArrayList<>();
@@ -188,8 +225,5 @@ public class LocalMediaIndexer {
 
         return musicList;
     }
-
-    UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
-    Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
 
 }

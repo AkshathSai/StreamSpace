@@ -3,7 +3,7 @@ package com.akshathsaipittala.streamspace.indexer;
 import bt.metainfo.TorrentFile;
 import bt.metainfo.TorrentId;
 import com.akshathsaipittala.streamspace.entity.Movie;
-import com.akshathsaipittala.streamspace.entity.Music;
+import com.akshathsaipittala.streamspace.entity.Song;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
@@ -46,7 +46,6 @@ public class MediaIndexer {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
         Movie movie = new Movie();
-        log.info("Size {}", file.getSize());
         movie.setContentLength(file.getSize());
         movie.setName(fileName);
         movie.setSummary(fileName);
@@ -63,19 +62,18 @@ public class MediaIndexer {
     public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
-        Music music = new Music();
-        log.info("Size {}", file.getSize());
-        music.setContentLength(file.getSize());
-        music.setName(fileName);
-        music.setSummary(fileName);
-        music.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        Song song = new Song();
+        song.setContentLength(file.getSize());
+        song.setName(fileName);
+        song.setSummary(fileName);
+        song.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-        music.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-        music.setMusicId(torrentId.toString().toUpperCase());
-        music.setMediaSource(ApplicationConstants.TORRENT);
-        mediaLibrary.getMusic().add(music);
-        musicRepository.save(music);
-        log.info("{}", music);
+        song.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        song.setSongId(torrentId.toString().toUpperCase());
+        song.setMediaSource(ApplicationConstants.TORRENT);
+        mediaLibrary.getSongs().add(song);
+        musicRepository.save(song);
+        log.info("{}", song);
     }
 
     /**
@@ -93,22 +91,22 @@ public class MediaIndexer {
                             .toList();
 
                     List<Movie> finalMovies;
-                    List<Music> finalMusic;
+                    List<Song> finalSongs;
                     try {
                         finalMovies = createMovieEntities(moviePaths);
-                        finalMusic = createMusicEntities(musicPaths);
+                        finalSongs = createMusicEntities(musicPaths);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                     mediaLibrary.setMovies(finalMovies);
-                    mediaLibrary.setMusic(finalMusic);
+                    mediaLibrary.setSongs(finalSongs);
 
                     // Save entities to the database asynchronously
                     CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
                                     movieRepository.saveAll(finalMovies))
                             .thenRun(() -> log.info("Finished Indexing Movies"));
                     CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
-                                    musicRepository.saveAll(finalMusic))
+                                    musicRepository.saveAll(finalSongs))
                             .thenRun(() -> log.info("Finished Indexing Music"));
 
                     // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete
@@ -188,12 +186,12 @@ public class MediaIndexer {
         return moviesList;
     }
 
-    private List<Music> createMusicEntities(List<Path> paths) throws IOException {
+    private List<Song> createMusicEntities(List<Path> paths) throws IOException {
 
-        List<Music> musicList = new ArrayList<>();
+        List<Song> songs = new ArrayList<>();
 
         for (Path entry : paths) {
-            Music music = new Music();
+            Song song = new Song();
             log.debug(entry.toString());
 
             // Get the immediate parent folder name
@@ -213,17 +211,17 @@ public class MediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
-            music.setName(encodedFileName);
-            music.setContentLength(Files.size(entry));
-            music.setSummary(entry.getFileName().toString());
-            music.setContentId(decodePathSegment.apply(contentStoreDir));
-            music.setContentMimeType(decodeContentType.apply(entry));
-            music.setMusicId(encodedFileName);
-            music.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
-            musicList.add(music);
+            song.setName(encodedFileName);
+            song.setContentLength(Files.size(entry));
+            song.setSummary(entry.getFileName().toString());
+            song.setContentId(decodePathSegment.apply(contentStoreDir));
+            song.setContentMimeType(decodeContentType.apply(entry));
+            song.setSongId(encodedFileName);
+            song.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
+            songs.add(song);
         }
 
-        return musicList;
+        return songs;
     }
 
 }

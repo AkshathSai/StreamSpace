@@ -73,8 +73,8 @@ public class SessionStateLogger {
                         String.format(RATE_FORMAT, downRate.getQuantity(), downRate.getMeasureUnit()),
                         String.format(RATE_FORMAT, upRate.getQuantity(), upRate.getMeasureUnit()),
                         peerCount,
-                        String.format("%s", remainingTime),
-                        String.format("%s", elapsedTime));
+                        String.format("%s", remainingTime));
+                //log.info(String.format("%s", elapsedTime));
             }
 
             boolean complete = (sessionState.getPiecesRemaining() == 0);

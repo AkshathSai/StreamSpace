@@ -32,8 +32,7 @@ public class APIClientBuilder {
     @Bean
     YTSAPIClient ytsapiClient(RestClient restClient) {
         return HttpServiceProxyFactory
-                .builder()
-                .exchangeAdapter(RestClientAdapter.create(restClient))
+                .builderFor(RestClientAdapter.create(restClient))
                 .build()
                 .createClient(YTSAPIClient.class);
     }
@@ -41,8 +40,7 @@ public class APIClientBuilder {
     @Bean
     APIBayClient apiBayClient(RestClient restClient) {
         return HttpServiceProxyFactory
-                .builder()
-                .exchangeAdapter(RestClientAdapter.create(restClient))
+                .builderFor(RestClientAdapter.create(restClient))
                 .build()
                 .createClient(APIBayClient.class);
     }

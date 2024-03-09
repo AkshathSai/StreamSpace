@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016—2021 Andrei Tomashpolskiy and individual contributors.
+ * Copyright (c) 2016—2024 Akshath Sai Pittala, Andrei Tomashpolskiy and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,11 @@
 
 package com.akshathsaipittala.streamspace.services.torrentengine;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.File;
 
-@Setter
-@Getter
+@Data
 public class Options {
 
     private File metainfoFile;
@@ -40,57 +38,4 @@ public class Options {
     private Integer dhtPort;
     private boolean downloadAllFiles;
 
-    public Options(File metainfoFile,
-                   String magnetUri,
-                   File targetDirectory,
-                   boolean seedAfterDownloaded,
-                   boolean sequential,
-                   boolean enforceEncryption,
-                   boolean disableUi,
-                   boolean disableTorrentStateLogs,
-                   boolean verboseLogging,
-                   boolean traceLogging,
-                   String iface,
-                   Integer port,
-                   Integer dhtPort,
-                   boolean downloadAllFiles) {
-        this.metainfoFile = metainfoFile;
-        this.magnetUri = magnetUri;
-        this.targetDirectory = targetDirectory;
-        this.seedAfterDownloaded = seedAfterDownloaded;
-        this.sequential = sequential;
-        this.enforceEncryption = enforceEncryption;
-        this.disableUi = disableUi;
-        this.disableTorrentStateLogs = disableTorrentStateLogs;
-        this.verboseLogging = verboseLogging;
-        this.traceLogging = traceLogging;
-        this.iface = iface;
-        this.port = port;
-        this.dhtPort = dhtPort;
-        this.downloadAllFiles = downloadAllFiles;
-    }
-
-    public boolean shouldSeedAfterDownloaded() {
-        return seedAfterDownloaded;
-    }
-
-    public boolean downloadSequentially() {
-        return sequential;
-    }
-
-    public boolean enforceEncryption() {
-        return enforceEncryption;
-    }
-
-    public boolean shouldDisableTorrentStateLogs() {
-        return disableTorrentStateLogs;
-    }
-
-    public Integer getDHTPort() {
-        return dhtPort;
-    }
-
-    public boolean shouldDownloadAllFiles() {
-        return downloadAllFiles;
-    }
 }

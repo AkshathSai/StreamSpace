@@ -1,7 +1,7 @@
 package com.akshathsaipittala.streamspace.indexer;
 
 import com.akshathsaipittala.streamspace.entity.Movie;
-import com.akshathsaipittala.streamspace.entity.Music;
+import com.akshathsaipittala.streamspace.entity.Song;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,10 @@ import java.util.List;
 public class MediaLibrary {
 
     private List<Movie> movies;
-    private List<Music> music;
+    private List<Song> songs;
 
-    public MediaLibrary(List<Movie> movies, List<Music> music) {
+    public MediaLibrary(List<Movie> movies, List<Song> songs) {
         this.movies = movies;
-        this.music = music;
+        this.songs = songs;
     }
 }

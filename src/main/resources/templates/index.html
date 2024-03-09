@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Space</title>
+    <!--    <link rel="stylesheet" th:href="@{/css/ZegoeLight-U.css}">-->
     <!-- Bootstrap CSS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <!-- Bootstrap JS -->
@@ -15,6 +16,9 @@
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
     <style>
+        /** {
+            font-family:'ZegoeLight-U';
+        }*/
         .card {
             border: none;
         }
@@ -155,6 +159,7 @@
         .dark {
             background-color: black;
             color: white;
+
         }
     </style>
 </head>
@@ -316,7 +321,8 @@
                            hx-boost="true"
                            hx-target="#movies"
                            hx-swap="transition:true"
-                           hx-push-url="true">
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
                             <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
                         </a>
                     </div>
@@ -335,7 +341,8 @@
                            hx-boost="true"
                            hx-target="#movies"
                            hx-swap="transition:true"
-                           hx-push-url="true">
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
                             <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
                         </a>
                     </div>
@@ -355,7 +362,8 @@
                            hx-boost="true"
                            hx-target="#movies"
                            hx-swap="transition:true"
-                           hx-push-url="true">
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
                             <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
                         </a>
                     </div>
@@ -374,7 +382,8 @@
                            hx-boost="true"
                            hx-target="#movies"
                            hx-swap="transition:true"
-                           hx-push-url="true">
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
                             <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
                         </a>
                     </div>
@@ -393,7 +402,8 @@
                            hx-boost="true"
                            hx-target="#movies"
                            hx-swap="transition:true"
-                           hx-push-url="true">
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
                             <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
                         </a>
                     </div>

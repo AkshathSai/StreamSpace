@@ -26,30 +26,13 @@ public class TorrentDownloadService {
     final RuntimeHelper runtimeHelper;
     final DownloadTaskRepository downloadTaskRepository;
     final TorrentProgressHandler torrentProgressHandler;
-    final RandomizedDownloader randomizedDownloader;
-    final SequentialDownloader sequentialDownloader;
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
     @Async
     public void startDownload(DownloadTask downloadTask) {
 
-        Options options = new Options(null,
-                TorrentUtils.createMagnetUri(downloadTask.getTorrentHash()),
-                //downloadTask.getDownloadLocation(),
-                //new File(runtimeHelper.getMoviesFolderPath()),
-                new File(runtimeHelper.getMediaFolders().get(downloadTask.getMediaType())),
-                false,
-                downloadTask.getDownloadType() == DOWNLOADTYPE.SEQUENTIAL,
-                true,
-                true,
-                false,
-                false,
-                false,
-                null,
-                null,
-                null,
-                true);
+        Options options = downloadTaskToOptions(downloadTask);
 
         try {
             TorrentClient.startEngine(options);
@@ -59,6 +42,30 @@ public class TorrentDownloadService {
             log.error(e.getMessage());
         }
 
+    }
+
+    public Options downloadTaskToOptions(DownloadTask downloadTask) {
+        Options options = new Options();
+        //options.setMetainfoFile(null);
+        options.setMagnetUri(TorrentUtils.createMagnetUri(downloadTask.getTorrentHash()));
+        options.setTargetDirectory(new File(runtimeHelper.getMediaFolders().get(downloadTask.getMediaType())));
+        options.setSeedAfterDownloaded(false);
+        options.setSequential(downloadTask.getDownloadType() == DOWNLOADTYPE.SEQUENTIAL);
+        options.setEnforceEncryption(true);
+        options.setDisableUi(true);
+        options.setDisableTorrentStateLogs(false);
+        options.setVerboseLogging(false);
+        options.setTraceLogging(false);
+        //options.setIface(null);
+        try {
+            options.setPort(TorrentUtils.getRandomFreePort());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //options.setDhtPort(null);
+        options.setDownloadAllFiles(true);
+        log.info("{}", options);
+        return options;
     }
 
 }

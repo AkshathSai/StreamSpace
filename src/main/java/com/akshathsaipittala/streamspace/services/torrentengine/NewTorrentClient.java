@@ -1,19 +1,13 @@
-/*
- * Copyright (c) 2016—2024 Akshath Sai Pittala, Andrei Tomashpolskiy and individual contributors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.akshathsaipittala.streamspace.services.torrentengine;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.security.Security;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import bt.Bt;
 import bt.BtClientBuilder;
@@ -29,36 +23,23 @@ import bt.runtime.Config;
 import bt.torrent.selector.PieceSelector;
 import bt.torrent.selector.RarestFirstSelector;
 import bt.torrent.selector.SequentialSelector;
-import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
-import com.akshathsaipittala.streamspace.listener.ApplicationContextProvider;
 import com.google.inject.Module;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.File;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.security.Security;
-import java.util.Optional;
-import java.util.function.Supplier;
+//import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-public class TorrentClient {
-
-    public static void startEngine(Options options) {
-        new TorrentClient(options).resume();
-    }
-
-    private Options options;
+//@Service
+//@Scope("prototype")
+public class NewTorrentClient {
 
     private BtRuntime runtime;
     private BtClient client;
-    private Optional<SessionStateLogger> torrentStateLogger;
     private boolean running;
-    private MediaIndexer mediaIndexer = ApplicationContextProvider.getApplicationContext().getBean(MediaIndexer .class);
+    private Options options;
+    private Optional<SessionStateLogger> torrentStateLogger;
 
-    private TorrentClient(Options options) {
+    public void startTorrent(Options options) {
         this.options = options;
 
         configureSecurity();
@@ -85,7 +66,7 @@ public class TorrentClient {
 
             @Override
             public EncryptionPolicy getEncryptionPolicy() {
-                return options.isEnforceEncryption()? EncryptionPolicy.REQUIRE_ENCRYPTED : EncryptionPolicy.PREFER_PLAINTEXT;
+                return options.isEnforceEncryption() ? EncryptionPolicy.REQUIRE_ENCRYPTED : EncryptionPolicy.PREFER_PLAINTEXT;
             }
         };
 
@@ -113,7 +94,8 @@ public class TorrentClient {
 
         BtClientBuilder clientBuilder = Bt.client(runtime)
                 .storage(storage)
-                .selector(selector);
+                .selector(selector)
+                .stopWhenDownloaded(); // new
 
         SessionStateLogger torrentStateLogger = options.isDisableTorrentStateLogs() ?
                 null : new SessionStateLogger();
@@ -129,8 +111,10 @@ public class TorrentClient {
                     file.getPathElements().forEach(fileName -> {
                                 if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv") || fileName.endsWith(".avi")) {
                                     // mediaIndexer.indexMovie(file, torrentName, fileName, torrentId);
+                                    log.info("Video {}", fileName);
                                 } else if (fileName.endsWith(".mp3") || fileName.endsWith(".flac")) {
                                     // mediaIndexer.indexMusic(file, torrentName, fileName, torrentId);
+                                    log.info("Audio {}", fileName);
                                 } else {
                                     // noop for OTHERS
                                     log.info("OTHERS {}", fileName);
@@ -150,10 +134,57 @@ public class TorrentClient {
             clientBuilder = clientBuilder.magnet(options.getMagnetUri());
         } else {
             throw new IllegalStateException("Torrent file or magnet URI is required");
+            //log.error("Torrent file or magnet URI is required");
+            //return;
         }
 
         this.client = clientBuilder.build();
         this.torrentStateLogger = Optional.ofNullable(torrentStateLogger);
+        resume();
+    }
+
+    public void pauseTorrent() {
+        if (!running) {
+            log.warn("Torrent client is not running.");
+            return;
+        }
+
+        try {
+            client.stop();
+            running = false;
+        } catch (Throwable e) {
+            log.warn("Unexpected error when stopping client", e);
+        }
+    }
+
+    public void resumeTorrent() {
+        if (running) {
+            log.warn("Torrent client is already running.");
+            return;
+        }
+
+        resume();
+    }
+
+    private void resume() {
+        running = true;
+        try {
+            client.startAsync(state -> {
+
+                torrentStateLogger.ifPresent(p -> p.printTorrentState(state));
+
+                if (!options.isSeedAfterDownloaded() && state.getPiecesRemaining() == 0) {
+                    torrentStateLogger = Optional.empty(); // mark for garbage collection
+                    //runtime.shutdown();
+                }
+            }, 5000).whenComplete((r, t) -> {
+                if (t != null) {
+                    throw new RuntimeException(t);
+                }
+            });
+        } catch (Throwable e) {
+            printAndShutdown(e);
+        }
     }
 
     private Optional<Integer> getPortOverride() {
@@ -206,55 +237,6 @@ public class TorrentClient {
         }
     }
 
-    void resume() {
-        if (running) {
-            return;
-        }
-
-        running = true;
-        try {
-            client
-                    .startAsync(state -> {
-
-                        torrentStateLogger.ifPresent(p -> p.printTorrentState(state));
-
-                        if (!options.isSeedAfterDownloaded() && state.getPiecesRemaining() == 0) {
-                            torrentStateLogger = Optional.empty(); // mark for garbage collection
-                            runtime.shutdown();
-                        }
-                    }, 5000)
-                    .whenComplete((r, t) -> {
-                        if (t != null) {
-                            throw new RuntimeException(t);
-                        }
-                    });
-        } catch (Throwable e) {
-            printAndShutdown(e);
-        }
-    }
-
-    void pause() {
-        if (!running) {
-            return;
-        }
-
-        try {
-            client.stop();
-        } catch (Throwable e) {
-            log.warn("Unexpected error when stopping client", e);
-        } finally {
-            running = false;
-        }
-    }
-
-    private void togglePause() {
-        if (running) {
-            pause();
-        } else {
-            resume();
-        }
-    }
-
     private static void printAndShutdown(Throwable e) {
         // ignore interruptions on shutdown
         if (!(e instanceof InterruptedException)) {
@@ -262,5 +244,5 @@ public class TorrentClient {
         }
         System.exit(1);
     }
-
 }
+

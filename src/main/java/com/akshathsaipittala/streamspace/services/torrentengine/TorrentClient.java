@@ -128,12 +128,14 @@ public class TorrentClient {
                     // Set the custom filename for the file
                     file.getPathElements().forEach(fileName -> {
                                 if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv") || fileName.endsWith(".avi")) {
-                                    // mediaIndexer.indexMovie(file, torrentName, fileName, torrentId);
+                                    mediaIndexer.indexMovie(file, torrentName, fileName, torrentId);
+                                    log.info("Video {}", fileName);
                                 } else if (fileName.endsWith(".mp3") || fileName.endsWith(".flac")) {
                                     // mediaIndexer.indexMusic(file, torrentName, fileName, torrentId);
+                                    log.info("Audio {}", fileName);
                                 } else {
                                     // noop for OTHERS
-                                    log.info("OTHERS {}", fileName);
+                                    log.info("Others {}", fileName);
                                 }
                             }
                     );

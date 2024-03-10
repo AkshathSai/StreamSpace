@@ -1,6 +1,5 @@
-package com.akshathsaipittala.streamspace.services;
+package com.akshathsaipittala.streamspace.services.background;
 
-import com.akshathsaipittala.streamspace.services.torrentengine.NewTorrentClient;
 import com.akshathsaipittala.streamspace.services.torrentengine.Options;
 import com.akshathsaipittala.streamspace.services.torrentengine.TorrentClient;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +9,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BackgroundDownloadTask {
 
-    //private final NewTorrentClient newTorrentClient;
-
     public void startDownload(Options options) {
-        //TorrentClient.startEngine(options);
-        NewTorrentClient newTorrentClient = new NewTorrentClient();
-        newTorrentClient.startTorrent(options);
+        TorrentClient.startEngine(options);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services;
+package com.akshathsaipittala.streamspace.services.background;
 
 import com.akshathsaipittala.streamspace.entity.CONTENTTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
@@ -24,7 +24,7 @@ import java.util.List;
 @Async
 @Slf4j
 @Service
-public class ForegroundServices {
+public class BackgroundServices {
 
     @Lazy
     @Autowired
@@ -63,7 +63,7 @@ public class ForegroundServices {
             }
         });
 
-        startBackgroundDownloads();
+        // startBackgroundDownloads();
 
         // 3C88F31D82729DBF83A702BD536A376B23DB5EC6
     }

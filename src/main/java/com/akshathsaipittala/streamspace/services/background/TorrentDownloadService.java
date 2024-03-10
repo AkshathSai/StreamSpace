@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services;
+package com.akshathsaipittala.streamspace.services.background;
 
 import com.akshathsaipittala.streamspace.entity.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
@@ -8,6 +8,7 @@ import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.services.torrentengine.Options;
 import com.akshathsaipittala.streamspace.services.torrentengine.TorrentClient;
+import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
 import com.akshathsaipittala.streamspace.utils.TorrentUtils;
@@ -60,7 +61,8 @@ public class TorrentDownloadService {
         try {
             options.setPort(TorrentUtils.getRandomFreePort());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error opening random free port falling back to 6891 " + e);
+            options.setPort(ApplicationConstants.ports[0]);
         }
         //options.setDhtPort(null);
         options.setDownloadAllFiles(true);

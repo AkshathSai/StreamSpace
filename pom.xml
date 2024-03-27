@@ -96,17 +96,6 @@
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jobrunr</groupId>
-			<artifactId>jobrunr-spring-boot-3-starter</artifactId>
-			<version>6.3.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.ow2.asm</groupId>
-					<artifactId>asm</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.17.2</version>

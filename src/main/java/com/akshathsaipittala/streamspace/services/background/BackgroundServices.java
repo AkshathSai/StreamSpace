@@ -5,11 +5,9 @@ import com.akshathsaipittala.streamspace.entity.DownloadTask;
 import com.akshathsaipittala.streamspace.entity.STATUS;
 import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
-import com.akshathsaipittala.streamspace.services.torrentengine.Options;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
@@ -42,12 +40,6 @@ public class BackgroundServices {
     @Autowired
     private TorrentDownloadService torrentDownloadService;
 
-    @Autowired
-    private JobScheduler jobScheduler;
-
-    @Autowired
-    BackgroundDownloadTask backgroundDownloadTask;
-
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
 
@@ -58,14 +50,12 @@ public class BackgroundServices {
                         runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
                         runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
                 );
+                startBackgroundDownloads();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        // startBackgroundDownloads();
-
-        // 3C88F31D82729DBF83A702BD536A376B23DB5EC6
     }
 
     private void startBackgroundDownloads() {
@@ -75,13 +65,10 @@ public class BackgroundServices {
         downloadTasks.addAll(downloadTasksRepo.findAllByTaskStatus(STATUS.NEW));
 
         downloadTasks.forEach(downloadTask -> {
-            Options options = torrentDownloadService.downloadTaskToOptions(downloadTask);
-            jobScheduler.enqueue(() -> backgroundDownloadTask.startDownload(options));
-            downloadTask.setTaskStatus(STATUS.INPROGRESS);
+            torrentDownloadService.startDownload(downloadTask);
         });
 
         // runAsStructuredConcurrent(downloadTasks);
-        downloadTasksRepo.saveAll(downloadTasks);
     }
 
     /*private void runAsStructuredConcurrent(List<BackgroundDownloadTask> backgroundDownloadTasks) {

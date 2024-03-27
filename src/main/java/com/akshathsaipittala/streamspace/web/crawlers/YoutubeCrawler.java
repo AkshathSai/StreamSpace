@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 @Slf4j
 @Service
-public class YoutubeCrawlerService {
+public class YoutubeCrawler {
 
     public YouTubeResponseDTO getYoutubeTrailersByTitle(String searchQuery) {
         YouTubeResponseDTO youTubeResponseDTO = null;

@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.web.api;
 
-import com.akshathsaipittala.streamspace.web.crawlers.YoutubeCrawlerService;
+import com.akshathsaipittala.streamspace.web.crawlers.YoutubeCrawler;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -18,12 +18,12 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class YouTubeAPI {
 
-    final YoutubeCrawlerService youtubeCrawlerService;
+    final YoutubeCrawler youtubeCrawler;
 
     @HxRequest
     @GetMapping("/trailer/{movie}")
     public CompletableFuture<String> getYoutubeTrailer(@PathVariable("movie") String movie, Model model) {
-        model.addAttribute("youtubeTrailers", youtubeCrawlerService.getYoutubeTrailersByTitle(movie));
+        model.addAttribute("youtubeTrailers", youtubeCrawler.getYoutubeTrailersByTitle(movie));
         return CompletableFuture.completedFuture("youtubetrailer");
     }
 

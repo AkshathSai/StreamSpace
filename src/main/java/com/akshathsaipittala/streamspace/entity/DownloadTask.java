@@ -2,11 +2,12 @@ package com.akshathsaipittala.streamspace.entity;
 
 import com.akshathsaipittala.streamspace.listener.DownloadTaskListener;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,6 +30,8 @@ public class DownloadTask extends AbstractAggregateRoot<DownloadTask> {
     private CONTENTTYPE mediaType;
     @Enumerated(EnumType.STRING)
     private DOWNLOADTYPE downloadType;
+    @CreatedDate
+    private Date createdDate;
 
     public DownloadTask(String torrentHash, String torrentName, String movieCode, STATUS taskStatus, CONTENTTYPE mediaType, DOWNLOADTYPE downloadType) {
         this.torrentHash = torrentHash;
@@ -37,5 +40,6 @@ public class DownloadTask extends AbstractAggregateRoot<DownloadTask> {
         this.taskStatus = taskStatus;
         this.mediaType = mediaType;
         this.downloadType = downloadType;
+        this.createdDate = Date.valueOf(LocalDate.now());
     }
 }

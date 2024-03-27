@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface DownloadTaskRepository extends JpaRepository<DownloadTask, Long> {
 
-    List<DownloadTask> findByTaskStatus(STATUS taskStatus);
+    List<DownloadTask> findAllByTaskStatus(STATUS taskStatus);
 
     DownloadTask findByTorrentHash(String torrentHash);
 }

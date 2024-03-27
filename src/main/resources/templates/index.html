@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Space</title>
+    <!--    <link rel="stylesheet" th:href="@{/css/ZegoeLight-U.css}">-->
     <!-- Bootstrap CSS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <!-- Bootstrap JS -->
@@ -15,19 +16,12 @@
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
     <style>
-        .thumbnail
-        {
-            width: 200px;
-            height: 310px;
-            overflow: hidden;
-            margin: auto;
+        /** {
+            font-family:'ZegoeLight-U';
+        }*/
+        .card {
+            border: none;
         }
-        .thumbnail img {
-            width: 164px;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .globalProgress {
             position: fixed;
             top: 0;
@@ -165,6 +159,7 @@
         .dark {
             background-color: black;
             color: white;
+
         }
     </style>
 </head>
@@ -300,42 +295,121 @@
 
                     <!--This is movies content-->
 
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">Most Watched</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='mostwatched')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-indicator=".globalProgress"
+                           hx-push-url="true">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
+                    </div>
+
                     <div id="most-watched-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsMostWatched"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
-                        <!--Loading most watched movies...-->
+                        <!-- Loading most watched movies...-->
+                    </div>
+
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">Latest Movies</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='latest')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
                     </div>
 
                     <div id="latest-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsLatest"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
                         <!--Loading Latest movies...-->
                     </div>
 
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">Most Liked</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='mostliked')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
+                    </div>
+
                     <div id="most-liked-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsMostLiked"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
                         <!--Loading Most Liked movies...-->
                     </div>
 
+
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">IMDB Highest Rated</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='imdbrating')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
+                    </div>
+
                     <div id="imdb-highest-rated-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsImdbRating"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
                         <!--Loading IMDB Highest Rated movies...-->
                     </div>
 
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">Latest Comedies</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='latestcomedies')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
+                    </div>
+
                     <div id="latest-comedy-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsLatestComedies"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
                         <!--Loading Latest Comedies...-->
                     </div>
 
+                    <div class="card-body d-flex align-items-center">
+                        <p class="card-title lead mb-0">Must Watch</p>
+                        <a hx:get="@{/yts/movies/cat/{category}(category='mustwatch')}"
+                           hx-boost="true"
+                           hx-target="#movies"
+                           hx-swap="transition:true"
+                           hx-push-url="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-chevron-compact-right" style="cursor: pointer"></i>
+                        </a>
+                    </div>
+
                     <div id="must-watch-movies"
+                         class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 active show"
                          hx-get="/yts/ytsMustWatch"
                          hx-trigger="click from:#movies-tab"
                          hx-indicator=".globalProgress">
@@ -366,7 +440,10 @@
                 </div>
                 <div class="tab-pane fade" id="playlist" role="tabpanel" aria-labelledby="playlist-tab">
 
-                    Coming soon
+                    <div id="getDownloadForm" hx-get="/download/form" hx-boost="true" hx-trigger="click from:#playlist-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
+
+
+                    </div>
 
                 </div>
             </div>

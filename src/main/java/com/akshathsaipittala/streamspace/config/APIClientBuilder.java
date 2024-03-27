@@ -9,21 +9,30 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+import java.net.http.HttpClient;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Configuration
 public class APIClientBuilder {
+
+    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .executor(executorService)
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build();
 
     @Bean
     RestClient restClient(RestClient.Builder builder) {
         return builder
-                .requestFactory(new JdkClientHttpRequestFactory())
+                .requestFactory(new JdkClientHttpRequestFactory(httpClient))
                 .build();
     }
 
     @Bean
     YTSAPIClient ytsapiClient(RestClient restClient) {
         return HttpServiceProxyFactory
-                .builder()
-                .exchangeAdapter(RestClientAdapter.create(restClient))
+                .builderFor(RestClientAdapter.create(restClient))
                 .build()
                 .createClient(YTSAPIClient.class);
     }
@@ -31,8 +40,7 @@ public class APIClientBuilder {
     @Bean
     APIBayClient apiBayClient(RestClient restClient) {
         return HttpServiceProxyFactory
-                .builder()
-                .exchangeAdapter(RestClientAdapter.create(restClient))
+                .builderFor(RestClientAdapter.create(restClient))
                 .build()
                 .createClient(APIBayClient.class);
     }

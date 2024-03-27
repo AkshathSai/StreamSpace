@@ -1,5 +1,6 @@
 package com.akshathsaipittala.streamspace.utils;
 
+import com.akshathsaipittala.streamspace.entity.CONTENTTYPE;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Getter
@@ -17,6 +20,7 @@ import java.io.File;
 @Component
 public class RuntimeHelper {
 
+    private final Map<CONTENTTYPE, String> mediaFolders = new ConcurrentHashMap<>(3);
     private String userHomePath = System.getProperty("user.home");
     private String downloadsFolderPath;
     private String musicFolderPath;
@@ -55,6 +59,9 @@ public class RuntimeHelper {
         log.info("Downloads: {}", downloadsFolderPath);
         log.info("MUSIC: {}", musicContentStore);
         log.info("MOVIES: {}", moviesContentStore);
+        mediaFolders.put(CONTENTTYPE.VIDEO, moviesFolderPath);
+        mediaFolders.put(CONTENTTYPE.AUDIO, musicFolderPath);
+        mediaFolders.put(CONTENTTYPE.OTHER, downloadsFolderPath);
     }
 
 }

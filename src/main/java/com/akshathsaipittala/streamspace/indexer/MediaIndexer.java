@@ -1,7 +1,9 @@
 package com.akshathsaipittala.streamspace.indexer;
 
+import bt.metainfo.TorrentFile;
+import bt.metainfo.TorrentId;
 import com.akshathsaipittala.streamspace.entity.Movie;
-import com.akshathsaipittala.streamspace.entity.Music;
+import com.akshathsaipittala.streamspace.entity.Song;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
@@ -30,22 +32,55 @@ import java.util.function.UnaryOperator;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LocalMediaIndexer {
+public class MediaIndexer {
+
+    private final UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
+    private final Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
 
     final MediaLibrary mediaLibrary;
     final RuntimeHelper runtimeHelper;
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
+    public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
+        log.info("FileName {}", fileName);
+        log.info("TorrentName {}", torrentName);
+        Movie movie = new Movie();
+        movie.setContentLength(file.getSize());
+        movie.setName(fileName);
+        movie.setSummary(fileName);
+        movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        movie.setMovieCode(torrentId.toString().toUpperCase());
+        movie.setMediaSource(ApplicationConstants.TORRENT);
+        mediaLibrary.getMovies().add(movie);
+        movieRepository.save(movie);
+        log.info("{}", movie);
+    }
+
+    public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
+        log.info("FileName {}", fileName);
+        log.info("TorrentName {}", torrentName);
+        Song song = new Song();
+        song.setContentLength(file.getSize());
+        song.setName(fileName);
+        song.setSummary(fileName);
+        song.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        song.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+        song.setSongId(torrentId.toString().toUpperCase());
+        song.setMediaSource(ApplicationConstants.TORRENT);
+        mediaLibrary.getSongs().add(song);
+        musicRepository.save(song);
+        log.info("{}", song);
+    }
+
     /**
      * Concurrent indexer
      */
-    public void indexMedia() throws IOException {
-
-        findLocalMediaFiles(
-                runtimeHelper.getMoviesFolderPath(),
-                runtimeHelper.getMusicFolderPath()
-        )
+    public void indexLocalMedia(String... locations) throws IOException {
+        findLocalMediaFiles(locations)
                 .thenApply(paths -> {
                     List<Path> musicPaths = paths.parallelStream()
                             .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
@@ -56,22 +91,22 @@ public class LocalMediaIndexer {
                             .toList();
 
                     List<Movie> finalMovies;
-                    List<Music> finalMusic;
+                    List<Song> finalSongs;
                     try {
                         finalMovies = createMovieEntities(moviePaths);
-                        finalMusic = createMusicEntities(musicPaths);
+                        finalSongs = createMusicEntities(musicPaths);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                     mediaLibrary.setMovies(finalMovies);
-                    mediaLibrary.setMusic(finalMusic);
+                    mediaLibrary.setSongs(finalSongs);
 
                     // Save entities to the database asynchronously
                     CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
                                     movieRepository.saveAll(finalMovies))
                             .thenRun(() -> log.info("Finished Indexing Movies"));
                     CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
-                                    musicRepository.saveAll(finalMusic))
+                                    musicRepository.saveAll(finalSongs))
                             .thenRun(() -> log.info("Finished Indexing Music"));
 
                     // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete
@@ -83,7 +118,7 @@ public class LocalMediaIndexer {
                 });
     }
 
-    public CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
+    private CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
         final String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
 
         List<Path> matchingPaths = new ArrayList<>();
@@ -151,12 +186,12 @@ public class LocalMediaIndexer {
         return moviesList;
     }
 
-    private List<Music> createMusicEntities(List<Path> paths) throws IOException {
+    private List<Song> createMusicEntities(List<Path> paths) throws IOException {
 
-        List<Music> musicList = new ArrayList<>();
+        List<Song> songs = new ArrayList<>();
 
         for (Path entry : paths) {
-            Music music = new Music();
+            Song song = new Song();
             log.debug(entry.toString());
 
             // Get the immediate parent folder name
@@ -176,20 +211,17 @@ public class LocalMediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
-            music.setName(encodedFileName);
-            music.setContentLength(Files.size(entry));
-            music.setSummary(entry.getFileName().toString());
-            music.setContentId(decodePathSegment.apply(contentStoreDir));
-            music.setContentMimeType(decodeContentType.apply(entry));
-            music.setMusicId(encodedFileName);
-            music.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
-            musicList.add(music);
+            song.setName(encodedFileName);
+            song.setContentLength(Files.size(entry));
+            song.setSummary(entry.getFileName().toString());
+            song.setContentId(decodePathSegment.apply(contentStoreDir));
+            song.setContentMimeType(decodeContentType.apply(entry));
+            song.setSongId(encodedFileName);
+            song.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
+            songs.add(song);
         }
 
-        return musicList;
+        return songs;
     }
-
-    UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
-    Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
 
 }

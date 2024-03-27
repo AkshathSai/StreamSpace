@@ -7,6 +7,7 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.content.commons.annotations.ContentId;
 import org.springframework.content.commons.annotations.ContentLength;
 import org.springframework.content.commons.annotations.MimeType;
@@ -14,11 +15,13 @@ import org.springframework.content.commons.annotations.MimeType;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class Music {
+public class Song {
 
     @Id
-    private String musicId;
+    private String songId;
+    private String album;
     private String name;
     @ContentId
     private String contentId;
@@ -30,10 +33,10 @@ public class Music {
     private String mediaSource;
 
     @PrePersist
-    public void randomGenerateMusicIdIfNotSet() {
-        if (musicId == null || musicId.isEmpty()) {
+    public void randomGenerateSongIdIfNotSet() {
+        if (songId == null || songId.isEmpty()) {
             // Generate a unique movieCode here (e.g., using UUID)
-            musicId = HelperFunctions.generateUniqueCode();
+            songId = HelperFunctions.generateUniqueCode();
         }
     }
 

@@ -30,7 +30,7 @@
           <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
             <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
                     th:value="${url.hash()}"
-                    th:text="${url.quality() + ' [' + url.size() + ']'}"></option>
+                    th:text="${url.quality() + '.' + url.video_codec() + ' [' + url.size() + '] - ' + url.audio_channels() + ' - ' + url.bit_depth() + 'bit'}"></option>
             <!-- th:text="${url.quality() + ' [' + url.size() + ']' + ' Peers ' + url.peers() + ' Seeds ' + url.seeds()}"></option>-->
           </select>
 
@@ -49,7 +49,7 @@
 
       </div>
       <div id="poster" class="col-md-5 order-md-1">
-        <img class="featurette-image img-fluid mx-auto shadow-lg" th:src="@{${ytsMovieRecord.data().movie().large_cover_image()}}" alt="500x500" data-holder-rendered="true">
+        <img loading="lazy" class="featurette-image img-fluid mx-auto shadow-lg" th:src="@{${ytsMovieRecord.data().movie().large_cover_image()}}" alt="500x500" data-holder-rendered="true">
       </div>
 
     </div>
@@ -76,8 +76,8 @@
       <div class="col" th:each="movie: ${ytsSuggestedRecord.data.movies}">
 
         <div class="card h-100">
-          <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#movies" hx-swap="transition:true" hx-push-url="true">
-            <img th:src="@{${movie.medium_cover_image}}" th:alt="${movie.title_long}" class="card-img-top">
+          <a hx:get="@{/yts/movies/{id}(id=${movie.id()})}" hx-indicator=".globalProgress" hx-boost="true" hx-target="#ytsMovieOverview" hx-swap="transition:true" hx-push-url="true">
+            <img loading="lazy" th:src="@{${movie.medium_cover_image}}" th:alt="${movie.title_long}" class="card-img-top">
           </a>
         </div>
 

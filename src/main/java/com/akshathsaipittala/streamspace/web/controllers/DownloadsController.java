@@ -24,6 +24,14 @@ public class DownloadsController {
 
     final DownloadTaskRepository downloadTaskRepository;
 
+    @GetMapping("/form")
+    public HtmxResponse downloadForm() {
+
+        return HtmxResponse.builder()
+                .view("downloads :: downloadTorrent")
+                .build();
+    }
+
     @GetMapping("/queue")
     public String getDownloadQueue(Model model) {
         model.addAttribute("tasks", downloadTaskRepository.findAll());

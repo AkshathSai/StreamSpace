@@ -64,14 +64,12 @@ public class BackgroundServices {
         downloadTasks.addAll(downloadTasksRepo.findAllByTaskStatus(STATUS.RETRY));
         downloadTasks.addAll(downloadTasksRepo.findAllByTaskStatus(STATUS.NEW));
 
-        downloadTasks.forEach(downloadTask -> {
-            torrentDownloadService.startDownload(downloadTask);
-        });
-
+        downloadTasks.forEach(downloadTask -> torrentDownloadService.startDownload(downloadTask));
+        // Future Plan targeted for StructuredConcurrency Final release
         // runAsStructuredConcurrent(downloadTasks);
     }
 
-    /*private void runAsStructuredConcurrent(List<BackgroundDownloadTask> backgroundDownloadTasks) {
+    /* private void runAsStructuredConcurrent(List<BackgroundDownloadTask> backgroundDownloadTasks) {
         ConJob conJob = new ConJob();
         conJob.executeAll(backgroundDownloadTasks);
     }*/

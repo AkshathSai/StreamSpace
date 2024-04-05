@@ -2,7 +2,6 @@ package com.akshathsaipittala.streamspace.web.controllers;
 
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
-import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,8 @@ public class LocalMediaController {
     @GetMapping("/media")
     HtmxResponse getTitles(Model model) {
 
-        model.addAttribute("videos", movieRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA));
-        model.addAttribute("music", musicRepository.findByMediaSource(ApplicationConstants.LOCAL_MEDIA));
+        model.addAttribute("videos", movieRepository.findAll());
+        model.addAttribute("music", musicRepository.findAll());
 
         return HtmxResponse.builder()
                 .view("localmedia :: local-media-player")

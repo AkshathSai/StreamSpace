@@ -7,6 +7,7 @@ import com.akshathsaipittala.streamspace.entity.Song;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
+import com.akshathsaipittala.streamspace.utils.HelperFunctions;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +37,6 @@ public class MediaIndexer {
 
     private final UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
     private final Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
-
-    final MediaLibrary mediaLibrary;
     final RuntimeHelper runtimeHelper;
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
@@ -45,18 +44,26 @@ public class MediaIndexer {
     public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
-        Movie movie = new Movie();
-        movie.setContentLength(file.getSize());
-        movie.setName(fileName);
-        movie.setSummary(fileName);
-        movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-        movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-        movie.setMovieCode(torrentId.toString().toUpperCase());
-        movie.setMediaSource(ApplicationConstants.TORRENT);
-        mediaLibrary.getMovies().add(movie);
-        movieRepository.save(movie);
-        log.info("{}", movie);
+
+        Movie movie = movieRepository.findByName(fileName);
+
+        if (movie != null) {
+            movie.setMovieCode(torrentId.toString().toUpperCase());
+            log.info("{} already indexed", fileName);
+        } else {
+            movie = new Movie();
+            movie.setContentLength(file.getSize());
+            movie.setName(fileName);
+            movie.setSummary(fileName);
+            movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+            movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
+            movie.setMovieCode(torrentId.toString().toUpperCase());
+            movie.setMediaSource(ApplicationConstants.TORRENT);
+            movieRepository.save(movie);
+            log.info("{}", movie);
+        }
+
     }
 
     public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
@@ -71,7 +78,6 @@ public class MediaIndexer {
         song.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
         song.setSongId(torrentId.toString().toUpperCase());
         song.setMediaSource(ApplicationConstants.TORRENT);
-        mediaLibrary.getSongs().add(song);
         musicRepository.save(song);
         log.info("{}", song);
     }
@@ -98,8 +104,6 @@ public class MediaIndexer {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    mediaLibrary.setMovies(finalMovies);
-                    mediaLibrary.setSongs(finalSongs);
 
                     // Save entities to the database asynchronously
                     CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
@@ -178,7 +182,7 @@ public class MediaIndexer {
             movie.setSummary(entry.getFileName().toString());
             movie.setContentId(decodePathSegment.apply(contentStoreDir));
             movie.setContentMimeType(decodeContentType.apply(entry));
-            movie.setMovieCode(encodedFileName);
+            movie.setMovieCode(HelperFunctions.generateUniqueCode());
             movie.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
             moviesList.add(movie);
         }

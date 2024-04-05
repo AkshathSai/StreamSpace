@@ -1,9 +1,7 @@
 package com.akshathsaipittala.streamspace.entity;
 
-import com.akshathsaipittala.streamspace.utils.HelperFunctions;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,13 +29,5 @@ public class Song {
     @MimeType
     private String contentMimeType;
     private String mediaSource;
-
-    @PrePersist
-    public void randomGenerateSongIdIfNotSet() {
-        if (songId == null || songId.isEmpty()) {
-            // Generate a unique movieCode here (e.g., using UUID)
-            songId = HelperFunctions.generateUniqueCode();
-        }
-    }
 
 }

@@ -1,0 +1,17 @@
+<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+
+    <div class="col" th:each="item: ${watchlistitems}">
+
+        <div class="card h-100">
+            <a hx:get="@{${item.itemUrl}}"
+               hx-boost="true"
+               hx-target="#watchlist-content"
+               hx-indicator=".globalProgress"
+               hx-push-url="true">
+                <img loading="lazy" th:src="@{${item.thumbnailUrl}}" th:alt="${item.name}" class="card-img-top">
+            </a>
+        </div>
+    </div>
+
+</div>
+

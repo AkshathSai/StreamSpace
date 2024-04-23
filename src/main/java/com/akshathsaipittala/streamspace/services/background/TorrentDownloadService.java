@@ -61,7 +61,7 @@ public class TorrentDownloadService {
         try {
             options.setPort(TorrentUtils.getRandomFreePort());
         } catch (Exception e) {
-            log.error("Error opening random free port falling back to 6891 " + e);
+            log.error("Error opening random free port falling back to 6891 {}", e.getMessage());
             options.setPort(ApplicationConstants.ports[0]);
         }
         //options.setDhtPort(null);

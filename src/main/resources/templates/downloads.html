@@ -46,6 +46,10 @@
 
 <div th:fragment="downloadTorrent" id="downloadTorrent">
 
+    <h3 class="pt-3">Torrents Web Downloader
+        <small class="text-body-secondary">Play torrents while you download.</small>
+    </h3>
+
     <form id="submit-torrentHash" class="mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
 
         <div class="form-group">

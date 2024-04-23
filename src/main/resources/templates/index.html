@@ -182,6 +182,8 @@
 
         <div class="col">
 
+            <!-- <a th:href="@{/newUX}" class="btn btn-sm btn-outline-secondary" role="button">Wanna Try New UX?</a>-->
+
             <div class="input-group mb-3 sticky-top navbar bg-transparent">
                 <input type="search"
                        class="form-control"
@@ -222,19 +224,19 @@
                         Movies
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="music-tab" data-bs-toggle="tab" data-bs-target="#music" type="button"
+                <li class="nav-item" role="presentation" data-bs-toggle="tooltip" data-bs-title="Need help in Development!">
+                    <button class="nav-link disabled" id="music-tab" data-bs-toggle="tab" data-bs-target="#music" type="button"
                             role="tab" aria-controls="music" aria-selected="false">
                         <i class="bi bi-music-note-beamed"></i>
                         Music
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link disabled" id="tv-tab" data-bs-toggle="tab" data-bs-target="#tv"
+                    <button class="nav-link" id="watchlist-tab" data-bs-toggle="tab" data-bs-target="#watchlist"
                             type="button"
-                            role="tab" aria-controls="tv" aria-selected="false" aria-disabled="true"><i
-                            class="bi bi-tv"></i>
-                        TV
+                            role="tab" aria-controls="watchlist" aria-selected="false" aria-disabled="true"><i
+                            class="bi bi-collection-play"></i>
+                        Watchlist
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -247,8 +249,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="playlist-tab" data-bs-toggle="tab" data-bs-target="#playlist"
                             type="button"
-                            role="tab" aria-controls="playlist" aria-selected="false"><i
-                            class="bi bi-collection-play"></i> Shelf
+                            role="tab" aria-controls="playlist" aria-selected="false">
+                        <i class="bi bi-cloud-arrow-down"></i>
+                        Downloads
                     </button>
                 </li>
             </ul>
@@ -426,9 +429,13 @@
                     </div>
 
                 </div>
-                <div class="tab-pane fade" id="tv" role="tabpanel" aria-labelledby="tv-tab">
+                <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
 
-                    Coming soon
+                    <h1 class="display-5 pt-3">Watchlist</h1>
+
+                    <div id="watchlist-content" hx-get="/watchlist" hx-trigger="click from:#watchlist-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
+
+                    </div>
 
                 </div>
                 <div class="tab-pane fade" id="localmedia" role="tabpanel" aria-labelledby="localmedia-tab">
@@ -450,7 +457,7 @@
 
             <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4">
                 <div class="col-md-4 d-flex align-items-center">
-                    <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Akshath Sai, Pittala</span>
+                    <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Akshath Sai, Pittala <a href="https://github.com/AkshathSai"><i class="bi bi-github"></i></a></span>
                 </div>
             </footer>
 
@@ -470,6 +477,10 @@
             searchTab.click();
         }
     });
+</script>
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
 </body>
 

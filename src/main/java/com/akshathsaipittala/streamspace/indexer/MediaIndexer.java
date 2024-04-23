@@ -110,10 +110,14 @@ public class MediaIndexer {
 
                     // Save entities to the database asynchronously
                     CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
-                                    movieRepository.saveAll(finalMovies))
+                                    finalMovies.stream()
+                                            .filter(movie -> !movieRepository.existsByContentId(movie.getContentId()))
+                                            .forEach(movieRepository::save))
                             .thenRun(() -> log.info("Finished Indexing Movies"));
                     CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
-                                    musicRepository.saveAll(finalSongs))
+                                    finalSongs.stream()
+                                            .filter(song -> !musicRepository.existsByContentId(song.getContentId()))
+                                            .forEach(musicRepository::save))
                             .thenRun(() -> log.info("Finished Indexing Music"));
 
                     // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete

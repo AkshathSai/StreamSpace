@@ -11,4 +11,5 @@ public interface MusicRepository extends ListCrudRepository<Song, String> {
 
     List<Song> findByMediaSource(String source);
 
+    boolean existsByContentId(String contentId);
 }

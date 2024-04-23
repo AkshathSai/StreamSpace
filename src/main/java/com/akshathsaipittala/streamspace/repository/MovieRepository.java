@@ -13,4 +13,5 @@ public interface MovieRepository extends ListCrudRepository<Movie, String> {
 
     List<Movie> findByMediaSource(String source);
 
+    boolean existsByContentId(String contentId);
 }

@@ -49,7 +49,7 @@ public class YoutubeCrawler {
                             .contents.getFirst().itemSectionRenderer.contents.getFirst().videoRenderer.videoId
             );
 
-        } catch (IOException ex) {
+        } catch (IOException | RuntimeException ex) {
             log.error("Error in fetching Youtube Trailer " + ex);
         }
         return youTubeResponseDTO;

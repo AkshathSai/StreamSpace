@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -161,6 +163,26 @@
             color: white;
 
         }
+
+        /* YT TRAILER MODAL-------------------------------------------------- */
+
+        .modal-dialog {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .modal-body {
+            position:relative;
+            padding:0px;
+        }
+        .btn-close {
+            position:absolute;
+            right:-30px;
+            top:0;
+        }
+
+        /* YT TRAILER MODAL-------------------------------------------------- */
+
     </style>
 </head>
 
@@ -224,13 +246,13 @@
                         Movies
                     </button>
                 </li>
-                <li class="nav-item" role="presentation" data-bs-toggle="tooltip" data-bs-title="Need help in Development!">
+                <!--<li class="nav-item" role="presentation" data-bs-toggle="tooltip" data-bs-title="Need help in Development!">
                     <button class="nav-link disabled" id="music-tab" data-bs-toggle="tab" data-bs-target="#music" type="button"
                             role="tab" aria-controls="music" aria-selected="false">
                         <i class="bi bi-music-note-beamed"></i>
                         Music
                     </button>
-                </li>
+                </li>-->
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="watchlist-tab" data-bs-toggle="tab" data-bs-target="#watchlist"
                             type="button"
@@ -251,7 +273,7 @@
                             type="button"
                             role="tab" aria-controls="playlist" aria-selected="false">
                         <i class="bi bi-cloud-arrow-down"></i>
-                        Downloads
+                        Downloads <span hx-get="/download/count" hx-trigger="load" class="badge text-bg-secondary"></span>
                     </button>
                 </li>
             </ul>
@@ -478,10 +500,10 @@
         }
     });
 </script>
-<script>
+<!--<script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-</script>
+</script>-->
 </body>
 
 </html>

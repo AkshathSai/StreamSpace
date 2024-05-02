@@ -1,19 +1,52 @@
 <div th:fragment="youtubeTrailer" th:remove="tag">
 
-    <div class="fade-me-in" hx-swap="outerHTML settle:1s">
+    <!-- Button triggers modal -->
+    <button type="button" class="btn btn-primary video-btn" data-bs-toggle="modal" th:attr="data-src=@{|https://www.youtube.com/embed/| + ${youtubeTrailers.url}}" data-bs-target="#myModal">
+        <i class="bi bi-play-circle-fill"></i> Trailer
+    </button>
 
-        <h1 class="display-6 text-muted">Trailers & More</h1>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
 
-        <div id="carouselExampleSlidesOnly" class="carousel slide shadow-lg" data-interval="false">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></span>
+                    </button>
+                    <!-- 16:9 aspect ratio -->
                     <div class="ratio ratio-16x9">
-                        <iframe loading="lazy" th:src="@{'https://www.youtube.com/embed/' + ${youtubeTrailers.url}}" title="Official Trailer from YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
+
             </div>
         </div>
-
     </div>
+
+    <script>
+        // Declare a variable to store the video source
+        var videoSrc;
+
+        // Add click event listener to all elements with class "video-btn"
+        document.querySelectorAll('.video-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Get the video source from the data-src attribute
+                videoSrc = button.dataset.src;
+                console.log(videoSrc);
+            });
+        });
+
+        // Add event listener for when the modal is opened
+        document.getElementById('myModal').addEventListener('shown.bs.modal', () => {
+            // Update the video source with autoplay and other options
+            document.getElementById('video').src = videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0";
+        });
+
+        // Add event listener for when the modal is closed
+        document.getElementById('myModal').addEventListener('hide.bs.modal', () => {
+            // Stop the video by resetting the source
+            document.getElementById('video').src = videoSrc;
+        });
+    </script>
 
 </div>

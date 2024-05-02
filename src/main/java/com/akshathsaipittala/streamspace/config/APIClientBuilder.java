@@ -1,6 +1,7 @@
 package com.akshathsaipittala.streamspace.config;
 
 import com.akshathsaipittala.streamspace.web.api.APIBayClient;
+import com.akshathsaipittala.streamspace.web.api.MicrosoftStoreAPI;
 import com.akshathsaipittala.streamspace.web.api.YTSAPIClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,14 @@ public class APIClientBuilder {
                 .builderFor(RestClientAdapter.create(restClient))
                 .build()
                 .createClient(APIBayClient.class);
+    }
+
+    @Bean
+    MicrosoftStoreAPI microsoftStoreAPI(RestClient restClient) {
+        return HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(restClient))
+                .build()
+                .createClient(MicrosoftStoreAPI.class);
     }
 
 }

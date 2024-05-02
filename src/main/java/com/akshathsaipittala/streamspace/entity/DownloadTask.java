@@ -18,8 +18,6 @@ import java.time.LocalDate;
 public class DownloadTask extends AbstractAggregateRoot<DownloadTask> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String torrentHash;
     private String torrentName;
     private String movieCode;

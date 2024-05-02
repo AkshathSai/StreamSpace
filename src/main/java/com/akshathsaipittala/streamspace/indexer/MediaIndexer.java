@@ -49,6 +49,7 @@ public class MediaIndexer {
 
         if (movie != null) {
             log.info("Movie Found {}", movie);
+            movieRepository.delete(movie);
             // Primary key cannot be updated due to which new record is created need to revisit
             movie.setMovieCode(torrentId.toString().toUpperCase());
             log.info("{} already indexed", fileName);

@@ -25,6 +25,7 @@ public class Options {
 
     private File metainfoFile;
     private String magnetUri;
+    private String torrentHash;
     private File targetDirectory;
     private boolean seedAfterDownloaded;
     private boolean sequential;

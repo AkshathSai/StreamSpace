@@ -7,6 +7,8 @@
 
 Dive into the world of StreamSpace, where entertainment meets innovation, and subscription fatigue becomes a thing of the past [^1] 
 
+Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation)
+
 <p align="center">
 <img src="https://upload.wikimedia.org/wikipedia/de/e/e1/Java-Logo.svg" alt="Java">
 <img src="https://github.com/AkshathSai/CinemaPass/assets/89769614/57bd7d6f-871c-4c22-adb8-9fdf27728f30" width="200" height="200" alt="Spring">
@@ -17,10 +19,9 @@ Dive into the world of StreamSpace, where entertainment meets innovation, and su
 - [Screenshots](#screenshots) 
 - [The Challenge](#the-challenge)
 - [Our Solution](#solution)
-- [Key Features](#key-features)
+- [Keynotes](#key-features)
 - [Technologies Used](#technologies-used)
 - [Setup & Installation](#setup--installation)
-- [Usage](#usage)
 - [Contribute](#contribute)
 - [Bug Reports](#bug-reports)
 - [License](#license)
@@ -66,19 +67,17 @@ In today's digital age, entertainment options have exploded, with countless OTT 
 StreamSpace is here to liberate you from subscription overload and bring all your entertainment needs under one unified banner. We believe that everyone should have the freedom to enjoy a wide variety of content without breaking the bank. With StreamSpace, you get:
 
 1. All-in-One Access
-2. Unlimited Choices
-3. Affordability
-4. Personalized Recommendations
-5. Seamless Experience
+2. Virtually Unlimited Choices
+3. Seamless Experience
 
-We're excited to collaborate and grow together in this open-source journey. Let's connect! 🤝
-
-## Key Features
+## Keynotes
 
 - 🔍 Search for content based on Movie Title/IMDb Code, Actor Name/IMDb Code, Director Name/IMDb Code
 - 🎞️ Stream movies while downloading in parallel for free!
-- 💾 In-memory streaming without downloading [Coming soon]
-- 🎵 Torrent Tunes (Future Plan) - Your favorite Music/Tunes delivered over the web without ads
+- [Coming soon] 💾 In-memory streaming without downloading 
+- [Future Plan] 🎵 Torrent Tunes  - Your favorite Music/Tunes delivered over P2P network
+- I'm pumped to collaborate and grow together in this open-source journey. [Let's connect! 🤝](mailto:akshathsai.pittala@outlook.com?)
+
 
 ## Technologies Used
 
@@ -95,7 +94,7 @@ We're excited to collaborate and grow together in this open-source journey. Let'
 
 ## Setup & Installation
 
-1. Download [CloudFlare 1.1.1.1 VPN](https://1.1.1.1)
+1. Download [CloudFlare 1.1.1.1 VPN](https://1.1.1.1) & [JDK 21](https://adoptium.net/temurin/releases/)
 
 2. Clone the repository:
 
@@ -120,14 +119,8 @@ cd target
 ```
 java -jar StreamSpace-0.0.1-SNAPSHOT.jar
 ```
-or Just double clik on the jar to run ;)
-
 6. Visit https://localhost:8080/
 7. Check out API Docs at https://localhost:8080/swagger-ui/index.html
-
-## Usage
-
-Ready to explore the world of StreamSpace? Dive right in!
 
 ## Contribute
 

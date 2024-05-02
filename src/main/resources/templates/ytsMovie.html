@@ -39,6 +39,16 @@
 
         </form>
 
+        <div id="yt-trailer-btn" class="pt-3 pb-3">
+
+          <div class="col"
+               hx-trigger="load delay:100ms"
+               hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
+               hx-indicator=".globalProgress"
+          ></div>
+
+        </div>
+
         <form class="pt-3 mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
 
           <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
@@ -69,17 +79,6 @@
     </div>
 
     <hr class="featurette-divider">
-
-    <div class="row">
-
-      <div class="col"
-           hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
-           hx-swap="transition: true"
-           hx-trigger="load delay:100ms"
-           hx-indicator=".globalProgress"
-      ></div>
-
-    </div>
 
     <h4>
       <small class="text-body-secondary">Suggested Movies</small>

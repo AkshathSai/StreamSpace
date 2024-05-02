@@ -24,6 +24,13 @@ public class DownloadsController {
 
     final DownloadTaskRepository downloadTaskRepository;
 
+    @ResponseBody
+    @GetMapping(value = "/count", produces="text/html;charset=UTF-8")
+    public String count() {
+        return String.valueOf(downloadTaskRepository.count());
+        //return "<span class=\"badge text-bg-secondary\">"+ downloadTaskRepository.count() +"</span>";
+    }
+
     @GetMapping("/form")
     public HtmxResponse downloadForm() {
 

@@ -3,6 +3,7 @@ package com.akshathsaipittala.streamspace.services.background;
 import com.akshathsaipittala.streamspace.entity.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
 import com.akshathsaipittala.streamspace.entity.STATUS;
+import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
@@ -26,6 +27,7 @@ public class TorrentDownloadService {
 
     final RuntimeHelper runtimeHelper;
     final DownloadTaskRepository downloadTaskRepository;
+    final MediaIndexer mediaIndexer;
     final TorrentProgressHandler torrentProgressHandler;
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
@@ -36,7 +38,7 @@ public class TorrentDownloadService {
         Options options = downloadTaskToOptions(downloadTask);
 
         try {
-            TorrentClient.startEngine(options);
+            TorrentClient.startEngine(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository);
             downloadTask.setTaskStatus(STATUS.INPROGRESS);
             downloadTaskRepository.save(downloadTask);
         } catch (Exception e) {

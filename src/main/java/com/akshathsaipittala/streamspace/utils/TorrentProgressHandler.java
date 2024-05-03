@@ -35,16 +35,23 @@ public class TorrentProgressHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String torrentId = (String) session.getAttributes().get("torrentHash");
         sessions.remove(torrentId);
-        super.afterConnectionClosed(session, status);
+        super.afterConnectionClosed(session, CloseStatus.NORMAL);
     }
 
-    public void sendProgressUpdate(String torrentId, String message, String downloaded, String uploaded, int peerCount, String remainingTime) throws IOException {
+    public void sendProgressUpdate(String torrentId, String message, String downloaded, String uploaded, int peerCount, String remainingTime, boolean complete) throws IOException {
         WebSocketSession session = sessions.get(torrentId);
         if (session != null && session.isOpen()) {
             String webResponse = "<div id=\"progress-bar\" class=\"progress progress-bar\" role=\"progressbar\" hx-swap-oob=\"true\" style=\"width: " + message + ";height:5px;\" aria-valuenow=\""+ message +"\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div><div id=\"torrent-stats\" class=\"container\"> <div class=\"row\"> <div class=\"col\"> <p class=\"text-body-secondary\">" + message + "</p></div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-down\"></i> "+ downloaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\"><i class=\"bi bi-arrow-up\"></i> "+ uploaded +"</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">"+peerCount+"P</p> </div> <div class=\"col\"> <p class=\"text-body-secondary\">ETA "+remainingTime+"</p> </div> </div> </div>";
-            session.sendMessage(new TextMessage(webResponse));
-            if (message.equals("100%")) {
-                session.close();
+            try {
+                session.sendMessage(new TextMessage(webResponse));
+                if (complete) {
+                    session.close(CloseStatus.NORMAL);
+                    log.info("Closed WebSocket");
+                }
+            } catch (IOException e) {
+                log.error("Error sending progress update or closing session for torrentId: {}", torrentId, e);
+                // Optionally, remove the session from the map if it's no longer valid
+                sessions.remove(torrentId);
             }
         }
     }

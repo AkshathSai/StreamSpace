@@ -30,7 +30,8 @@ import bt.torrent.selector.PieceSelector;
 import bt.torrent.selector.RarestFirstSelector;
 import bt.torrent.selector.SequentialSelector;
 import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
-import com.akshathsaipittala.streamspace.listener.ApplicationContextProvider;
+import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
+import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
 import com.google.inject.Module;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +47,8 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
-    public static void startEngine(Options options) {
-        new TorrentClient(options).resume();
+    public static void startEngine(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
+        new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
     }
 
     private Options options;
@@ -56,10 +57,15 @@ public class TorrentClient {
     private BtClient client;
     private Optional<SessionStateLogger> torrentStateLogger;
     private boolean running;
-    private MediaIndexer mediaIndexer = ApplicationContextProvider.getApplicationContext().getBean(MediaIndexer .class);
+    private MediaIndexer mediaIndexer;
+    private TorrentProgressHandler torrentProgressHandler;
+    private DownloadTaskRepository downloadTaskRepository;
 
-    private TorrentClient(Options options) {
+    private TorrentClient(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
         this.options = options;
+        this.mediaIndexer = mediaIndexer;
+        this.torrentProgressHandler = torrentProgressHandler;
+        this.downloadTaskRepository = downloadTaskRepository;
 
         configureSecurity();
 
@@ -116,7 +122,7 @@ public class TorrentClient {
                 .selector(selector);
 
         SessionStateLogger torrentStateLogger = options.isDisableTorrentStateLogs() ?
-                null : new SessionStateLogger();
+                null : new SessionStateLogger(torrentProgressHandler, downloadTaskRepository);
 
         if (torrentStateLogger != null) {
 

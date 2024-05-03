@@ -2,7 +2,7 @@ package com.akshathsaipittala.streamspace.services.torrentengine;
 
 import bt.metainfo.Torrent;
 import bt.torrent.TorrentSessionState;
-import com.akshathsaipittala.streamspace.listener.ApplicationContextProvider;
+import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
 import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,11 +31,14 @@ public class SessionStateLogger {
     private volatile long started;
     private volatile long downloaded;
     private volatile long uploaded;
-    private final TorrentProgressHandler torrentProgressHandler = ApplicationContextProvider.getApplicationContext().getBean(TorrentProgressHandler.class);
+    private final TorrentProgressHandler torrentProgressHandler;
+    private final DownloadTaskRepository downloadTaskRepository;
 
-    public SessionStateLogger() {
+    public SessionStateLogger(TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
         started = System.currentTimeMillis();
         this.torrent = Optional.empty();
+        this.torrentProgressHandler = torrentProgressHandler;
+        this.downloadTaskRepository = downloadTaskRepository;
         printTorrentInfo();
     }
 
@@ -73,13 +76,21 @@ public class SessionStateLogger {
                         String.format(RATE_FORMAT, downRate.getQuantity(), downRate.getMeasureUnit()),
                         String.format(RATE_FORMAT, upRate.getQuantity(), upRate.getMeasureUnit()),
                         peerCount,
-                        String.format("%s", remainingTime));
+                        String.format("%s", remainingTime), Boolean.FALSE);
                 //log.info(String.format("%s", elapsedTime));
             }
 
             boolean complete = (sessionState.getPiecesRemaining() == 0);
             if (complete) {
-                log.info("Download is complete. Press Ctrl-C to stop seeding and exit.");
+                downloadTaskRepository.deleteById(torrent.get().getTorrentId().toString().toUpperCase());
+                torrentProgressHandler.sendProgressUpdate(torrent.get().getTorrentId().toString().toUpperCase(),
+                        String.format("%.2f%%", completePercents),
+                        String.format(RATE_FORMAT, downRate.getQuantity(), downRate.getMeasureUnit()),
+                        String.format(RATE_FORMAT, upRate.getQuantity(), upRate.getMeasureUnit()),
+                        peerCount,
+                        String.format("%s", remainingTime), Boolean.TRUE);
+                //log.info("Download is complete. Press Ctrl-C to stop seeding and exit.");
+                log.info("Download is complete.");
             }
 
             if (complete) {

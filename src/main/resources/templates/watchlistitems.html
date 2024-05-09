@@ -1,6 +1,6 @@
 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
 
-    <div class="col" th:each="item: ${watchlistitems}">
+    <div class="col" th:each="item: ${watchlistitems}" th:id="|list-item-${item.id}|">
 
         <div class="card h-100">
             <a hx:get="@{${item.itemUrl}}"
@@ -10,7 +10,16 @@
                hx-push-url="true">
                 <img loading="lazy" th:src="@{${item.thumbnailUrl}}" th:alt="${item.name}" class="card-img-top">
             </a>
+            <div class="card-footer">
+                <small>
+                    <a th:attr="hx-delete=@{/watchlist/{id}(id=${item.id})},hx-target=|#list-item-${item.id}|"
+                          hx-trigger="click"
+                          hx-swap="delete"
+                          hx-method="delete"><i class="bi bi-trash"></i></a>
+                </small>
+            </div>
         </div>
+
     </div>
 
 </div>

@@ -11,9 +11,4 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/progress")
-    public String getDownloadProgress() {
-        return "queue";
-    }
-
 }

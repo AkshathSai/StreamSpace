@@ -10,16 +10,33 @@
     <!-- Bootstrap CSS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <!-- Bootstrap JS -->
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<!--    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- HTMX -->
     <script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
     <!-- Hyperscript for fancier stuff -->
     <script type="text/javascript" th:src="@{/webjars/hyperscript.org/dist/_hyperscript.js}"></script>
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"/>
+    <link
+            rel="stylesheet"
+            media="(prefers-color-scheme:light)"
+            href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"
+    />
+    <link
+            rel="stylesheet"
+            media="(prefers-color-scheme:dark)"
+            href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/dark.css"
+            onload="document.documentElement.classList.add('sl-theme-dark');"
+    />
     <style>
+        /*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');*/
         /** {
             font-family:'ZegoeLight-U';
+        }*/
+       /* body {
+            font-family: 'Roboto', 'Helvetica', Arial, sans-serif;
         }*/
         .card {
             border: none;
@@ -183,6 +200,85 @@
 
         /* YT TRAILER MODAL-------------------------------------------------- */
 
+        @media (max-width: 767px) {
+            #featureContainer .carousel-inner .carousel-item > div {
+                display: none;
+            }
+            #featureContainer .carousel-inner .carousel-item > div:first-child {
+                display: block;
+            }
+        }
+
+        #featureContainer .carousel-inner .carousel-item.active,
+        #featureContainer .carousel-inner .carousel-item-next,
+        #featureContainer .carousel-inner .carousel-item-prev {
+            display: flex;
+        }
+
+        /* medium and up screens */
+        @media (min-width: 768px) {
+
+            #featureContainer .carousel-inner .carousel-item-end.active,
+            #featureContainer .carousel-inner .carousel-item-next {
+                transform: translateX(25%);
+            }
+
+            #featureContainer .carousel-inner .carousel-item-start.active,
+            #featureContainer .carousel-inner .carousel-item-prev {
+                transform: translateX(-25%);
+            }
+            #featureContainer .card img{
+                width: 90%;
+                height: 50vh;
+            }
+            #featureContainer .carousel-item{
+                justify-content: space-between;
+            }
+        }
+        @media (max-width: 767px) {
+            #featureContainer .card img{
+                width: 100%;
+                height: 75vh;
+            }
+        }
+        #featureContainer .carousel-inner .carousel-item-end,
+        #featureContainer .carousel-inner .carousel-item-start {
+            transform: translateX(0);
+        }
+        #featureContainer .card{
+            border: 0;
+        }
+        #featureContainer .card{
+            position: relative;
+        }
+        #featureContainer .card .card-img-overlays{
+            position: absolute;
+            bottom: 15%;
+            left: 10%;
+        }
+        #featureContainer a{
+            text-decoration: none;
+        }
+        #featureContainer .indicator{
+            border: 1px solid rgb(202, 202, 202);
+            padding: 3px 6px 3px 6px;
+        }
+        #featureContainer .indicator:hover{
+            background-color: blue;
+            border: 1px solid blue;
+            transition: 200ms;
+        }
+        #featureContainer .indicator:hover{
+            color: white;
+            transition: 200ms;
+        }
+        #featureContainer .indicator {
+            color: lightgray;
+        }
+        #featureContainer .float-end{
+            padding-top: 10px;
+        }
+
     </style>
 </head>
 
@@ -202,9 +298,11 @@
 
     <div class="row align-items-center" style="min-height: 80vh;">
 
-        <div class="col">
+        <!-- Logo Plan
+            <div style="font-weight: lighter;" class=" logo display-1 text-center">🎞️ StreamSpace</div>
+        -->
 
-            <!-- <a th:href="@{/newUX}" class="btn btn-sm btn-outline-secondary" role="button">Wanna Try New UX?</a>-->
+        <div class="col">
 
             <div class="input-group mb-3 sticky-top navbar bg-transparent">
                 <input type="search"
@@ -298,7 +396,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div th:if="${musicResults} != null">
+                        <!--<div th:if="${musicResults} != null">
                             <div class="card border-0" th:each="musicResult: ${musicResults}">
                                 <div class="card-body">
                                     <a class="card-title card-link primary"
@@ -310,7 +408,7 @@
                                        th:text="${musicResult.name}"></a>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -319,6 +417,15 @@
                      hx-swap="transition:true">
 
                     <!--This is movies content-->
+
+
+                    <!-- Featured Carousel -->
+                    <div class="row"
+                         hx-get="/microsoft/newreleases"
+                         hx-trigger="click from:#movies-tab"
+                         hx-indicator=".globalProgress">
+
+                    </div>
 
                     <div class="card-body d-flex align-items-center">
                         <p class="card-title lead mb-0">Most Watched</p>
@@ -474,6 +581,11 @@
 
                     </div>
 
+                    <div id="getAllDownloads" hx-get="/download" hx-trigger="click from:#playlist-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
+
+
+                    </div>
+
                 </div>
             </div>
 
@@ -488,10 +600,14 @@
     </div>
 </div>
 
-<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!--<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+</script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
 <script>
-    document.body.addEventListener('htmx:afterSwap', function(event) {
+    document.body.addEventListener('htmx:afterSwap', function (event) {
         // Check if the updated content is the search results
         if (event.detail.target.id === 'search-results') {
             // Switch to the "Search" tab

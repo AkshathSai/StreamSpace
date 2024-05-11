@@ -9,6 +9,7 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,16 @@ public class DownloadsController {
 
     final DownloadTaskRepository downloadTaskRepository;
 
+    @GetMapping("")
+    public HtmxResponse getAllDownloads(Model model) {
+        return HtmxResponse
+                .builder()
+                .view(new ModelAndView("downloads :: showAllDownloads", Map.of("tasks", downloadTaskRepository.findAll())))
+                .build();
+    }
+
     @ResponseBody
-    @GetMapping(value = "/count", produces="text/html;charset=UTF-8")
+    @GetMapping(value = "/count", produces=MediaType.TEXT_HTML_VALUE)
     public String count() {
         return String.valueOf(downloadTaskRepository.count());
         //return "<span class=\"badge text-bg-secondary\">"+ downloadTaskRepository.count() +"</span>";
@@ -50,8 +59,8 @@ public class DownloadsController {
     public HtmxResponse downloadTorrent(
             @RequestParam("selectedOption") String torrentHash,
             @RequestParam(value = "sequentialCheck", required = false) String sequentialCheck,
-            Model model
-    ) {
+            @RequestParam(value = "torrentName", required = false) String torrentName,
+            Model model) {
 
         log.info("Selected Option: {}", torrentHash);
         log.info("Strategy: {}", sequentialCheck);
@@ -60,9 +69,9 @@ public class DownloadsController {
         DownloadTask task;
 
         if (sequentialCheck != null && sequentialCheck.equals("on")) {
-            task = new DownloadTask(torrentHash, torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.SEQUENTIAL);
+            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.SEQUENTIAL);
         } else {
-            task = new DownloadTask(torrentHash, torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.RANDOMIZED);
+            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.RANDOMIZED);
         }
 
         downloadTaskRepository.save(task);

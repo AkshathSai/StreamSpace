@@ -1,5 +1,6 @@
 package com.akshathsaipittala.streamspace.web.controllers;
 
+import com.akshathsaipittala.streamspace.dto.youtube.YouTubeResponseDTO;
 import com.akshathsaipittala.streamspace.web.crawlers.YoutubeCrawler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,13 @@ public class YouTubeController {
 
     @GetMapping("/trailer/{movie}")
     public String getYoutubeTrailer(@PathVariable("movie") String movie, Model model) {
-        model.addAttribute("youtubeTrailers", youtubeCrawler.getYoutubeTrailersByTitle(movie));
-        return "youtubetrailer";
+        YouTubeResponseDTO youTubeResponseDTO = youtubeCrawler.getYoutubeTrailersByTitle(movie);
+        if (youTubeResponseDTO != null) {
+            model.addAttribute("youtubeTrailers", youTubeResponseDTO);
+            return "youtubetrailer";
+        } else {
+            return "";
+        }
     }
 
 }

@@ -132,3 +132,107 @@
 
 
 </div>
+
+<div th:fragment="msftfeatured" th:remove="tag">
+
+  <!--<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="ratio ratio-16x9">
+          <img th:src="@{${activeItem.previews[0].url}}" class="d-block w-100" th:alt="${activeItem.title}">
+        </div>
+      </div>
+      &lt;!&ndash; Iterate over each product in the productsList &ndash;&gt;
+      <div th:each="product: ${productsList}" class="carousel-item">
+        &lt;!&ndash; Access the first preview of the current product &ndash;&gt;
+        <div class="ratio ratio-16x9">
+          <img th:src="@{${product.previews[0].url}}" class="d-block w-100" th:alt="${product.title}">
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>-->
+
+  <div class="my-3" id="featureContainer">
+    <div class="row mx-auto my-auto justify-content-center">
+      <div id="featureCarousel" class="carousel slide" data-bs-ride="carousel">
+        <h1 class="float-start mt-5 display-6">
+          Suggested
+        </h1>
+        <div class="float-end pe-md-4">
+          <a class="indicator" href="#featureCarousel" role="button" data-bs-slide="prev">
+            <span class="fas fa-chevron-left" aria-hidden="true"></span>
+          </a> &nbsp;&nbsp;
+          <a class="w-aut indicator" href="#featureCarousel" role="button" data-bs-slide="next">
+            <span class="fas fa-chevron-right" aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active" data-bs-interval="2000">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-img">
+                    <img th:src="@{${activeItem.posterArtUrl}}" class="img-fluid" th:alt="${activeItem.title}"
+                         hx:get="@{/search/yts(term=${activeItem.title})}"
+                         hx-trigger="click"
+                         hx-indicator=".globalProgress"
+                         hx-target="#search-results"
+                         hx-swap="transition:true"
+                         hx-push-url="true" />
+                </div>
+<!--                <div class="card-img-overlays" th:text="${activeItem.productId}"></div>-->
+              </div>
+            </div>
+          </div>
+          <div th:each="product: ${productsList}" class="carousel-item" data-bs-interval="2000">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-img">
+                    <img th:src="@{${product.posterArtUrl}}" class="img-fluid" th:alt="${product.title}"
+                         hx:get="@{/search/yts(term=${product.title})}"
+                         hx-trigger="click"
+                         hx-indicator=".globalProgress"
+                         hx-target="#search-results"
+                         hx-swap="transition:true"
+                         hx-push-url="true" />
+                </div>
+<!--                <div class="card-img-overlays" th:text="${product.productId}"></div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <small class="text-body-secondary pt-1">Powered by Microsoft. <i class="bi bi-microsoft"></i></small>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var items2 = document.querySelectorAll('#featureContainer .carousel .carousel-item');
+
+    items2.forEach((el) => {
+      const minPerSlide = 4
+      let next = el.nextElementSibling
+      for (var i = 1; i < minPerSlide; i++) {
+        if (!next) {
+          // wrap carousel by using first child
+          next = items2[0]
+        }
+        let cloneChild = next.cloneNode(true)
+        el.appendChild(cloneChild.children[0])
+        next = next.nextElementSibling
+      }
+    })
+    $(document).ready(function(){
+      $('#featureCarousel').carousel({interval: false});
+      $('#featureCarousel').carousel('pause');
+    });
+  </script>
+</div>

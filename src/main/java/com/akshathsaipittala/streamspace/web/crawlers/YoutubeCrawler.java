@@ -52,6 +52,7 @@ public class YoutubeCrawler {
         } catch (IOException | RuntimeException ex) {
             log.error("Error in fetching Youtube Trailer " + ex);
         }
+        log.info("{}", youTubeResponseDTO);
         return youTubeResponseDTO;
     }
 

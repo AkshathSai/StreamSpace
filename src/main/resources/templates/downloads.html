@@ -2,12 +2,16 @@
 
     <input type="hidden" id="torrentHash" th:value="${torrentHash}">
 
-    <div hx-ext="ws" id="ws-connect">
-        Progress
-        <div id="download-stats">
-            <div id="progress-bar" class="progress progress-bar" role="progressbar" style="width: 1%; height: 5px;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+    <div hx-ext="ws" th:id="'ws-connect-' + ${torrentHash}" th:attr="ws-connect=|/download-progress?torrentHash=${torrentHash}|">
 
-            <div id="torrent-stats" class="container">
+        <div>
+            <strong role="status">Downloading</strong>&nbsp;<div aria-hidden="true" class="spinner-border spinner-border-sm"></div>
+        </div>
+
+        <div th:id="'download-stats-' + ${torrentHash}">
+            <div th:id="'progress-bar-' + ${torrentHash}" class="progress progress-bar" role="progressbar" style="width: 1%; height: 5px;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+
+            <div th:id="'torrent-stats-' + ${torrentHash}" class="container">
                 <div class="row">
                     <div class="col">
                         <p class="text-body-secondary">0%</p>
@@ -67,20 +71,57 @@
             <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
         </div>
 
-        <button type="submit" hx-on="htmx:afterSwap" class="btn btn-primary">Download</button>
+        <button type="submit" class="btn btn-primary">Download</button>
     </form>
-
-    <script>
-
-        document.getElementById("downloadTorrent").addEventListener('htmx:afterSwap', function (event) {
-            var torrentHash = document.getElementById('torrentHash').value;
-            console.log(torrentHash);
-            var connectUrl = '/download-progress?torrentHash=' + torrentHash;
-            document.getElementById('ws-connect').setAttribute('ws-connect', connectUrl);
-        });
-
-    </script>
 
 </div>
 
+<div th:fragment="showAllDownloads" th:remove="tag">
 
+    <h1 class="display-2">Download Queue</h1>
+
+    <div th:each="task : ${tasks}">
+        <input type="hidden" th:value="${task.torrentHash}" th:id="'torrentHash-' + ${task.torrentHash}">
+
+        <h1 class="display-6" th:text="${task.torrentName}"></h1>
+
+        <div hx-ext="ws" th:id="'ws-connect-' + ${task.torrentHash}" th:attr="ws-connect=|/download-progress?torrentHash=${task.torrentHash}|">
+            Progress
+            <div th:id="'download-stats-' + ${task.torrentHash}">
+                <div th:id="'progress-bar-' + ${task.torrentHash}" class="progress progress-bar" role="progressbar" style="width: 1%; height: 5px;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+
+                <div th:id="'torrent-stats-' + ${task.torrentHash}" class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="text-body-secondary">0%</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-body-secondary"><i class="bi bi-arrow-down"></i> 0.0 B/s</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-body-secondary"><i class="bi bi-arrow-up"></i> 0.0 B/s</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-body-secondary">0P</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-body-secondary">ETA -</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a hx:get="@{/stream/movie/{contentId}(contentId=${task.torrentHash})}"
+           class="text-decoration-none fs-4 mb-3"
+           hx-boost="true"
+           hx-indicator=".globalProgress"
+           hx-target="#poster">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                <path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"></path>
+            </svg>
+            Play
+        </a>
+    </div>
+
+</div>

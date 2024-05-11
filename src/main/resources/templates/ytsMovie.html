@@ -51,6 +51,8 @@
 
         <form class="pt-3 mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
 
+          <input type="hidden" id="torrentName" name="torrentName" th:value="${ytsMovieRecord.data().movie().title_long()}" />
+
           <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
             <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
                     th:value="${url.hash()}"
@@ -67,7 +69,7 @@
 <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
           </div>
 
-          <button type="submit" hx-on="htmx:afterSwap" class="btn btn-primary">Download</button>
+          <button type="submit" class="btn btn-primary">Download</button>
 
         </form>
 
@@ -97,17 +99,6 @@
       </div>
 
     </div>
-
-    <script>
-
-      document.getElementById("downloadForm").addEventListener('htmx:afterSwap', function (event) {
-        var torrentHash = document.getElementById('torrentHash').value;
-        console.log(torrentHash);
-        var connectUrl = '/download-progress?torrentHash=' + torrentHash;
-        document.getElementById('ws-connect').setAttribute('ws-connect', connectUrl);
-      });
-
-    </script>
 
   </div>
 

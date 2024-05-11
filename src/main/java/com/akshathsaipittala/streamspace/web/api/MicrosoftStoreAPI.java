@@ -1,14 +1,19 @@
 package com.akshathsaipittala.streamspace.web.api;
 
 import com.akshathsaipittala.streamspace.dto.microsoft.MicrosoftStoreRecord;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
 @HttpExchange("https://apps.microsoft.com/api/Reco/GetMovieProductsList?gl=US&hl=en-us&listName=")
 public interface MicrosoftStoreAPI {
 
-    @GetExchange("video.newreleases.movies&pgNo=1&noItems=48&mediaType=movies&filteredCategories=AllProducts")
-    MicrosoftStoreRecord newReleases();
+    @GetExchange("video.newreleases.movies&pgNo={pgNo}&noItems={noItems}&mediaType={mediaType}&filteredCategories={filteredCategories}&studioFilter=")
+    MicrosoftStoreRecord newReleases(@PathVariable(value = "pgNo") int pgNo,
+                                     @PathVariable(value = "noItems") int noItems,
+                                     @PathVariable(value = "mediaType") String mediaType,
+                                     @PathVariable(value = "filteredCategories") String filteredCategories);
 
     /** Available Filters
      *  Action/Adventure
@@ -29,11 +34,14 @@ public interface MicrosoftStoreAPI {
      *  TV Movies
      */
     // Sample for applying Filters
-    @GetExchange("video.newreleases.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=Comedy&studioFilter=")
-    MicrosoftStoreRecord newTopComedy();
+    // @GetExchange("video.newreleases.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=Comedy&studioFilter=")
+    // MicrosoftStoreRecord newTopComedy();
 
-    @GetExchange("video.toprated.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=AllProducts&studioFilter=")
-    MicrosoftStoreRecord topRated();
+    @GetExchange("video.toprated.movies&pgNo={pgNo}&noItems={noItems}&mediaType={mediaType}&filteredCategories={filteredCategories}&studioFilter=")
+    MicrosoftStoreRecord topRated(@PathVariable(value = "pgNo") int pgNo,
+                                  @PathVariable(value = "noItems") int noItems,
+                                  @PathVariable(value = "mediaType") String mediaType,
+                                  @PathVariable(value = "filteredCategories") String filteredCategories);
 
     @GetExchange("video.topselling.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=AllProducts&studioFilter=")
     MicrosoftStoreRecord topSelling();

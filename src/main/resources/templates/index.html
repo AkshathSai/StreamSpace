@@ -6,30 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Space</title>
-    <!--    <link rel="stylesheet" th:href="@{/css/ZegoeLight-U.css}">-->
+    <!--<link rel="stylesheet" th:href="@{/css/ZegoeLight-U.css}">-->
     <!-- Bootstrap CSS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <!-- Bootstrap JS -->
-<!--    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- HTMX -->
     <script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
     <!-- Hyperscript for fancier stuff -->
     <script type="text/javascript" th:src="@{/webjars/hyperscript.org/dist/_hyperscript.js}"></script>
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"/>
-    <link
-            rel="stylesheet"
-            media="(prefers-color-scheme:light)"
-            href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"
-    />
-    <link
-            rel="stylesheet"
-            media="(prefers-color-scheme:dark)"
-            href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/dark.css"
-            onload="document.documentElement.classList.add('sl-theme-dark');"
-    />
     <style>
         /*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');*/
         /** {
@@ -600,11 +585,8 @@
     </div>
 </div>
 
-<!--<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>-->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-</script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
 <script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
 <script>
     document.body.addEventListener('htmx:afterSwap', function (event) {

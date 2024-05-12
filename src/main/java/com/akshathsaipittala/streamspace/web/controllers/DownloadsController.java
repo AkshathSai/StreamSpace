@@ -50,11 +50,11 @@ public class DownloadsController {
                 .build();
     }
 
-    @PostMapping("/togglePause")
+    /*@PostMapping("/togglePause")
     public ResponseEntity<String> togglePause() {
         TorrentClient.toggleStartStop();
         return ResponseEntity.ok("Toggled Pause! Click to Resume");
-    }
+    }*/
 
     @HxRequest
     @PostMapping("/torrent")

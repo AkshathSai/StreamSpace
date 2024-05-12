@@ -47,15 +47,15 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
-    private static TorrentClient instance;
+    //private static TorrentClient instance;
 
     public static void startEngine(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
-        if (instance!= null) {
+        /*   if (instance!= null) {
             throw new IllegalStateException("TorrentClient is already initialized");
         }
         instance = new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository);
-        instance.resume();
-        //new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
+        instance.resume();*/
+        new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
     }
 
     private Options options;
@@ -172,12 +172,12 @@ public class TorrentClient {
     }
 
     // Static method to get the instance
-    public static TorrentClient getInstance() {
+    /*public static TorrentClient getInstance() {
         if (instance == null) {
             throw new IllegalStateException("TorrentClient is not initialized");
         }
         return instance;
-    }
+    }*/
 
     private Optional<Integer> getPortOverride() {
         return getOptionalPort(options::getPort);
@@ -303,9 +303,9 @@ public class TorrentClient {
         torrentStateLogger = Optional.empty(); // Clear the optional reference
     }
 
-    public static void toggleStartStop() {
+    /*public static void toggleStartStop() {
         TorrentClient client = getInstance();
         client.togglePause();
-    }
+    }*/
 
 }

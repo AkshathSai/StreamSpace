@@ -167,12 +167,9 @@
           Suggested
         </h1>
         <div class="float-end pe-md-4">
-          <a class="indicator" href="#featureCarousel" role="button" data-bs-slide="prev">
-            <span class="fas fa-chevron-left" aria-hidden="true"></span>
-          </a> &nbsp;&nbsp;
-          <a class="w-aut indicator" href="#featureCarousel" role="button" data-bs-slide="next">
-            <span class="fas fa-chevron-right" aria-hidden="true"></span>
-          </a>
+            <i aria-hidden="true" class="bi bi-arrow-left fs-4" href="#featureCarousel" role="button" data-bs-slide="prev"></i>
+            &nbsp;&nbsp;
+            <i aria-hidden="true" class="bi bi-arrow-right fs-4" href="#featureCarousel" role="button" data-bs-slide="next"></i>
         </div>
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item active" data-bs-interval="2000">
@@ -229,10 +226,10 @@
         el.appendChild(cloneChild.children[0])
         next = next.nextElementSibling
       }
-    })
-    $(document).ready(function(){
+    });
+    /*$(document).ready(function(){
       $('#featureCarousel').carousel({interval: false});
       $('#featureCarousel').carousel('pause');
-    });
+    });*/
   </script>
 </div>

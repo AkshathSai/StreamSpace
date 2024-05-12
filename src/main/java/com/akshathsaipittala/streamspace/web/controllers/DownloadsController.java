@@ -5,11 +5,13 @@ import com.akshathsaipittala.streamspace.entity.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
 import com.akshathsaipittala.streamspace.entity.STATUS;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
+import com.akshathsaipittala.streamspace.services.torrentengine.TorrentClient;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,7 @@ public class DownloadsController {
     final DownloadTaskRepository downloadTaskRepository;
 
     @GetMapping("")
-    public HtmxResponse getAllDownloads(Model model) {
+    public HtmxResponse getAllDownloads() {
         return HtmxResponse
                 .builder()
                 .view(new ModelAndView("downloads :: showAllDownloads", Map.of("tasks", downloadTaskRepository.findAll())))
@@ -48,10 +50,10 @@ public class DownloadsController {
                 .build();
     }
 
-    @GetMapping("/queue")
-    public String getDownloadQueue(Model model) {
-        model.addAttribute("tasks", downloadTaskRepository.findAll());
-        return "queue";
+    @PostMapping("/togglePause")
+    public ResponseEntity<String> togglePause() {
+        TorrentClient.toggleStartStop();
+        return ResponseEntity.ok("Toggled Pause! Click to Resume");
     }
 
     @HxRequest

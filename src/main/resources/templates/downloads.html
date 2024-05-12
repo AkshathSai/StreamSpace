@@ -50,7 +50,7 @@
 
 <div th:fragment="downloadTorrent" id="downloadTorrent">
 
-    <h3 class="pt-3">Torrents Web Downloader
+    <h3 class="display-6 pt-3">Torrents Web Downloader
         <small class="text-body-secondary">Play torrents while you download.</small>
     </h3>
 
@@ -71,57 +71,75 @@
             <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
         </div>
 
-        <button type="submit" class="btn btn-primary">Download</button>
+        <div class="pt-1">
+            <button type="submit" class="btn btn-primary">Download</button>
+        </div>
     </form>
 
 </div>
 
 <div th:fragment="showAllDownloads" th:remove="tag">
 
-    <h1 class="display-2">Download Queue</h1>
+    <h1 class="display-6">Download Queue</h1>
 
     <div th:each="task : ${tasks}">
-        <input type="hidden" th:value="${task.torrentHash}" th:id="'torrentHash-' + ${task.torrentHash}">
 
-        <h1 class="display-6" th:text="${task.torrentName}"></h1>
+        <div class="pb-3 text-end">
+            <a hx-post="/download/togglePause" class="btn btn-warning btn-sm">Pause All Downloads</a>
+        </div>
 
-        <div hx-ext="ws" th:id="'ws-connect-' + ${task.torrentHash}" th:attr="ws-connect=|/download-progress?torrentHash=${task.torrentHash}|">
-            Progress
-            <div th:id="'download-stats-' + ${task.torrentHash}">
-                <div th:id="'progress-bar-' + ${task.torrentHash}" class="progress progress-bar" role="progressbar" style="width: 1%; height: 5px;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="list-group list-group-flush">
 
-                <div th:id="'torrent-stats-' + ${task.torrentHash}" class="container">
-                    <div class="row">
-                        <div class="col">
-                            <p class="text-body-secondary">0%</p>
-                        </div>
-                        <div class="col">
-                            <p class="text-body-secondary"><i class="bi bi-arrow-down"></i> 0.0 B/s</p>
-                        </div>
-                        <div class="col">
-                            <p class="text-body-secondary"><i class="bi bi-arrow-up"></i> 0.0 B/s</p>
-                        </div>
-                        <div class="col">
-                            <p class="text-body-secondary">0P</p>
-                        </div>
-                        <div class="col">
-                            <p class="text-body-secondary">ETA -</p>
+            <div class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1" th:text="${task.torrentName}"></h5>
+                    <!--<small>3 days ago</small>-->
+                    <small th:text="${task.createdDate}"></small>
+                </div>
+                <p class="mb-1">
+                    Downloading
+                </p>
+                <div hx-ext="ws" th:id="'ws-connect-' + ${task.torrentHash}"
+                     th:attr="ws-connect=|/download-progress?torrentHash=${task.torrentHash}|">
+                    <div th:id="'download-stats-' + ${task.torrentHash}">
+                        <div th:id="'progress-bar-' + ${task.torrentHash}" class="progress progress-bar"
+                             role="progressbar" style="width: 1%; height: 5px;" aria-valuenow="1" aria-valuemin="0"
+                             aria-valuemax="100"></div>
+
+                        <div th:id="'torrent-stats-' + ${task.torrentHash}" class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <p class="text-body-secondary">0%</p>
+                                </div>
+                                <div class="col">
+                                    <p class="text-body-secondary"><i class="bi bi-arrow-down"></i> 0.0 B/s</p>
+                                </div>
+                                <div class="col">
+                                    <p class="text-body-secondary"><i class="bi bi-arrow-up"></i> 0.0 B/s</p>
+                                </div>
+                                <div class="col">
+                                    <p class="text-body-secondary">0P</p>
+                                </div>
+                                <div class="col">
+                                    <p class="text-body-secondary">ETA -</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <a hx:get="@{/stream/movie/{contentId}(contentId=${task.torrentHash})}"
+                   hx-target="#downloads-player"
+                   hx-indicator=".globalProgress"
+                   class="btn btn-primary btn-sm">
+                    <i class="bi bi-play-fill"></i> Play
+                </a>
             </div>
         </div>
 
-        <a hx:get="@{/stream/movie/{contentId}(contentId=${task.torrentHash})}"
-           class="text-decoration-none fs-4 mb-3"
-           hx-boost="true"
-           hx-indicator=".globalProgress"
-           hx-target="#poster">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
-                <path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"></path>
-            </svg>
-            Play
-        </a>
+        <div id="downloads-player">
+
+        </div>
+
     </div>
 
 </div>

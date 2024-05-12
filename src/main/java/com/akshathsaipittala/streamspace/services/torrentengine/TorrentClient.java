@@ -47,8 +47,15 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
+    private static TorrentClient instance;
+
     public static void startEngine(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
-        new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
+        if (instance!= null) {
+            throw new IllegalStateException("TorrentClient is already initialized");
+        }
+        instance = new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository);
+        instance.resume();
+        //new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
     }
 
     private Options options;
@@ -164,6 +171,14 @@ public class TorrentClient {
         this.torrentStateLogger = Optional.ofNullable(torrentStateLogger);
     }
 
+    // Static method to get the instance
+    public static TorrentClient getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("TorrentClient is not initialized");
+        }
+        return instance;
+    }
+
     private Optional<Integer> getPortOverride() {
         return getOptionalPort(options::getPort);
     }
@@ -238,6 +253,7 @@ public class TorrentClient {
                     });
         } catch (Throwable e) {
             printAndShutdown(e);
+            //addShutdownHook();
         }
     }
 
@@ -268,7 +284,28 @@ public class TorrentClient {
         if (!(e instanceof InterruptedException)) {
             log.error("Unexpected error, exiting...", e);
         }
-        System.exit(1);
+        //System.exit(1);
+    }
+
+    // Modify the shutdown hook to call cleanup
+    public void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("Shutting down TorrentClient...");
+            cleanup();
+            System.gc(); // Suggest garbage collection
+        }));
+    }
+
+    private void cleanup() {
+        pause(); // Ensure the client is stopped
+        client = null; // Dereference the client
+        runtime = null; // Dereference the runtime
+        torrentStateLogger = Optional.empty(); // Clear the optional reference
+    }
+
+    public static void toggleStartStop() {
+        TorrentClient client = getInstance();
+        client.togglePause();
     }
 
 }

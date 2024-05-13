@@ -45,7 +45,7 @@ Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation
 
 ### Download Movies
 
-<img width="1512" alt="Download a Movie demo Screenshot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/c55d7531-dac3-4891-bdfd-d1d9cdb50c8a">
+<img width="1512" alt="Screenshot 2024-05-13 at 1 09 07 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/df4306d7-3315-4ef2-bcf4-468e9a718bee">
 
 ### Get Suggested & Related Movies 
 

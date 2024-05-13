@@ -12,48 +12,44 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Slf4j
 @Service
 public class YoutubeCrawler {
 
-    public YouTubeResponseDTO getYoutubeTrailersByTitle(String searchQuery) {
-        YouTubeResponseDTO youTubeResponseDTO = null;
-        try {
+    public YouTubeResponseDTO getYoutubeTrailersByTitle(String searchQuery) throws IOException {
 
-            Document document = Jsoup.connect("https://www.youtube.com/results?search_query=" + searchQuery + " trailer")
-                    .get();
+        Document document = Jsoup.connect("https://www.youtube.com/results?search_query=" + searchQuery + " trailer")
+                .get();
 
-            Elements scriptElements = document.getElementsByTag("script");
-            String json = scriptElements.get(34).data();
-            json = json.replace("var ytInitialData = ", "");
+        Elements scriptElements = document.getElementsByTag("script");
+        String json = scriptElements.get(34).data();
+        json = json.replace("var ytInitialData = ", "");
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(json);
 
-            JsonNode contents = jsonNode.get("contents");
+        JsonNode contents = jsonNode.get("contents");
 
-            Content content = objectMapper.treeToValue(contents, Content.class);
+        Content content = objectMapper.treeToValue(contents, Content.class);
 
-            youTubeResponseDTO = new YouTubeResponseDTO(
-                    content
-                            .twoColumnSearchResultsRenderer
-                            .primaryContents
-                            .sectionListRenderer
-                            .contents.getFirst().itemSectionRenderer.contents.getFirst().videoRenderer.title.runs.getFirst().text,
+        YouTubeResponseDTO youTubeResponseDTO = new YouTubeResponseDTO(
+                content
+                        .twoColumnSearchResultsRenderer
+                        .primaryContents
+                        .sectionListRenderer
+                        .contents.getFirst().itemSectionRenderer.contents.getFirst().videoRenderer.title.runs.getFirst().text,
 
-                    content
-                            .twoColumnSearchResultsRenderer
-                            .primaryContents
-                            .sectionListRenderer
-                            .contents.getFirst().itemSectionRenderer.contents.getFirst().videoRenderer.videoId
-            );
+                content
+                        .twoColumnSearchResultsRenderer
+                        .primaryContents
+                        .sectionListRenderer
+                        .contents.getFirst().itemSectionRenderer.contents.getFirst().videoRenderer.videoId
+        );
 
-        } catch (IOException | RuntimeException ex) {
-            log.error("Error in fetching Youtube Trailer " + ex);
-        }
-        log.info("{}", youTubeResponseDTO);
-        return youTubeResponseDTO;
+        log.debug("{}", youTubeResponseDTO);
+        return Objects.requireNonNull(youTubeResponseDTO);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

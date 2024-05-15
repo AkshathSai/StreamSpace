@@ -3,14 +3,16 @@ package com.akshathsaipittala.streamspace.services.resilience;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @Service
 public class RetryService<T> {
 
     //@Value("${retryAttempts}")
-    private int retryAttempts = 3;
+    private int retryAttempts = 4;
     //@Value("${timeToWait}")
-    private int timeToWait = 1000;
+    private final long timeToWait = TimeUnit.SECONDS.toSeconds(1000);
 
     public T retry(RetryExecutor<T> retryExecutor) {
 

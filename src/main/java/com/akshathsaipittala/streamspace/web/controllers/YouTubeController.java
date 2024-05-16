@@ -1,7 +1,7 @@
 package com.akshathsaipittala.streamspace.web.controllers;
 
 import com.akshathsaipittala.streamspace.dto.youtube.YouTubeResponseDTO;
-import com.akshathsaipittala.streamspace.services.resilience.RetryService;
+import com.akshathsaipittala.streamspace.resilience.RetryService;
 import com.akshathsaipittala.streamspace.web.crawlers.YoutubeCrawler;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import lombok.RequiredArgsConstructor;

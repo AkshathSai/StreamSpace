@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services.resilience;
+package com.akshathsaipittala.streamspace.resilience;
 
 @FunctionalInterface
 public interface RetryExecutor<T> {

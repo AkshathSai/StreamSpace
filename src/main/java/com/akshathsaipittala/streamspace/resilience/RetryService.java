@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services.resilience;
+package com.akshathsaipittala.streamspace.resilience;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

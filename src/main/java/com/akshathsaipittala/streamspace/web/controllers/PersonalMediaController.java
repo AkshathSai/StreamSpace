@@ -26,7 +26,7 @@ public class PersonalMediaController {
         model.addAttribute("music", musicRepository.findAll());
 
         return HtmxResponse.builder()
-                .view("localmedia :: local-media-player")
+                .view("personalmedia :: personalMediaPlayer")
                 .build();
     }
 

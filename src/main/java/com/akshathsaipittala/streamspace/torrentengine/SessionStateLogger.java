@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services.torrentengine;
+package com.akshathsaipittala.streamspace.torrentengine;
 
 import bt.metainfo.Torrent;
 import bt.torrent.TorrentSessionState;

@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services.background;
+package com.akshathsaipittala.streamspace.services;
 
 import com.akshathsaipittala.streamspace.entity.CONTENTTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;

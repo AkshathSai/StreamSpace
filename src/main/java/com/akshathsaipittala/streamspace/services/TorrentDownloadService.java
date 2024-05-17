@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.services.background;
+package com.akshathsaipittala.streamspace.services;
 
 import com.akshathsaipittala.streamspace.entity.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.entity.DownloadTask;
@@ -7,8 +7,8 @@ import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
 import com.akshathsaipittala.streamspace.repository.MovieRepository;
 import com.akshathsaipittala.streamspace.repository.MusicRepository;
-import com.akshathsaipittala.streamspace.services.torrentengine.Options;
-import com.akshathsaipittala.streamspace.services.torrentengine.TorrentClient;
+import com.akshathsaipittala.streamspace.torrentengine.Options;
+import com.akshathsaipittala.streamspace.torrentengine.TorrentClient;
 import com.akshathsaipittala.streamspace.utils.ApplicationConstants;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;

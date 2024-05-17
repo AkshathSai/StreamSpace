@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.akshathsaipittala.streamspace.services.torrentengine;
+package com.akshathsaipittala.streamspace.torrentengine;
 
 import lombok.Data;
 

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/local")
+@RequestMapping("/personal")
 @RequiredArgsConstructor
-public class LocalMediaController {
+public class PersonalMediaController {
 
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;

@@ -80,8 +80,6 @@
 
 <div th:fragment="showAllDownloads" th:remove="tag">
 
-    <h1 class="display-6">Download Queue</h1>
-
     <div th:each="task : ${tasks}">
 
         <!--<div class="pb-3 text-end">
@@ -142,4 +140,8 @@
 
     </div>
 
+</div>
+
+<div th:fragment="showNoDownloads" th:remove="tag">
+    <small>No Downloads</small>
 </div>

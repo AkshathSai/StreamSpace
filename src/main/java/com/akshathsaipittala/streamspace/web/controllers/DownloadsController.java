@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,10 +28,18 @@ public class DownloadsController {
 
     @GetMapping("")
     public HtmxResponse getAllDownloads() {
-        return HtmxResponse
-                .builder()
-                .view(new ModelAndView("downloads :: showAllDownloads", Map.of("tasks", downloadTaskRepository.findAll())))
-                .build();
+        List<DownloadTask> listOfDownloads = downloadTaskRepository.findAll();
+
+        if (listOfDownloads.isEmpty()) {
+            return HtmxResponse.builder()
+                    .view("downloads :: showNoDownloads")
+                    .build();
+        } else {
+            return HtmxResponse
+                    .builder()
+                    .view(new ModelAndView("downloads :: showAllDownloads", Map.of("tasks", listOfDownloads)))
+                    .build();
+        }
     }
 
     @ResponseBody

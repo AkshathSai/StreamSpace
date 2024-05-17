@@ -345,10 +345,10 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="localmedia-tab" data-bs-toggle="tab" data-bs-target="#localmedia"
+                    <button class="nav-link" id="personalmedia-tab" data-bs-toggle="tab" data-bs-target="#personalmedia"
                             type="button"
-                            role="tab" aria-controls="localmedia" aria-selected="false"><i class="bi bi-phone"></i>
-                        Local
+                            role="tab" aria-controls="personalmedia" aria-selected="false"><i class="bi bi-phone"></i>
+                        Personal
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -552,9 +552,9 @@
                     </div>
 
                 </div>
-                <div class="tab-pane fade" id="localmedia" role="tabpanel" aria-labelledby="localmedia-tab">
+                <div class="tab-pane fade" id="personalmedia" role="tabpanel" aria-labelledby="personalmedia-tab">
 
-                    <div id="local-media" class="row" hx-get="/local/media" hx-trigger="click from:#localmedia-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
+                    <div id="personal-media" class="row" hx-get="/personal/media" hx-trigger="click from:#personalmedia-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
 
                     </div>
 
@@ -566,8 +566,9 @@
 
                     </div>
 
-                    <div id="getAllDownloads" hx-get="/download" hx-trigger="click from:#playlist-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
+                    <h1 class="display-6">Download Queue</h1>
 
+                    <div id="getAllDownloads" hx-get="/download" hx-trigger="click from:#playlist-tab" hx-indicator=".globalProgress" hx-swap="transition:true">
 
                     </div>
 

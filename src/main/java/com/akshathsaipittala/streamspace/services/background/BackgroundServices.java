@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Async
 @Slf4j
 @Service
 public class BackgroundServices {
@@ -42,6 +41,7 @@ public class BackgroundServices {
     @Autowired
     private TorrentDownloadService torrentDownloadService;
 
+    @Async
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
 
@@ -60,7 +60,8 @@ public class BackgroundServices {
 
     }
 
-    private void startBackgroundDownloads() {
+    @Async
+    public void startBackgroundDownloads() {
 
         Specification<DownloadTask> spec = DownloadTaskSpecs.hasTaskStatusIn(STATUS.RETRY, STATUS.NEW);
         List<DownloadTask> downloadTasks = new ArrayList<>(downloadTasksRepo.findAll(spec));

@@ -29,7 +29,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-@Async
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,7 @@ public class MediaIndexer {
     final MovieRepository movieRepository;
     final MusicRepository musicRepository;
 
+    @Async
     public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
@@ -70,6 +70,7 @@ public class MediaIndexer {
 
     }
 
+    @Async
     public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
@@ -89,40 +90,25 @@ public class MediaIndexer {
     /**
      * Concurrent indexer
      */
-    public void indexLocalMedia(String... locations) throws IOException {
-        findLocalMediaFiles(locations)
-                .thenApply(paths -> {
-                    List<Path> musicPaths = paths.parallelStream()
-                            .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".flac"))
-                            .toList();
+    @Async
+    public CompletableFuture<Void> indexLocalMedia(String... locations) throws IOException {
+        return findLocalMediaFiles(locations)
+                .thenCompose(paths -> {
+                    List<Path> musicPaths = filterPaths(paths, ".mp3", ".flac");
+                    List<Path> moviePaths = filterPaths(paths, ".mp4", ".mkv", ".avi", ".mpeg");
 
-                    List<Path> moviePaths = paths.parallelStream()
-                            .filter(path -> path.toString().endsWith(".mp4") || path.toString().endsWith(".mkv") || path.toString().endsWith(".avi") || path.toString().endsWith(".mpeg"))
-                            .toList();
-
-                    List<Movie> finalMovies;
-                    List<Song> finalSongs;
                     try {
-                        finalMovies = createMovieEntities(moviePaths);
-                        finalSongs = createMusicEntities(musicPaths);
+                        List<Movie> finalMovies = createMovieEntities(moviePaths);
+                        List<Song> finalSongs = createMusicEntities(musicPaths);
+
+                        CompletableFuture<Void> moviesFuture = saveMoviesAsync(finalMovies);
+                        CompletableFuture<Void> musicFuture = saveMusicAsync(finalSongs);
+
+                        return CompletableFuture.allOf(moviesFuture, musicFuture);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        log.error("Error creating media entities", e);
+                        return CompletableFuture.failedFuture(e);
                     }
-
-                    // Save entities to the database asynchronously
-                    CompletableFuture<Void> moviesFuture = CompletableFuture.runAsync(() ->
-                                    finalMovies.stream()
-                                            .filter(movie -> !movieRepository.existsByContentId(movie.getContentId()))
-                                            .forEach(movieRepository::save))
-                            .thenRun(() -> log.info("Finished Indexing Movies"));
-                    CompletableFuture<Void> musicFuture = CompletableFuture.runAsync(() ->
-                                    finalSongs.stream()
-                                            .filter(song -> !musicRepository.existsByContentId(song.getContentId()))
-                                            .forEach(musicRepository::save))
-                            .thenRun(() -> log.info("Finished Indexing Music"));
-
-                    // Return a new CompletableFuture that is completed when both of the provided CompletableFutures complete
-                    return CompletableFuture.allOf(moviesFuture, musicFuture);
                 })
                 .exceptionally(throwable -> {
                     log.error("Error indexing media", throwable);
@@ -130,35 +116,63 @@ public class MediaIndexer {
                 });
     }
 
-    private CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) throws IOException {
+    private CompletableFuture<List<Path>> findLocalMediaFiles(String... locations) {
         final String pattern = "glob:**/*.{mp4,mpeg,mp3,mkv,flac}";
 
         List<Path> matchingPaths = new ArrayList<>();
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
 
         for (String location : locations) {
-
-            Path start = Paths.get(location);
-
-            if (Files.exists(start)) {
-
-                Files.walkFileTree(start, new SimpleFileVisitor<>() {
-                    @Override
-                    public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
-                        if (matcher.matches(path)) {
-                            matchingPaths.add(path);
+            try {
+                Path start = Paths.get(location);
+                if (Files.exists(start)) {
+                    Files.walkFileTree(start, new SimpleFileVisitor<>() {
+                        @Override
+                        public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                            if (matcher.matches(path)) {
+                                matchingPaths.add(path);
+                            }
+                            return FileVisitResult.CONTINUE;
                         }
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
-
+                    });
+                }
+            } catch (IOException e) {
+                log.error("Error finding personal media files in location: {}", location, e);
             }
-
         }
 
         return CompletableFuture.completedFuture(matchingPaths);
     }
 
+    private List<Path> filterPaths(List<Path> paths, String... extensions) {
+        return paths.parallelStream()
+                .filter(path -> {
+                    String pathString = path.toString().toLowerCase();
+                    for (String ext : extensions) {
+                        if (pathString.endsWith(ext)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .toList();
+    }
+
+    private CompletableFuture<Void> saveMoviesAsync(List<Movie> movies) {
+        return CompletableFuture.runAsync(() ->
+                        movies.stream()
+                                .filter(movie -> !movieRepository.existsByContentId(movie.getContentId()))
+                                .forEach(movieRepository::save))
+                .thenRun(() -> log.info("Finished Indexing Movies"));
+    }
+
+    private CompletableFuture<Void> saveMusicAsync(List<Song> songs) {
+        return CompletableFuture.runAsync(() ->
+                        songs.stream()
+                                .filter(song -> !musicRepository.existsByContentId(song.getContentId()))
+                                .forEach(musicRepository::save))
+                .thenRun(() -> log.info("Finished Indexing Music"));
+    }
 
     private List<Movie> createMovieEntities(List<Path> paths) throws IOException {
 

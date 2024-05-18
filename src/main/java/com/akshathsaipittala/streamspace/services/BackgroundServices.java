@@ -41,23 +41,23 @@ public class BackgroundServices {
     @Autowired
     private TorrentDownloadService torrentDownloadService;
 
+
     @Async
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
-
-        Thread.startVirtualThread(() -> {
-            try {
-                log.info("Indexing Local Media");
-                mediaIndexer.indexLocalMedia(
-                        runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
-                        runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
-                );
-                startBackgroundDownloads();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
+        try {
+            log.info("Indexing Local Media");
+            mediaIndexer.indexLocalMedia(
+                            runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
+                            runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
+                    ).thenRunAsync(this::startBackgroundDownloads)
+                    .exceptionally(throwable -> {
+                        log.error("Error during media indexing or starting background downloads", throwable);
+                        return null;
+                    });
+        } catch (IOException e) {
+            log.error("Error indexing local media", e);
+        }
     }
 
     @Async

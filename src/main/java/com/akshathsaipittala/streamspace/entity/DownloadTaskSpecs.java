@@ -5,7 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 public class DownloadTaskSpecs {
 
     public static Specification<DownloadTask> hasTaskStatusIn(STATUS... statuses) {
-        return (root, query, criteriaBuilder) -> root.get("taskStatus").in(statuses);
+        // Convert varargs to an array explicitly
+        return (root, query, criteriaBuilder) -> root.get("taskStatus").in((Object[]) statuses);
     }
 
 }

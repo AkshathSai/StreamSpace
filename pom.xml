@@ -153,6 +153,12 @@
 			<artifactId>hyperscript.org</artifactId>
 			<version>0.9.12</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.progressify/progressify-spring -->
+		<dependency>
+			<groupId>org.progressify</groupId>
+			<artifactId>progressify-spring</artifactId>
+			<version>0.2.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

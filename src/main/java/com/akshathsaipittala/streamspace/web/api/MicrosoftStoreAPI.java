@@ -43,11 +43,17 @@ public interface MicrosoftStoreAPI {
                                   @PathVariable(value = "mediaType") String mediaType,
                                   @PathVariable(value = "filteredCategories") String filteredCategories);
 
-    @GetExchange("video.topselling.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=AllProducts&studioFilter=")
-    MicrosoftStoreRecord topSelling();
+    @GetExchange("video.topselling.movies&pgNo={pgNo}&noItems={noItems}&mediaType={mediaType}&filteredCategories={filteredCategories}&studioFilter=")
+    MicrosoftStoreRecord topSelling(@PathVariable(value = "pgNo") int pgNo,
+                                    @PathVariable(value = "noItems") int noItems,
+                                    @PathVariable(value = "mediaType") String mediaType,
+                                    @PathVariable(value = "filteredCategories") String filteredCategories);
 
-    @GetExchange("video.toprented.movies&pgNo=1&noItems=12&mediaType=movies&filteredCategories=AllProducts&studioFilter=")
-    MicrosoftStoreRecord topRented();
+    @GetExchange("video.toprented.movies&pgNo={pgNo}&noItems={noItems}&mediaType={mediaType}&filteredCategories={filteredCategories}&studioFilter=")
+    MicrosoftStoreRecord topRented(@PathVariable(value = "pgNo") int pgNo,
+                                   @PathVariable(value = "noItems") int noItems,
+                                   @PathVariable(value = "mediaType") String mediaType,
+                                   @PathVariable(value = "filteredCategories") String filteredCategories);
 
     @GetExchange("video.collections.promo_marvelmovies&pgNo=1&noItems=48&mediaType=movies&filteredCategories=AllProducts")
     MicrosoftStoreRecord MCUCollection();

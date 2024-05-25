@@ -3,9 +3,13 @@
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Space</title>
+    <title>StreamSpace</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <!--<link rel="stylesheet" th:href="@{/css/ZegoeLight-U.css}">-->
     <!-- Bootstrap CSS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
@@ -15,6 +19,18 @@
     <script type="text/javascript" th:src="@{/webjars/hyperscript.org/dist/_hyperscript.js}"></script>
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
+
+    <link rel="manifest" th:href="@{/assets/manifest.webmanifest}">
+    <link rel="apple-touch-icon" th:href="@{/assets/images/logo.png}" />
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', ()=> {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+    </script>
+
     <style>
         /*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');*/
         /** {
@@ -307,7 +323,7 @@
                        autofocus
                 >
                 <!-- <span class="input-group-text" id="basic-addon2">search</span> -->
-                <!--<img id="spinner" class="htmx-indicator" src="/images/loader.svg" alt="Request In Flight..."/>-->
+                <!--<img id="spinner" class="htmx-indicator" th:src="@{/assets/images/loader.svg}" alt="Request In Flight..."/>-->
                 <!--<div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">
                     <div class="indeterminate" style="background-color: red;"></div>
                 </div>-->

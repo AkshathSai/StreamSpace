@@ -35,7 +35,7 @@
     </div>
 
     <a class="text-decoration-none fs-4 mb-3"
-       hx:get="@{/stream/movie/{contentId}(contentId=${torrentHash})}"
+       hx:get="@{/stream/movie/{movieCode}(movieCode=${torrentHash})}"
        hx-boost="true"
        hx-indicator=".globalProgress"
        hx-target="#poster">

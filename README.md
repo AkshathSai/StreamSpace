@@ -57,6 +57,10 @@ Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation
 
 <img width="1512" alt="View All Page Screenshot-2" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/6587d8ab-fe4a-436a-b8b4-668072da3ffe">
 
+### And Finally, Dark theme 🤯 
+
+<img width="1512" alt="Screenshot 2024-05-30 at 10 48 49 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/b8287d24-0762-4a9b-a7c5-033dd4d594db">
+
 
 ## The Challenge
 

@@ -243,6 +243,9 @@
         #featureContainer .card{
             position: relative;
         }
+        #featureContainer .card{
+            background: transparent;
+        }
         #featureContainer .card .card-img-overlays{
             position: absolute;
             bottom: 15%;
@@ -275,7 +278,7 @@
 </head>
 
 <!--<body data-bs-theme="dark" class="dark">-->
-<body data-bs-theme="light">
+<body>
 
 <div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">
     <div class="indeterminate" style="background-color: red;"></div>
@@ -293,6 +296,7 @@
         <!-- Logo Plan
             <div style="font-weight: lighter;" class=" logo display-1 text-center">🎞️ StreamSpace</div>
         -->
+        <i id="btnSwitch" class="bi bi-shadows"></i>
 
         <div class="col">
 
@@ -596,6 +600,20 @@
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
 <script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
+<script>
+    document.getElementById('btnSwitch').addEventListener('click',()=>{
+        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+            document.documentElement.setAttribute('data-bs-theme','light');
+            // Reset the document's background color to default
+            document.body.style.backgroundColor = '';
+        }
+        else {
+            document.documentElement.setAttribute('data-bs-theme','dark');
+            // Change the document's background color to black
+            document.body.style.backgroundColor = 'black';
+        }
+    });
+</script>
 <script>
     document.body.addEventListener('htmx:afterSwap', function (event) {
         // Check if the updated content is the search results

@@ -274,6 +274,16 @@
             padding-top: 10px;
         }
 
+        .custom-back-button {
+            color: inherit; /* Use the parent's color */
+            text-decoration: none!important; /* Remove underline */
+        }
+
+        .custom-back-button:hover,
+        .custom-back-button:focus {
+            color: inherit; /* Keep the color consistent even on hover/focus */
+            text-decoration: none!important; /* Ensure underline doesn't reappear on hover/focus */
+        }
     </style>
 </head>
 
@@ -296,9 +306,9 @@
         <!-- Logo Plan
             <div style="font-weight: lighter;" class=" logo display-1 text-center">🎞️ StreamSpace</div>
         -->
-        <i id="btnSwitch" class="bi bi-shadows"></i>
 
         <div class="col">
+            <i id="btnSwitch" class="bi bi-shadows"></i>
 
             <div class="input-group mb-3 sticky-top navbar bg-transparent">
                 <input type="search"

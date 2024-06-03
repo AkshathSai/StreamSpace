@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>io.github.wimdeblauwe</groupId>
 			<artifactId>htmx-spring-boot-thymeleaf</artifactId>
-			<version>3.3.0</version>
+			<version>3.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.paulcwarren</groupId>

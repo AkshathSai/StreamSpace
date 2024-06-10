@@ -179,7 +179,6 @@ public class MediaIndexer {
         List<Movie> moviesList = new ArrayList<>();
 
         for (Path entry : paths) {
-            Movie movie = new Movie();
             log.debug(entry.toString());
 
             // Get the immediate parent folder name
@@ -199,6 +198,7 @@ public class MediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
+            Movie movie = new Movie();
             movie.setName(encodedFileName);
             movie.setContentLength(Files.size(entry));
             movie.setSummary(entry.getFileName().toString());
@@ -217,7 +217,6 @@ public class MediaIndexer {
         List<Song> songs = new ArrayList<>();
 
         for (Path entry : paths) {
-            Song song = new Song();
             log.debug(entry.toString());
 
             // Get the immediate parent folder name
@@ -237,6 +236,7 @@ public class MediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
+            Song song = new Song();
             song.setName(encodedFileName);
             song.setContentLength(Files.size(entry));
             song.setSummary(entry.getFileName().toString());

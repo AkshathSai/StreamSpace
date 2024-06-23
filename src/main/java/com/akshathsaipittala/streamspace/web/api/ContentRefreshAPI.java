@@ -16,7 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/refresh")
 @RequiredArgsConstructor
-public class RefreshAPI {
+public class ContentRefreshAPI {
 
     final RuntimeHelper runtimeHelper;
     final MovieRepository movieRepository;

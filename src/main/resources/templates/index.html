@@ -308,9 +308,18 @@
         -->
 
         <div class="col">
-            <i id="btnSwitch" class="bi bi-shadows"></i>
+
 
             <div class="input-group mb-3 sticky-top navbar bg-transparent">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="btnSwitch">
+<!--                        <i class="bi bi-shadows"></i>-->
+                        <i class="bi bi-search"></i>&nbsp;&nbsp;
+                        <i class="bi bi-moon-stars-fill"></i>
+                    </span>
+                </div>
+
                 <input type="search"
                        class="form-control"
                        placeholder="Active Search"
@@ -327,6 +336,13 @@
                        hx-boost="true"
                        autofocus
                 >
+
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="bi bi-mic-fill"></i>
+                    </span>
+                </div>
+
                 <!-- <span class="input-group-text" id="basic-addon2">search</span> -->
                 <!--<img id="spinner" class="htmx-indicator" th:src="@{/assets/images/loader.svg}" alt="Request In Flight..."/>-->
                 <!--<div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">

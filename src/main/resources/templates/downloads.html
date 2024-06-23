@@ -56,13 +56,13 @@
 
     <form id="submit-torrentHash" class="mb-3" hx-post="/download/torrent" hx-swap="outerHTML">
 
-        <div class="form-group">
-            <label for="selectedOption">Torrent Hash</label>
+        <div class="mb-3">
+            <label for="selectedOption" class="form-label">Torrent Hash</label>
             <input type="text" class="form-control" id="selectedOption" name="selectedOption" aria-describedby="torrentHashHelp" placeholder="Torrent Hash">
-            <small id="torrentHashHelp" class="form-text text-muted">Please enter the TorrentHash/InfoHash to begin the torrent download.</small>
+            <div id="torrentHashHelp" class="form-text text-muted">Please enter the TorrentHash/InfoHash to begin the torrent download.</div>
         </div>
 
-        <div class="form-check text-muted">
+        <div class="mb-3 form-check">
             <input class="form-check-input" type="checkbox" id="sequentialCheck" name="sequentialCheck">
             <label class="form-check-label" for="sequentialCheck">
                 Sequential
@@ -71,9 +71,7 @@
             <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
         </div>
 
-        <div class="pt-1">
-            <button type="submit" class="btn btn-primary">Download</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Download</button>
     </form>
 
 </div>

@@ -1,10 +1,20 @@
 <div th:fragment="personalMediaPlayer" th:remove="tag" xmlns:hx="http://www.w3.org/1999/xhtml">
 
-    <div class="col text-left fade-me-in">
+    <div class="col">
 
-        <p class="display-6 card-title lead mb-0 text-muted">Library</p>
+        <h3 class="display-6 pt-3 mb-3">
+            Personal Media
+            <small class="text-body-secondary" style="cursor: pointer">
+                <i class="bi bi-arrow-repeat"
+                   data-toggle="tooltip"
+                   title="Refresh"
+                   hx-get="/refresh/personalmedia"
+                   hx-indicator=".globalProgress"
+                   hx-swap="outerHTML:#personal-media-files"></i>
+            </small>
+        </h3>
 
-        <ul id="local-media-files" class="text-left">
+        <ul id="personal-media-files" class="text-left">
 
             <li th:each="video: ${videos}">
                 <a th:text="${video.name}"

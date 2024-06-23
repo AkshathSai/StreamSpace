@@ -9,11 +9,13 @@ import org.springframework.content.commons.annotations.ContentId;
 import org.springframework.content.commons.annotations.ContentLength;
 import org.springframework.content.commons.annotations.MimeType;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Song {
+public class Song implements Serializable {
 
     @Id
     private String songId;

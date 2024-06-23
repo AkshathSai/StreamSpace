@@ -27,11 +27,12 @@ public class RetryService<T> {
             } catch (Exception e) {
                 retryAttempts--;
                 if (shouldRetry()) {
-                    log.info("Waiting for next retry...");
+                    //log.error(e.getMessage(), e);
+                    log.error(e.getMessage());
                     waitBeforeNextRetry();
                 } else {
                     //throw e; // if all retries failed, throw the exception
-                    log.error("Exception occurred while executing the method {} ", e);
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -45,9 +46,10 @@ public class RetryService<T> {
 
     private void waitBeforeNextRetry() {
         try {
+            log.info("Waiting before next retry...");
             Thread.sleep(timeToWait);
         } catch (Exception e) {
-            log.info("Exception while waiting for next retry {} ", e);
+            log.error("Exception while waiting for next retry {}", e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
     }

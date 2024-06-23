@@ -11,13 +11,14 @@ import org.springframework.content.commons.annotations.ContentLength;
 import org.springframework.content.commons.annotations.MimeType;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Movie {
+public class Movie implements Serializable {
 
     @Id
     private String movieCode;

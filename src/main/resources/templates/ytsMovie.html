@@ -4,12 +4,15 @@
 
     <!--  <hr class="featurette-divider">-->
 
-    <div id="movieFeaturette" class="row featurette">
-      <a href="javascript:void(0);" onclick="window.history.back();" class="custom-back-button text-decoration-none">
-        <i aria-hidden="true" class="bi bi-arrow-left h2"></i>
-      </a>
+    <div id="movieFeaturette" class="row pt-3">
 
-      <div id="downloadForm" class="col-md-7 order-md-2">
+      <div class="col-1">
+        <a href="javascript:void(0);" onclick="window.history.back();" class="custom-back-button text-decoration-none">
+          <i aria-hidden="true" class="bi bi-arrow-left h2"></i>
+        </a>
+      </div>
+
+      <div id="downloadForm" class="col order-md-2">
 
         <h3 class="featurette-heading" th:text="${ytsMovieRecord.data().movie().title_long()}"></h3>
 
@@ -42,14 +45,19 @@
 
           <input type="hidden" id="torrentName" name="torrentName" th:value="${ytsMovieRecord.data().movie().title_long()}" />
 
-          <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
-            <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
-                    th:value="${url.hash()}"
-                    th:text="${url.quality() + '.' + url.video_codec() + ' [' + url.size() + '] - ' + url.audio_channels() + ' - ' + url.bit_depth() + 'bit'}"></option>
-            <!-- th:text="${url.quality() + ' [' + url.size() + ']' + ' Peers ' + url.peers() + ' Seeds ' + url.seeds()}"></option>-->
-          </select>
+          <div class="form-floating mb-3">
+            <select class="form-select" aria-label="Default select example" id="selectedOption" name="selectedOption">
+              <option th:each="url: ${ytsMovieRecord.data().movie().torrents()}"
+                      th:value="${url.hash()}"
+                      th:text="${url.quality() + '.' + url.video_codec() + ' [' + url.size() + '] - ' + url.audio_channels() + ' - ' + url.bit_depth() + 'bit'}"></option>
+              <!-- th:text="${url.quality() + ' [' + url.size() + ']' + ' Peers ' + url.peers() + ' Seeds ' + url.seeds()}"></option>-->
+            </select>
+            <label for="selectedOption">
+              <i class="bi bi-cloud-arrow-down"></i> Video On Demand
+            </label>
+          </div>
 
-          <div class="form-check text-muted">
+          <div class="mb-3 form-check text-muted">
             <input class="form-check-input" type="checkbox" id="sequentialCheck" name="sequentialCheck">
             <label class="form-check-label" for="sequentialCheck">
               Sequential
@@ -63,7 +71,8 @@
         </form>
 
       </div>
-      <div id="poster" class="col-md-5 order-md-1">
+
+      <div id="poster" class="col order-md-1">
         <img loading="lazy" class="featurette-image img-fluid mx-auto shadow-lg" th:src="@{${ytsMovieRecord.data().movie().large_cover_image()}}" alt="500x500" data-holder-rendered="true">
       </div>
 

@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<bt.version>1.10</bt.version>
-		<spring.content.version>3.0.10</spring.content.version>
+		<spring.content.version>3.0.11</spring.content.version>
 	</properties>
 	<dependencies>
 		<dependency>

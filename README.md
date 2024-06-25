@@ -3,9 +3,8 @@
 [![Java CI with Maven](https://github.com/AkshathSai/StreamSpace/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/AkshathSai/StreamSpace/actions/workflows/ci-build.yml)
 ![Maven](https://badgen.net/badge/icon/maven?icon=maven&label)
 ![GitHub](https://img.shields.io/github/license/akshathsai/TuneTrip)
-[![Coverage Status](https://coveralls.io/repos/github/your-username/project-name/badge.svg?branch=master)](https://coveralls.io/github/your-username/project-name?branch=master)
-
-Dive into the world of StreamSpace, where entertainment meets innovation, and subscription fatigue becomes a thing of the past [^1] 
+> [!CAUTION]
+> The StreamSpace project is designed and developed solely for educational purposes. It demonstrates the capabilities of modern software technologies in aggregating and streaming media content. The use of this software for downloading copyrighted material without permission is strictly prohibited and against the law. Users are responsible for complying with all applicable laws and regulations in their jurisdiction regarding copyright infringement. We strongly advise against using StreamSpace for any activities that may infringe upon the rights of content creators and distributors. Use this software responsibly and at your own risk.
 
 Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation)
 

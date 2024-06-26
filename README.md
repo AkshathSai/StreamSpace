@@ -15,10 +15,8 @@ Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation
 
 ## Contents
 
-- [Screenshots](#screenshots) 
-- [The Challenge](#the-challenge)
-- [Our Solution](#solution)
-- [Keynotes](#key-features)
+- [Screenshots](#screenshots)
+- [Keynotes](#keynotes)
 - [Technologies Used](#technologies-used)
 - [Setup & Installation](#setup--installation)
 - [Contribute](#contribute)
@@ -29,49 +27,41 @@ Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation
 
 ### Simple Straight forward call-to-action UI 
 
-<img width="1512" alt="Homapage UI shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a9c000e9-4f9c-4822-acf1-2b4a24938527">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 35 51 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/8a5d0214-cc03-4ecf-9707-7f96d1f54b91">
 
 ### Lightning Fast⚡ Active Search 💨(Type ahead suggestions Sweet 🥹)
 
-<img width="1512" alt="Active Search demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/8b801bd1-f498-4b31-afdd-a17978d16d68">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 37 04 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/632dc455-ed99-4cd5-8b1c-25644b7cbbd1">
 
-### Instant movie Details, stream uncompressed eye-candy 🥹 upto 4K Quality!!
-<img width="1512" alt="Movie Streaming demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/9e765ad5-00c2-4245-ac10-e0057de282ca">
+### Instant movie Details, stream uncompressed eye-candy 🥹 available in 720p, 1080p & 2160p Video Quality!!
+
+<img width="1512" alt="Screenshot 2024-06-26 at 5 37 54 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/8323fb6c-395b-400f-9947-8b3c0c202212">
+
+<img width="1512" alt="Screenshot 2024-06-26 at 5 39 48 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/5f052202-ba64-4674-bb78-806f617dad6e">
 
 ### Not sure? Watch Trailers😃
 
-<img width="1512" alt="Youtube Trailers demo shot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/a6bf8775-aa4a-4319-b0d0-966bd88867d0">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 38 24 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/6529d329-5332-48d8-8e42-4637d74bbe9e">
 
 ### Download Movies
 
-<img width="1512" alt="Screenshot 2024-05-13 at 1 09 07 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/df4306d7-3315-4ef2-bcf4-468e9a718bee">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 39 23 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/45b8699d-0a4d-4a0c-89a5-fafa4f3bb3d3">
 
-### Get Suggested & Related Movies 
+<img width="1512" alt="Screenshot 2024-06-26 at 5 40 03 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/913e1d0c-aaaf-443d-82c3-76397d3a871f">
 
-<img width="1512" alt="Suggested Movies Screenshot" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/ad8ba5ae-75a9-45da-aa0b-e4a85a1f424e">
+### Watchlist for later...
 
-### View All Page with Pagination
+<img width="1512" alt="Screenshot 2024-06-26 at 5 43 49 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/7d9065c3-3344-4863-8734-8128dbd1d4fc">
 
-<img width="1512" alt="View All Page Screenshot-1" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/88190f52-3394-4311-bd6b-05c1d315ec0e">
+### Play your local media likes Movies 'n' Music with the Media Player
 
-<img width="1512" alt="View All Page Screenshot-2" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/6587d8ab-fe4a-436a-b8b4-668072da3ffe">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 43 20 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/de22173d-7311-42c6-ba04-fd70eb7ad489">
 
 ### And Finally, Dark theme 🤯 
 
-<img width="1512" alt="Screenshot 2024-05-30 at 10 48 49 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/b8287d24-0762-4a9b-a7c5-033dd4d594db">
+<img width="1512" alt="Screenshot 2024-06-26 at 5 44 13 PM" src="https://github.com/AkshathSai/StreamSpace/assets/89769614/1c361871-9e25-4ac8-b48d-0418a617aec0">
 
 
-## The Challenge
-
-In today's digital age, entertainment options have exploded, with countless OTT platforms vying for your attention. However, the more services that emerge, the more you find yourself juggling subscriptions just to access the content you love. It's a constant battle between your wallet and your desire to watch that latest blockbuster movie, explore a new TV series, or listen to your favorite tunes.
-
-## Solution
-
-StreamSpace is here to liberate you from subscription overload and bring all your entertainment needs under one unified banner. We believe that everyone should have the freedom to enjoy a wide variety of content without breaking the bank. With StreamSpace, you get:
-
-1. All-in-One Access
-2. Virtually Unlimited Choices
-3. Seamless Experience
 
 ## Keynotes
 
@@ -80,7 +70,7 @@ StreamSpace is here to liberate you from subscription overload and bring all you
 - [Coming soon] 💾 In-memory streaming without downloading 
 - [Future Plan] 🎵 Torrent Tunes  - Your favorite Music/Tunes delivered over P2P network
 - I'm pumped to collaborate and grow together in this open-source journey. [Let's connect! 🤝](mailto:akshathsai.pittala@outlook.com?)
-
+ 
 
 ## Technologies Used
 

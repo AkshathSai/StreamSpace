@@ -1,11 +1,9 @@
 package com.akshathsaipittala.streamspace.services;
 
-import com.akshathsaipittala.streamspace.entity.CONTENTTYPE;
-import com.akshathsaipittala.streamspace.entity.DownloadTask;
-import com.akshathsaipittala.streamspace.entity.STATUS;
-import com.akshathsaipittala.streamspace.entity.DownloadTaskSpecs;
+import com.akshathsaipittala.streamspace.entity.*;
 import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
 import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
+import com.akshathsaipittala.streamspace.repository.UserPreferences;
 import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +39,20 @@ public class BackgroundServices {
     @Autowired
     private TorrentDownloadService torrentDownloadService;
 
+    @Lazy
+    @Autowired
+    private UserPreferences userPreferences;
 
     @Async
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
         try {
             log.info("Indexing Local Media");
+            // Runs only during initial setup
+            if (userPreferences.count() == 0) {
+                configurePreferences();
+            }
+
             mediaIndexer.indexLocalMedia(
                             runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
                             runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
@@ -58,6 +64,13 @@ public class BackgroundServices {
         } catch (IOException e) {
             log.error("Error indexing local media", e);
         }
+    }
+
+    private void configurePreferences() {
+        List<Preference> features = List.of(
+                new Preference().setPrefId(1).setName("DARK_MODE_ENABLED")
+        );
+        userPreferences.saveAll(features);
     }
 
     @Async

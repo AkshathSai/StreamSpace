@@ -50,22 +50,24 @@ public class MediaIndexer {
         if (movie != null) {
             log.info("Movie Found {}", movie);
             movieRepository.delete(movie);
-            // Primary key cannot be updated due to which new record is created need to revisit
+            // TODO: need to revisit
+            // Primary key cannot be updated due to which new record is created
+            // hence deleting and inserting as new with latest torrentId
             movie.setMovieCode(torrentId.toString().toUpperCase());
             log.info("{} already indexed", fileName);
             movieRepository.save(movie);
         } else {
-            movie = new Movie();
-            movie.setContentLength(file.getSize());
-            movie.setName(fileName);
-            movie.setSummary(fileName);
-            movie.setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            log.info(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-            movie.setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
-            movie.setMovieCode(torrentId.toString().toUpperCase());
-            movie.setMediaSource(ApplicationConstants.TORRENT);
+            movie = new Movie()
+                    .setContentLength(file.getSize())
+                    .setName(fileName)
+                    .setSummary(fileName)
+                    .setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                    .setContentId(runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName)
+                    .setMovieCode(torrentId.toString().toUpperCase())
+                    .setMediaSource(ApplicationConstants.TORRENT);
+
+            log.info("Content ID {}", runtimeHelper.getMoviesContentStore() + torrentName + "/" + fileName);
             movieRepository.save(movie);
-            log.info("{}", movie);
         }
 
     }
@@ -84,7 +86,6 @@ public class MediaIndexer {
         song.setSongId(torrentId.toString().toUpperCase());
         song.setMediaSource(ApplicationConstants.TORRENT);
         musicRepository.save(song);
-        log.info("{}", song);
     }
 
     /**
@@ -198,14 +199,15 @@ public class MediaIndexer {
             log.debug("Content Store {}", contentStoreDir);
             log.debug("Local Directory {}", userDir);
 
-            Movie movie = new Movie();
-            movie.setName(encodedFileName);
-            movie.setContentLength(Files.size(entry));
-            movie.setSummary(entry.getFileName().toString());
-            movie.setContentId(decodePathSegment.apply(contentStoreDir));
-            movie.setContentMimeType(decodeContentType.apply(entry));
-            movie.setMovieCode(HelperFunctions.generateUniqueCode());
-            movie.setMediaSource(ApplicationConstants.LOCAL_MEDIA);
+            Movie movie = new Movie()
+                    .setName(encodedFileName)
+                    .setContentLength(Files.size(entry))
+                    .setSummary(entry.getFileName().toString())
+                    .setContentId(decodePathSegment.apply(contentStoreDir))
+                    .setContentMimeType(decodeContentType.apply(entry))
+                    .setMovieCode(HelperFunctions.generateUniqueCode())
+                    .setMediaSource(ApplicationConstants.LOCAL_MEDIA);
+
             moviesList.add(movie);
         }
 

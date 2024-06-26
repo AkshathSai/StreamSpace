@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en"
+      th:attrappend="data-bs-theme=${darkmodeenabled ? 'dark' : ''}">
 <head>
     <meta charset="UTF-8">
     <title>Stream Space</title>
@@ -169,8 +170,7 @@
         }
         .dark {
             background-color: black;
-            color: white;
-
+            /*color: white;*/
         }
 
         /* YT TRAILER MODAL-------------------------------------------------- */
@@ -288,8 +288,7 @@
 </head>
 
 <!--<body data-bs-theme="dark" class="dark">-->
-<body>
-
+<body th:styleappend="${darkmodeenabled}? 'background-color: black;' : ''">
 <div id="globalProgress" class="globalProgress" style="height: 3px; background-color: white;">
     <div class="indeterminate" style="background-color: red;"></div>
 </div>
@@ -316,7 +315,7 @@
                     <span class="input-group-text" id="btnSwitch">
 <!--                        <i class="bi bi-shadows"></i>-->
                         <i class="bi bi-search"></i>&nbsp;&nbsp;
-                        <i class="bi bi-moon-stars-fill"></i>
+                        <i class="bi bi-moon-stars-fill" data-toggle="tooltip" title="Toggle Dark Mode"></i>
                     </span>
                 </div>
 
@@ -627,17 +626,21 @@
 <!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
 <script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
 <script>
-    document.getElementById('btnSwitch').addEventListener('click',()=>{
-        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
-            document.documentElement.setAttribute('data-bs-theme','light');
-            // Reset the document's background color to default
-            document.body.style.backgroundColor = '';
-        }
-        else {
-            document.documentElement.setAttribute('data-bs-theme','dark');
-            // Change the document's background color to black
-            document.body.style.backgroundColor = 'black';
-        }
+    document.getElementById('btnSwitch').addEventListener('click', function () {
+        var currentTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark'? 'dark' : 'light';
+        var newTheme = currentTheme === 'dark'? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-bs-theme', newTheme);
+        document.body.style.backgroundColor = newTheme === 'dark'? 'black' : '';
+
+        // Send AJAX request to save preference
+        fetch('/preference', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prefId: 1, enabled: newTheme === 'dark' })
+        });
     });
 </script>
 <script>

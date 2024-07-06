@@ -22,6 +22,8 @@ Ready to explore the world of StreamSpace? [Dive right in!](#setup--installation
 - [Contribute](#contribute)
 - [Bug Reports](#bug-reports)
 - [License](#license)
+- [Copyright](#copyright)
+
 
 ## Screenshots
 
@@ -141,6 +143,21 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+## Copyright
+Note: before reaching out with some threat/complain about copyright infringement be aware of the following:
+
+    We host neither TORRENTS nor actual files for download
+    We are NOT a torrent tracker
+    We are merely a search engine, indexing various bits of information about torrents
+    We cannot be held liable for any user created/uploaded content. All of our users host the files on their computers, not our website
+    Any torrent files which are stored on another website or database and linked to on our website are not our responsibility
+    We do not in any way, shape, or form, create, modify, distribute, or therefore intend to manage alleged copyrighted files
+    We do not host any copyrightable metadata on our website
+    The torrent metadata files we provide links to do not contain copyrighted material
+    The copyright laws of your country may not apply to us
+
 
 ## Disclaimer
 

@@ -15,8 +15,6 @@
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <!-- HTMX -->
     <script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
-    <!-- Hyperscript for fancier stuff -->
-    <script type="text/javascript" th:src="@{/webjars/hyperscript.org/dist/_hyperscript.js}"></script>
     <!-- Bootstrap ICONS -->
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}">
 
@@ -624,7 +622,7 @@
 
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
-<script th:src="@{/webjars/htmx.org/dist/ext/ws.js}"></script>
+<script th:src="@{/webjars/htmx-ext-ws/ws.js}"></script>
 <script>
     document.getElementById('btnSwitch').addEventListener('click', function () {
         var currentTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark'? 'dark' : 'light';

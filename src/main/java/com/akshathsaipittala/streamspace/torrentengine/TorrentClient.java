@@ -29,9 +29,7 @@ import bt.runtime.Config;
 import bt.torrent.selector.PieceSelector;
 import bt.torrent.selector.RarestFirstSelector;
 import bt.torrent.selector.SequentialSelector;
-import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
-import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
-import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
+import com.akshathsaipittala.streamspace.library.Indexer;
 import com.google.inject.Module;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,37 +45,28 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
-    //private static TorrentClient instance;
-
-    public static void startEngine(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
-        /*   if (instance!= null) {
-            throw new IllegalStateException("TorrentClient is already initialized");
-        }
-        instance = new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository);
-        instance.resume();*/
-        new TorrentClient(options, mediaIndexer, torrentProgressHandler, downloadTaskRepository).resume();
-    }
-
-    private Options options;
-
+    private final String torrentHash;
+    private final Options options;
     private BtRuntime runtime;
     private BtClient client;
     private Optional<SessionStateLogger> torrentStateLogger;
     private boolean running;
-    private MediaIndexer mediaIndexer;
-    private TorrentProgressHandler torrentProgressHandler;
-    private DownloadTaskRepository downloadTaskRepository;
+    private final Indexer indexer;
+    private final DownloadProgressHandler downloadProgressHandler;
+    private final TorrentDownloadManager torrentDownloadManager;
 
-    private TorrentClient(Options options, MediaIndexer mediaIndexer, TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
+    public TorrentClient(Options options, Indexer indexer, DownloadProgressHandler downloadProgressHandler, TorrentDownloadManager torrentDownloadManager, String torrentHash) {
+        this.torrentHash = torrentHash;
         this.options = options;
-        this.mediaIndexer = mediaIndexer;
-        this.torrentProgressHandler = torrentProgressHandler;
-        this.downloadTaskRepository = downloadTaskRepository;
+        this.indexer = indexer;
+        this.downloadProgressHandler = downloadProgressHandler;
+        this.torrentDownloadManager = torrentDownloadManager;
 
         configureSecurity();
 
         Optional<InetAddress> acceptorAddressOverride = getAcceptorAddressOverride();
-        Optional<Integer> portOverride = getPortOverride();
+        //Optional<Integer> portOverride = getPortOverride();
+        Optional<Integer> portOverride = Optional.empty();
         Optional<Integer> dhtPortOverride = getDHTPortOverride();
 
         Config config = new Config() {
@@ -129,7 +118,7 @@ public class TorrentClient {
                 .selector(selector);
 
         SessionStateLogger torrentStateLogger = options.isDisableTorrentStateLogs() ?
-                null : new SessionStateLogger(torrentProgressHandler, downloadTaskRepository);
+                null : new SessionStateLogger(downloadProgressHandler, torrentDownloadManager);
 
         if (torrentStateLogger != null) {
 
@@ -141,7 +130,7 @@ public class TorrentClient {
                     // Set the custom filename for the file
                     file.getPathElements().forEach(fileName -> {
                                 if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv") || fileName.endsWith(".avi")) {
-                                    mediaIndexer.indexMovie(file, torrentName, fileName, torrentId);
+                                    indexer.indexMovie(file, torrentName, fileName, torrentId);
                                     log.info("Video {}", fileName);
                                 } else if (fileName.endsWith(".mp3") || fileName.endsWith(".flac")) {
                                     // mediaIndexer.indexMusic(file, torrentName, fileName, torrentId);
@@ -170,14 +159,6 @@ public class TorrentClient {
         this.client = clientBuilder.build();
         this.torrentStateLogger = Optional.ofNullable(torrentStateLogger);
     }
-
-    // Static method to get the instance
-    /*public static TorrentClient getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("TorrentClient is not initialized");
-        }
-        return instance;
-    }*/
 
     private Optional<Integer> getPortOverride() {
         return getOptionalPort(options::getPort);
@@ -245,6 +226,9 @@ public class TorrentClient {
                             torrentStateLogger = Optional.empty(); // mark for garbage collection
                             runtime.shutdown();
                         }
+
+                        //log.info(runtime.getClients().toString());
+
                     }, 5000)
                     .whenComplete((r, t) -> {
                         if (t != null) {
@@ -268,14 +252,7 @@ public class TorrentClient {
             log.warn("Unexpected error when stopping client", e);
         } finally {
             running = false;
-        }
-    }
-
-    private void togglePause() {
-        if (running) {
-            pause();
-        } else {
-            resume();
+            log.info("Client stopped");
         }
     }
 
@@ -285,27 +262,7 @@ public class TorrentClient {
             log.error("Unexpected error, exiting...", e);
         }
         //System.exit(1);
+        System.gc(); // Suggest garbage collection
     }
-
-    // Modify the shutdown hook to call cleanup
-    public void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            log.info("Shutting down TorrentClient...");
-            cleanup();
-            System.gc(); // Suggest garbage collection
-        }));
-    }
-
-    private void cleanup() {
-        pause(); // Ensure the client is stopped
-        client = null; // Dereference the client
-        runtime = null; // Dereference the runtime
-        torrentStateLogger = Optional.empty(); // Clear the optional reference
-    }
-
-    /*public static void toggleStartStop() {
-        TorrentClient client = getInstance();
-        client.togglePause();
-    }*/
 
 }

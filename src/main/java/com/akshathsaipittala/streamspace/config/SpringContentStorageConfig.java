@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.config;
 
-import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
+import com.akshathsaipittala.streamspace.services.ContentDirectoryServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.content.fs.config.EnableFilesystemStores;
 import org.springframework.content.fs.io.FileSystemResourceLoader;
@@ -14,11 +14,11 @@ import java.io.File;
 @RequiredArgsConstructor
 public class SpringContentStorageConfig {
 
-    final RuntimeHelper runtimeHelper;
+    final ContentDirectoryServices contentDirectoryServices;
 
     @Bean
     File filesystemRoot() {
-        return new File(runtimeHelper.getUserHomePath());
+        return new File(contentDirectoryServices.getUserHomePath());
     }
 
     @Bean

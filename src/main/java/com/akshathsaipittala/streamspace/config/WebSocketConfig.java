@@ -1,6 +1,6 @@
 package com.akshathsaipittala.streamspace.config;
 
-import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
+import com.akshathsaipittala.streamspace.torrentengine.DownloadProgressHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -20,15 +20,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    final TorrentProgressHandler torrentProgressHandler;
+    final DownloadProgressHandler downloadProgressHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(torrentProgressHandler, "/download-progress")
+        registry.addHandler(downloadProgressHandler, "/download-progress")
                 .addInterceptors(new HandshakeInterceptor() {
                     @Override
                     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                                   WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+                                                   WebSocketHandler wsHandler, Map<String, Object> attributes) {
                         // Extract the torrentHash from the request URL
                         String query = request.getURI().getQuery();
                         Map<String, String> queryPairs = Arrays.stream(query.split("&"))

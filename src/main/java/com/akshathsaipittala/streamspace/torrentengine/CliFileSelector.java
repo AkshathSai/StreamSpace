@@ -23,7 +23,6 @@ import bt.torrent.fileselector.TorrentFileSelector;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
-import java.util.Optional;
 
 public class CliFileSelector extends TorrentFileSelector {
     private static final String PROMPT_MESSAGE_FORMAT = "Download '%s'? (Hit <Enter> to confirm, <Esc> to skip, <a> to confirm all remaining, <s> to skip all remaining or <q> to abort)";
@@ -33,21 +32,21 @@ public class CliFileSelector extends TorrentFileSelector {
     private static final int CTRL_C = 3;
     private static final int CTRL_D = 4;
 
-    private final Optional<SessionStatePrinter> printer;
+    // private final Optional<SessionStatePrinter> printer;
     private volatile boolean shutdown;
 
     private boolean selectRemaining = false;
     private boolean skipRemaining = false;
 
     public CliFileSelector() {
-        this.printer = Optional.empty();
+        // this.printer = Optional.empty();
         registerShutdownHook();
     }
 
-    public CliFileSelector(SessionStatePrinter printer) {
+    /* public CliFileSelector(SessionStatePrinter printer) {
         this.printer = Optional.of(printer);
         registerShutdownHook();
-    }
+    } */
 
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
@@ -55,11 +54,11 @@ public class CliFileSelector extends TorrentFileSelector {
 
     @Override
     public List<SelectionResult> selectFiles(List<TorrentFile> files) {
-        printer.ifPresent(SessionStatePrinter::pause);
+        // printer.ifPresent(SessionStatePrinter::pause);
 
         List<SelectionResult> results = super.selectFiles(files);
 
-        printer.ifPresent(SessionStatePrinter::resume);
+        // printer.ifPresent(SessionStatePrinter::resume);
         return results;
     }
 

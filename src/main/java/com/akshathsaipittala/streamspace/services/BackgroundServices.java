@@ -1,22 +1,21 @@
 package com.akshathsaipittala.streamspace.services;
 
-import com.akshathsaipittala.streamspace.entity.*;
-import com.akshathsaipittala.streamspace.indexer.MediaIndexer;
-import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
+import com.akshathsaipittala.streamspace.helpers.*;
+import com.akshathsaipittala.streamspace.library.Indexer;
+import com.akshathsaipittala.streamspace.repository.Downloads;
 import com.akshathsaipittala.streamspace.repository.UserPreferences;
-import com.akshathsaipittala.streamspace.utils.RuntimeHelper;
-import jakarta.annotation.PreDestroy;
+import com.akshathsaipittala.streamspace.torrentengine.TorrentDownloadManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -25,19 +24,15 @@ public class BackgroundServices {
 
     @Lazy
     @Autowired
-    private RuntimeHelper runtimeHelper;
+    private Indexer indexer;
 
     @Lazy
     @Autowired
-    private MediaIndexer mediaIndexer;
+    private Downloads downloadTasksRepo;
 
     @Lazy
     @Autowired
-    private DownloadTaskRepository downloadTasksRepo;
-
-    @Lazy
-    @Autowired
-    private TorrentDownloadService torrentDownloadService;
+    private TorrentDownloadManager torrentDownloadManager;
 
     @Lazy
     @Autowired
@@ -53,16 +48,14 @@ public class BackgroundServices {
                 configurePreferences();
             }
 
-            mediaIndexer.indexLocalMedia(
-                            runtimeHelper.getMediaFolders().get(CONTENTTYPE.VIDEO),
-                            runtimeHelper.getMediaFolders().get(CONTENTTYPE.AUDIO)
+            indexer.indexLocalMedia(new HashSet<>(ContentDirectoryServices.mediaFolders.values())
                     ).thenRunAsync(this::startBackgroundDownloads)
                     .exceptionally(throwable -> {
                         log.error("Error during media indexing or starting background downloads", throwable);
                         return null;
                     });
         } catch (IOException e) {
-            log.error("Error indexing local media", e);
+            log.error("Error indexing local media {}", e.getMessage(), e);
         }
     }
 
@@ -75,35 +68,17 @@ public class BackgroundServices {
 
     @Async
     public void startBackgroundDownloads() {
-
-        Specification<DownloadTask> spec = DownloadTaskSpecs.hasTaskStatusIn(STATUS.RETRY, STATUS.NEW);
-        List<DownloadTask> downloadTasks = new ArrayList<>(downloadTasksRepo.findAll(spec));
-
-        // Starts all downloads on startup
+        var downloadTasks = new ArrayList<>(downloadTasksRepo.findAll());
         if (!downloadTasks.isEmpty()) {
-            downloadTasks.forEach(downloadTask -> torrentDownloadService.startDownload(downloadTask));
-
+            log.info("Starting background downloads");
+            downloadTasks.forEach(downloadTask -> torrentDownloadManager.startDownload(downloadTask));
             // Future Plan targeted for StructuredConcurrency Final release
             // runAsStructuredConcurrent(downloadTasks);
         }
-
     }
 
     /* private void runAsStructuredConcurrent(List<BackgroundDownloadTask> backgroundDownloadTasks) {
         ConJob conJob = new ConJob();
         conJob.executeAll(backgroundDownloadTasks);
     }*/
-
-    @PreDestroy
-    private void onShutDown() {
-        List<DownloadTask> downloadTasks = downloadTasksRepo.findAll();
-        if (downloadTasks.isEmpty()) {
-            log.info("No pending Downloads");
-        } else {
-            log.info("Setting pending Downloads to retry");
-            downloadTasks.forEach(downloadTask -> downloadTask.setTaskStatus(STATUS.RETRY));
-            downloadTasksRepo.saveAll(downloadTasks);
-        }
-    }
-
 }

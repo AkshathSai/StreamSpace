@@ -2,8 +2,6 @@ package com.akshathsaipittala.streamspace.torrentengine;
 
 import bt.metainfo.Torrent;
 import bt.torrent.TorrentSessionState;
-import com.akshathsaipittala.streamspace.repository.DownloadTaskRepository;
-import com.akshathsaipittala.streamspace.utils.TorrentProgressHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
@@ -24,21 +22,18 @@ public class SessionStateLogger {
 
     private static final String LOG_ENTRY_SEED = "Seeding.. Peers: %s; Up: " + RATE_FORMAT;
 
-    private volatile boolean supressOutput;
-    private volatile boolean shutdown;
-
     private Optional<Torrent> torrent;
     private volatile long started;
     private volatile long downloaded;
     private volatile long uploaded;
-    private final TorrentProgressHandler torrentProgressHandler;
-    private final DownloadTaskRepository downloadTaskRepository;
+    private final DownloadProgressHandler downloadProgressHandler;
+    private final TorrentDownloadManager torrentDownloadManager;
 
-    public SessionStateLogger(TorrentProgressHandler torrentProgressHandler, DownloadTaskRepository downloadTaskRepository) {
+    public SessionStateLogger(DownloadProgressHandler downloadProgressHandler, TorrentDownloadManager torrentDownloadManager) {
         started = System.currentTimeMillis();
         this.torrent = Optional.empty();
-        this.torrentProgressHandler = torrentProgressHandler;
-        this.downloadTaskRepository = downloadTaskRepository;
+        this.downloadProgressHandler = downloadProgressHandler;
+        this.torrentDownloadManager = torrentDownloadManager;
         printTorrentInfo();
     }
 
@@ -71,7 +66,7 @@ public class SessionStateLogger {
             // graphics.putString(0, 4, getProgressBar(completePercents, requiredPercents));
 
             if (torrent.isPresent()) {
-                torrentProgressHandler.sendProgressUpdate(torrent.get().getTorrentId().toString().toUpperCase(),
+                downloadProgressHandler.sendProgressUpdate(torrent.get().getTorrentId().toString().toUpperCase(),
                         String.format("%.2f%%", completePercents),
                         String.format(RATE_FORMAT, downRate.getQuantity(), downRate.getMeasureUnit()),
                         String.format(RATE_FORMAT, upRate.getQuantity(), upRate.getMeasureUnit()),
@@ -82,8 +77,8 @@ public class SessionStateLogger {
 
             boolean complete = (sessionState.getPiecesRemaining() == 0);
             if (complete) {
-                downloadTaskRepository.deleteById(torrent.get().getTorrentId().toString().toUpperCase());
-                torrentProgressHandler.sendProgressUpdate(torrent.get().getTorrentId().toString().toUpperCase(),
+                torrentDownloadManager.onComplete(torrent.get().getTorrentId().toString().toUpperCase());
+                downloadProgressHandler.sendProgressUpdate(torrent.get().getTorrentId().toString().toUpperCase(),
                         String.format("%.2f%%", completePercents),
                         String.format(RATE_FORMAT, downRate.getQuantity(), downRate.getMeasureUnit()),
                         String.format(RATE_FORMAT, upRate.getQuantity(), upRate.getMeasureUnit()),
@@ -114,7 +109,7 @@ public class SessionStateLogger {
 
     private void printTorrentNameAndSize(Optional<Torrent> torrent) {
         String name = torrent.isPresent() ? torrent.get().getName() : "";
-        long size = torrent.isPresent() ? torrent.get().getSize() : 0;
+        long size = torrent.map(Torrent::getSize).orElse(0L);
         log.info(String.format(TORRENT_INFO, name, size));
     }
 

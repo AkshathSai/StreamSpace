@@ -95,7 +95,7 @@
     <div class="row">
 
       <div class="col"
-           hx:get="@{/yt/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
+           hx:get="@{/yt/crawl/trailer/{movie}(movie=${ytsMovieRecord.data().movie().title_long()})}"
            hx-swap="transition: true"
            hx-trigger="load delay:100ms"
            hx-indicator=".globalProgress"

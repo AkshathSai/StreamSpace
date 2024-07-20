@@ -171,25 +171,6 @@
             /*color: white;*/
         }
 
-        /* YT TRAILER MODAL-------------------------------------------------- */
-
-        .modal-dialog {
-            max-width: 800px;
-            margin: 30px auto;
-        }
-
-        .modal-body {
-            position:relative;
-            padding:0px;
-        }
-        .btn-close {
-            position:absolute;
-            right:-30px;
-            top:0;
-        }
-
-        /* YT TRAILER MODAL-------------------------------------------------- */
-
         @media (max-width: 767px) {
             #featureContainer .carousel-inner .carousel-item > div {
                 display: none;
@@ -621,7 +602,6 @@
 </div>
 
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
 <script th:src="@{/webjars/htmx-ext-ws/ws.js}"></script>
 <script>
     document.getElementById('btnSwitch').addEventListener('click', function () {
@@ -651,10 +631,6 @@
         }
     });
 </script>
-<!--<script>
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-</script>-->
 </body>
 
 </html>

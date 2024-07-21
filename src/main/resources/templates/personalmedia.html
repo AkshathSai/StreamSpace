@@ -10,11 +10,15 @@
                    title="Refresh"
                    hx-get="/refresh/personalmedia"
                    hx-indicator=".globalProgress"
-                   hx-swap="outerHTML:#personal-media-files"></i>
+                   hx-swap="outerHTML"></i>
             </small>
         </h3>
 
-        <ul id="personal-media-files" class="text-left">
+        <div id="mini-player" class="row">
+
+        </div>
+
+        <ul id="personal-media-files" class="row text-left">
 
             <li th:each="video: ${videos}">
                 <a th:text="${video.name}"
@@ -37,10 +41,6 @@
             </li>
 
         </ul>
-
-    </div>
-
-    <div id="mini-player" class="col">
 
     </div>
 

@@ -1,16 +1,8 @@
 <div th:fragment="videoPlayer" th:remove="tag">
 
     <div class="fade-me-in">
-<!--        <p class="display-6 text-muted">Now Playing</p>-->
-        <video class="img-fluid shadow-lg" controls>
-            <source th:src="@{'/movies/' + ${movieCode} + '/content'}" type="video/mp4">
-            <source th:src="@{'/movies/' + ${movieCode}}" type="video/mp4">
-            <!--<source th:src="@{'/movies/' + ${movieCode}}" type="video/webm">
-            <source th:src="@{'/movies/' + ${movieCode}}" type="video/ogg">-->
-            <p>
-                Sorry, your browser doesn't support embedded videos, but don't worry, you can continue downloading and watch it with your favorite video player!
-            </p>
-        </video>
+        <!--<p class="display-6 text-muted">Now Playing</p>-->
+        <video class="img-fluid shadow-lg" th:src="@{'/movies/' + ${movieCode} + '/content'}" type="video/webm" controls preload="auto"></video>
     </div>
 
 </div>

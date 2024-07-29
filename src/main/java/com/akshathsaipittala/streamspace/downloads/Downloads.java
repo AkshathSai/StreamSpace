@@ -1,4 +1,4 @@
-package com.akshathsaipittala.streamspace.repository;
+package com.akshathsaipittala.streamspace.downloads;
 
 import com.akshathsaipittala.streamspace.helpers.DownloadTask;
 import com.akshathsaipittala.streamspace.helpers.CONTENTTYPE;
@@ -117,9 +117,15 @@ class DownloadsController {
                 .build();
     }
 
-    @PostMapping("/pause/{pauseHash}")
-    ResponseEntity<String> pauseDownload(@PathVariable("pauseHash") String pauseHash) {
+    @PostMapping("/pause/{hashString}")
+    ResponseEntity<String> pauseDownload(@PathVariable("hashString") String pauseHash) {
         torrentDownloadManager.pauseDownload(pauseHash);
         return ResponseEntity.ok("<i hx-post=/download/torrent/" + pauseHash+ " class=\"bi bi-arrow-clockwise\" hx-target=\"#download-container\" hx-swap=\"outerHTML\"></i>");
+    }
+
+    @PostMapping("/cancel/{hashString}")
+    ResponseEntity<String> cancelDownload(@PathVariable("hashString") String cancelHash) {
+        torrentDownloadManager.cancelDownload(cancelHash);
+        return ResponseEntity.ok("");
     }
 }

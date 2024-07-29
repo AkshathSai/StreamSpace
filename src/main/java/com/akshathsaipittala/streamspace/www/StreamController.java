@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/stream")
 public class StreamController {
 
-    @GetMapping("/movie/{movieCode}")
+    @GetMapping("/video/{movieCode}")
     public String getVideoPlayer(@PathVariable("movieCode") String movieCode, Model model) {
         model.addAttribute("movieCode", movieCode);
         return "player :: videoPlayer";

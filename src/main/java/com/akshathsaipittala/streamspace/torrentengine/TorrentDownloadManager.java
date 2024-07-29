@@ -3,7 +3,7 @@ package com.akshathsaipittala.streamspace.torrentengine;
 import com.akshathsaipittala.streamspace.helpers.DOWNLOADTYPE;
 import com.akshathsaipittala.streamspace.helpers.STATUS;
 import com.akshathsaipittala.streamspace.library.Indexer;
-import com.akshathsaipittala.streamspace.repository.Downloads;
+import com.akshathsaipittala.streamspace.downloads.Downloads;
 import com.akshathsaipittala.streamspace.helpers.ApplicationConstants;
 import com.akshathsaipittala.streamspace.services.ContentDirectoryServices;
 import com.akshathsaipittala.streamspace.helpers.DownloadTask;
@@ -30,8 +30,9 @@ public class TorrentDownloadManager {
 
     @Async
     public void startDownload(DownloadTask downloadTask) {
+        TorrentClient torrentClient;
         try {
-            TorrentClient torrentClient = clients.get(downloadTask.getTorrentHash());
+            torrentClient = clients.get(downloadTask.getTorrentHash());
 
             if (torrentClient != null) {
                 torrentClient.resume();
@@ -58,6 +59,12 @@ public class TorrentDownloadManager {
     }
 
     public void onComplete(String torrentHash) {
+        downloads.deleteById(torrentHash);
+        clients.remove(torrentHash);
+    }
+
+    public void cancelDownload(String torrentHash) {
+        clients.get(torrentHash).pause();
         downloads.deleteById(torrentHash);
         clients.remove(torrentHash);
     }

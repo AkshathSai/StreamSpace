@@ -22,7 +22,7 @@
 
             <li th:each="video: ${videos}">
                 <a th:text="${video.name}"
-                   hx:get="@{/stream/movie/{movieCode}(movieCode=${video.movieCode})}"
+                   hx:get="@{/stream/video/{movieCode}(movieCode=${#uris.escapePathSegment(video.movieCode)})}"
                    hx-indicator=".globalProgress"
                    hx-target="#mini-player"
                    hx-push-url="true"

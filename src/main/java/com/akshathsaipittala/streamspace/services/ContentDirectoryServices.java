@@ -18,7 +18,7 @@ import java.util.Map;
 public class ContentDirectoryServices {
 
     public static final Map<CONTENTTYPE, String> mediaFolders = new HashMap<>(3);
-    private String userHomePath = System.getProperty("user.home");
+    public static final String userHomePath = System.getProperty("user.home");
     private String downloadsFolderPath;
     private String musicFolderPath;
     private String moviesFolderPath;

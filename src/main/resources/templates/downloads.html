@@ -40,12 +40,12 @@
 
         <div class="row">
             <div class="col fs-1 mb-3">
-                <a hx:post="@{/download/pause/{pauseHash}(pauseHash=${torrentHash})}"
+                <a hx:post="@{/download/pause/{hashString}(hashString=${torrentHash})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress">
                     <i class="bi bi-pause"></i>
                 </a>
-                <a hx:get="@{/stream/movie/{movieCode}(movieCode=${torrentHash})}"
+                <a hx:get="@{/stream/video/{movieCode}(movieCode=${torrentHash})}"
                    hx-boost="true"
                    hx-indicator=".globalProgress"
                    hx-target="#poster">
@@ -87,6 +87,10 @@
 </div>
 
 <div th:fragment="showAllDownloads" th:remove="tag">
+
+    <div id="downloads-player" class="mt-3">
+
+    </div>
 
     <div th:each="task : ${tasks}">
 
@@ -134,17 +138,30 @@
                         </div>
                     </div>
                 </div>
-                <a hx:get="@{/stream/movie/{contentId}(contentId=${task.torrentHash})}"
+
+                <!--<a hx:get="@{/stream/video/{contentId}(contentId=${task.torrentHash})}"
                    hx-target="#downloads-player"
                    hx-indicator=".globalProgress"
                    class="btn btn-primary btn-sm">
                     <i class="bi bi-play-fill"></i> Play
-                </a>
+                </a>-->
+
+                <div class="row">
+                    <div class="col fs-1 mb-3">
+                        <a hx:post="@{/download/pause/{hashString}(hashString=${task.torrentHash})}"
+                           hx-boost="true"
+                           hx-indicator=".globalProgress">
+                            <i class="bi bi-pause"></i>
+                        </a>
+                        <a hx:get="@{/stream/video/{movieCode}(movieCode=${task.torrentHash})}"
+                           hx-indicator=".globalProgress"
+                           hx-target="#downloads-player">
+                            <i class="bi bi-play"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        <div id="downloads-player">
-
         </div>
 
     </div>

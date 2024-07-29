@@ -14,11 +14,9 @@ import java.io.File;
 @RequiredArgsConstructor
 public class SpringContentStorageConfig {
 
-    final ContentDirectoryServices contentDirectoryServices;
-
     @Bean
     File filesystemRoot() {
-        return new File(contentDirectoryServices.getUserHomePath());
+        return new File(ContentDirectoryServices.userHomePath);
     }
 
     @Bean

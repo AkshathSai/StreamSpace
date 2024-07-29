@@ -1,7 +1,7 @@
 package com.akshathsaipittala.streamspace.www;
 
-import com.akshathsaipittala.streamspace.repository.MovieRepository;
-import com.akshathsaipittala.streamspace.repository.MusicRepository;
+import com.akshathsaipittala.streamspace.library.VideoRepository;
+import com.akshathsaipittala.streamspace.library.MusicRepository;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class PersonalMediaController {
 
-    final MovieRepository movieRepository;
+    final VideoRepository videoRepository;
     final MusicRepository musicRepository;
 
     @HxRequest
     @GetMapping("/media")
     HtmxResponse getTitles(Model model) {
 
-        model.addAttribute("videos", movieRepository.findAll());
+        model.addAttribute("videos", videoRepository.findAll());
         model.addAttribute("music", musicRepository.findAll());
 
         return HtmxResponse.builder()

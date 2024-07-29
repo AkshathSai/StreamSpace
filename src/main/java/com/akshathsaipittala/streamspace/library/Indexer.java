@@ -2,8 +2,6 @@ package com.akshathsaipittala.streamspace.library;
 
 import bt.metainfo.TorrentFile;
 import bt.metainfo.TorrentId;
-import com.akshathsaipittala.streamspace.repository.MovieRepository;
-import com.akshathsaipittala.streamspace.repository.MusicRepository;
 import com.akshathsaipittala.streamspace.services.ContentDirectoryServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -36,27 +33,26 @@ public class Indexer {
     private final UnaryOperator<String> decodePathSegment = pathSegment -> UriUtils.decode(pathSegment, StandardCharsets.UTF_8.name());
     private final Function<Path, String> decodeContentType = fileEntryPath -> MediaTypeFactory.getMediaType(new FileSystemResource(fileEntryPath)).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
     final ContentDirectoryServices contentDirectoryServices;
-    final MovieRepository movieRepository;
+    final VideoRepository videoRepository;
     final MusicRepository musicRepository;
 
-    @Async
     public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
 
-        Movie movie = movieRepository.findByName(fileName);
+        Video video = videoRepository.findByName(fileName);
 
-        if (movie != null) {
-            log.info("Movie Found {}", movie);
-            movieRepository.delete(movie);
+        if (video != null) {
+            log.info("Movie Found {}", video);
+            videoRepository.delete(video);
             // TODO: need to revisit
             // Primary key cannot be updated due to which new record is created
             // hence deleting and inserting as new with latest torrentId
-            movie.setMovieCode(torrentId.toString().toUpperCase());
+            video.setMovieCode(torrentId.toString().toUpperCase());
             log.info("{} already indexed", fileName);
-            movieRepository.save(movie);
+            videoRepository.save(video);
         } else {
-            movie = new Movie()
+            video = new Video()
                     .setContentLength(file.getSize())
                     .setName(fileName)
                     .setCreated(LocalDateTime.now())
@@ -67,12 +63,11 @@ public class Indexer {
                     .setSource(SOURCE.TORRENT);
 
             log.info("Content ID {}", contentDirectoryServices.getMoviesContentStore() + torrentName + "/" + fileName);
-            movieRepository.save(movie);
+            videoRepository.save(video);
         }
 
     }
 
-    @Async
     public void indexMusic(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
@@ -92,20 +87,20 @@ public class Indexer {
      * Concurrent indexer
      */
     @Async
-    public CompletableFuture<Void> indexLocalMedia(Set<String> locations) throws IOException {
+    public CompletableFuture<Void> indexLocalMedia(Set<String> locations) {
         return findLocalMediaFiles(locations)
                 .thenCompose(paths -> {
                     List<Path> musicPaths = filterPaths(paths, ".mp3", ".flac");
-                    List<Path> moviePaths = filterPaths(paths, ".mp4", ".mkv", ".avi", ".mpeg");
+                    List<Path> videoFolderPaths = filterPaths(paths, ".mp4", ".mkv", ".avi", ".mpeg");
 
                     try {
-                        List<Movie> finalMovies = createMovieEntities(moviePaths);
+                        List<Video> finalVideos = createVideoEntities(videoFolderPaths);
                         List<Song> finalSongs = createMusicEntities(musicPaths);
 
-                        CompletableFuture<Void> moviesFuture = saveMoviesAsync(finalMovies);
+                        CompletableFuture<Void> videosFuture = saveVideosAsync(finalVideos);
                         CompletableFuture<Void> musicFuture = saveMusicAsync(finalSongs);
 
-                        return CompletableFuture.allOf(moviesFuture, musicFuture);
+                        return CompletableFuture.allOf(videosFuture, musicFuture);
                     } catch (IOException e) {
                         log.error("Error creating media entities", e);
                         return CompletableFuture.failedFuture(e);
@@ -159,25 +154,28 @@ public class Indexer {
                 .toList();
     }
 
-    private CompletableFuture<Void> saveMoviesAsync(List<Movie> movies) {
-        return CompletableFuture.runAsync(() ->
-                        movies.stream()
-                                .filter(movie -> !movieRepository.existsByContentId(movie.getContentId()))
-                                .forEach(movieRepository::save))
-                .thenRun(() -> log.info("Finished Indexing Movies"));
+    private CompletableFuture<Void> saveVideosAsync(List<Video> videos) {
+        return CompletableFuture.runAsync(() -> {
+            List<Video> nonExistingVideos = videos.stream()
+                    .filter(video -> !videoRepository.existsByContentId(video.getContentId()))
+                    .toList();
+            videoRepository.saveAll(nonExistingVideos);
+        }).thenRun(() -> log.info("Finished Indexing Videos"));
+
     }
 
     private CompletableFuture<Void> saveMusicAsync(List<Song> songs) {
-        return CompletableFuture.runAsync(() ->
-                        songs.stream()
-                                .filter(song -> !musicRepository.existsByContentId(song.getContentId()))
-                                .forEach(musicRepository::save))
-                .thenRun(() -> log.info("Finished Indexing Music"));
+        return CompletableFuture.runAsync(() -> {
+            List<Song> nonExistingSongs = songs.stream()
+                    .filter(song -> !musicRepository.existsByContentId(song.getContentId()))
+                    .toList();
+            musicRepository.saveAll(nonExistingSongs);
+        }).thenRun(() -> log.info("Finished Indexing Music"));
     }
 
-    private List<Movie> createMovieEntities(List<Path> paths) throws IOException {
-        Movie movie = null;
-        List<Movie> moviesList = new ArrayList<>();
+    private List<Video> createVideoEntities(List<Path> paths) throws IOException {
+        Video video = null;
+        List<Video> videos = new ArrayList<>();
         String encodedFileName;
         Path relativePath;
 
@@ -186,22 +184,23 @@ public class Indexer {
             encodedFileName = decodePathSegment.apply(entry.getFileName().toString());
 
             // Relativize the entry path against the user home directory
-            relativePath = Paths.get(contentDirectoryServices.getUserHomePath()).relativize(entry);
+            relativePath = Paths.get(ContentDirectoryServices.userHomePath).relativize(entry);
 
-            movie = new Movie()
+            video = new Video()
                     .setName(encodedFileName)
                     .setContentLength(Files.size(entry))
                     .setSummary(entry.getFileName().toString())
                     .setContentId(File.separator + decodePathSegment.apply(relativePath.toString()))
                     //.setContentId(decodePathSegment.apply(relativePath.toString()))
                     .setContentMimeType(decodeContentType.apply(entry))
-                    .setMovieCode(generateUniqueCode())
+                    //.setMovieCode(generateUniqueCode())
+                    .setMovieCode(encodedFileName)
                     .setSource(SOURCE.LOCAL);
 
-            moviesList.add(movie);
+            videos.add(video);
         }
 
-        return moviesList;
+        return videos;
     }
 
     private List<Song> createMusicEntities(List<Path> paths) throws IOException {
@@ -215,7 +214,7 @@ public class Indexer {
             encodedFileName = decodePathSegment.apply(entry.getFileName().toString());
 
             // Relativize the entry path against the user home directory
-            relativePath = Paths.get(contentDirectoryServices.getUserHomePath()).relativize(entry);
+            relativePath = Paths.get(ContentDirectoryServices.userHomePath).relativize(entry);
 
             song = new Song()
                     .setName(encodedFileName)
@@ -231,11 +230,6 @@ public class Indexer {
         }
 
         return songs;
-    }
-
-    // method to generate a unique movieCode (e.g., using UUID)
-    private static String generateUniqueCode() {
-        return UUID.randomUUID().toString();
     }
 }
 

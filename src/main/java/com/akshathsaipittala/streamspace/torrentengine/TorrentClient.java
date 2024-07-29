@@ -45,12 +45,12 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
-    private final String torrentHash;
-    private final Options options;
+    private String torrentHash;
+    private boolean running;
     private BtRuntime runtime;
     private BtClient client;
     private Optional<SessionStateLogger> torrentStateLogger;
-    private boolean running;
+    private Options options;
     private final Indexer indexer;
     private final DownloadProgressHandler downloadProgressHandler;
     private final TorrentDownloadManager torrentDownloadManager;
@@ -65,8 +65,7 @@ public class TorrentClient {
         configureSecurity();
 
         Optional<InetAddress> acceptorAddressOverride = getAcceptorAddressOverride();
-        //Optional<Integer> portOverride = getPortOverride();
-        Optional<Integer> portOverride = Optional.empty();
+        Optional<Integer> portOverride = getPortOverride();
         Optional<Integer> dhtPortOverride = getDHTPortOverride();
 
         Config config = new Config() {
@@ -225,6 +224,7 @@ public class TorrentClient {
                         if (!options.isSeedAfterDownloaded() && state.getPiecesRemaining() == 0) {
                             torrentStateLogger = Optional.empty(); // mark for garbage collection
                             runtime.shutdown();
+                            options = null;
                         }
 
                         //log.info(runtime.getClients().toString());
@@ -256,13 +256,12 @@ public class TorrentClient {
         }
     }
 
-    private static void printAndShutdown(Throwable e) {
+    private void printAndShutdown(Throwable e) {
         // ignore interruptions on shutdown
         if (!(e instanceof InterruptedException)) {
             log.error("Unexpected error, exiting...", e);
         }
         //System.exit(1);
-        System.gc(); // Suggest garbage collection
     }
 
 }

@@ -34,7 +34,6 @@ class Watch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
     private String name;
     private String itemUrl;
     private String thumbnailUrl;

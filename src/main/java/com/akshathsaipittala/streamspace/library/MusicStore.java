@@ -1,6 +1,5 @@
-package com.akshathsaipittala.streamspace.repository;
+package com.akshathsaipittala.streamspace.library;
 
-import com.akshathsaipittala.streamspace.library.Song;
 import org.springframework.content.commons.store.ContentStore;
 import org.springframework.content.rest.StoreRestResource;
 

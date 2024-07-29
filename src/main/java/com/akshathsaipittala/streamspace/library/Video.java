@@ -21,8 +21,14 @@ import java.time.LocalDateTime;
 @Setter
 @Accessors(chain = true)
 @NoArgsConstructor
-public class Movie implements Serializable {
+public class Video implements Serializable {
 
+    /**
+     * movieCode will be using the FileName
+     * so that Android TV browsers can stream
+     * videos using Native Media players rather
+     * than HTML5 Video for a better UX
+     */
     @Id
     private String movieCode;
     private String name;

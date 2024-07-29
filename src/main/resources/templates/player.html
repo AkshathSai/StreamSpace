@@ -2,9 +2,9 @@
 
     <div class="fade-me-in">
         <!--<p class="display-6 text-muted">Now Playing</p>-->
-        <video class="img-fluid shadow-lg" controls preload="auto">
-            <source th:src="@{'/videos/' + ${movieCode} + '/content'}">
-            <source th:src="@{'/videos/' + ${movieCode}}" type="video/webm">
+        <video class="img-fluid shadow-lg" controls>
+            <source th:src="@{'/videos/' + ${movieCode} + '/content'}" th:type="${contentMimeType}">
+            <source th:src="@{'/videos/' + ${movieCode}}" th:type="${contentMimeType}">
         </video>
     </div>
 

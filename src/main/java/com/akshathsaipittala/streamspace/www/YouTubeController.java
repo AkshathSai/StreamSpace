@@ -22,9 +22,36 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Controller
+@RequestMapping("/yt")
+@RequiredArgsConstructor
+public class YouTubeController {
+
+    final YoutubeCrawler youtubeCrawler;
+
+    @GetMapping("/crawl/trailer/{movie}")
+    HtmxResponse getYoutubeTrailer(@PathVariable("movie") String movie, Model model) {
+        RetryService<YouTubeResponseDTO> retryService = new RetryService<>();
+
+        YouTubeResponseDTO youTubeResponseDTO = retryService.retry(() -> youtubeCrawler.getYoutubeTrailersByTitle(movie));
+        if (youTubeResponseDTO != null) {
+            model.addAttribute("youtubeTrailers", youTubeResponseDTO);
+            return HtmxResponse.builder()
+                    .view("yt :: youtubeTrailer")
+                    .build();
+        } else {
+            return HtmxResponse.builder()
+                    .view("yt :: notFound")
+                    .build();
+        }
+    }
+}
+
+record YouTubeResponseDTO (String title, String url) {}
+
 @Slf4j
 @Service
-public class YoutubeCrawler {
+class YoutubeCrawler {
 
     private static final Pattern polymerInitialDataRegex = Pattern.compile("(window\\[\"ytInitialData\"]|var ytInitialData)\\s*=\\s*(.*);");
 
@@ -116,32 +143,5 @@ public class YoutubeCrawler {
     record Run(
             String text
     ) {
-    }
-}
-
-record YouTubeResponseDTO (String title, String url) {}
-
-@Controller
-@RequestMapping("/yt")
-@RequiredArgsConstructor
-class YouTubeController {
-
-    final YoutubeCrawler youtubeCrawler;
-
-    @GetMapping("/crawl/trailer/{movie}")
-    HtmxResponse getYoutubeTrailer(@PathVariable("movie") String movie, Model model) {
-        RetryService<YouTubeResponseDTO> retryService = new RetryService<>();
-
-        YouTubeResponseDTO youTubeResponseDTO = retryService.retry(() -> youtubeCrawler.getYoutubeTrailersByTitle(movie));
-        if (youTubeResponseDTO != null) {
-            model.addAttribute("youtubeTrailers", youTubeResponseDTO);
-            return HtmxResponse.builder()
-                    .view("yt :: youtubeTrailer")
-                    .build();
-        } else {
-            return HtmxResponse.builder()
-                    .view("yt :: notFound")
-                    .build();
-        }
     }
 }

@@ -1,4 +1,4 @@
-<div th:fragment="personalMediaPlayer" th:remove="tag" xmlns:hx="http://www.w3.org/1999/xhtml">
+<div id="personalMediaPlayer" th:fragment="personalMediaPlayer">
 
     <div class="col">
 
@@ -10,6 +10,7 @@
                    title="Refresh"
                    hx-get="/refresh/personalmedia"
                    hx-indicator=".globalProgress"
+                   hx-target="#personalMediaPlayer"
                    hx-swap="outerHTML"></i>
             </small>
         </h3>
@@ -18,7 +19,7 @@
 
         </div>
 
-        <ul id="personal-media-files" class="row text-left">
+        <ul id="personal-media-files" th:fragment="personal-media-files" class="row text-left">
 
             <li th:each="video: ${videos}">
                 <a th:text="${video.name}"

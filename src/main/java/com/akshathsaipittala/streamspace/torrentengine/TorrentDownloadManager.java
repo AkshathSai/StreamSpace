@@ -29,6 +29,10 @@ public class TorrentDownloadManager {
     final DownloadProgressHandler downloadProgressHandler;
 
     @Async
+    public void startDownloadAsync(DownloadTask downloadTask) {
+        startDownload(downloadTask);
+    }
+
     public void startDownload(DownloadTask downloadTask) {
         TorrentClient torrentClient;
         try {
@@ -56,6 +60,10 @@ public class TorrentDownloadManager {
 
     public void pauseDownload(String torrentHash) {
         clients.get(torrentHash).pause();
+        downloads.findById(torrentHash).ifPresent(download -> {
+            download.setTaskStatus(STATUS.PAUSED);
+            downloads.save(download);
+        });
     }
 
     public void onComplete(String torrentHash) {

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -86,7 +85,6 @@ public class Indexer {
     /**
      * Concurrent indexer
      */
-    @Async
     public CompletableFuture<Void> indexLocalMedia(Set<String> locations) {
         return findLocalMediaFiles(locations)
                 .thenCompose(paths -> {

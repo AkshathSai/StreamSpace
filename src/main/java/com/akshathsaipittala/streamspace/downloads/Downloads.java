@@ -92,7 +92,7 @@ class DownloadsController {
         }
 
         downloads.save(task);
-        torrentDownloadManager.startDownload(task);
+        torrentDownloadManager.startDownloadAsync(task);
 
         return HtmxResponse
                 .builder()
@@ -109,7 +109,7 @@ class DownloadsController {
         DownloadTask task = new DownloadTask(torrentHash, torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.AUDIO, DOWNLOADTYPE.SEQUENTIAL);
 
         downloads.save(task);
-        torrentDownloadManager.startDownload(task);
+        torrentDownloadManager.startDownloadAsync(task);
 
         return HtmxResponse
                 .builder()

@@ -223,7 +223,6 @@ public class TorrentClient {
 
                         if (!options.isSeedAfterDownloaded() && state.getPiecesRemaining() == 0) {
                             torrentStateLogger = Optional.empty(); // mark for garbage collection
-                            runtime.shutdown();
                             options = null;
                         }
 

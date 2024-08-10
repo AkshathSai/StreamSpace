@@ -9,7 +9,6 @@ import com.akshathsaipittala.streamspace.services.ContentDirectoryServices;
 import com.akshathsaipittala.streamspace.helpers.DownloadTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -27,11 +26,6 @@ public class TorrentDownloadManager {
     final Downloads downloads;
     final Indexer indexer;
     final DownloadProgressHandler downloadProgressHandler;
-
-    @Async
-    public void startDownloadAsync(DownloadTask downloadTask) {
-        startDownload(downloadTask);
-    }
 
     public void startDownload(DownloadTask downloadTask) {
         TorrentClient torrentClient;

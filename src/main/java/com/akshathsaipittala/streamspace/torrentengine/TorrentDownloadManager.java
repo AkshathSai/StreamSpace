@@ -12,9 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -23,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TorrentDownloadManager {
 
     private static final Map<String, TorrentClient> clients = new ConcurrentHashMap<>();
+    private static final Random random = new Random();
     final Downloads downloads;
     final Indexer indexer;
     final DownloadProgressHandler downloadProgressHandler;
@@ -86,7 +86,9 @@ public class TorrentDownloadManager {
         options.setTraceLogging(false);
         // options.setIface(null);
         try {
-            options.setPort(getRandomFreePort());
+            int randomIndex = random.nextInt(ApplicationConstants.ports.length);
+            int randomPort = ApplicationConstants.ports[randomIndex];
+            options.setPort(randomPort);
         } catch (Exception e) {
             log.error("Error opening random free port falling back to 6891 {}", e.getMessage(), e);
             options.setPort(ApplicationConstants.ports[0]);
@@ -99,12 +101,6 @@ public class TorrentDownloadManager {
 
     private static String createMagnetUri(String torrentHash) {
         return "magnet:?xt=urn:btih:" + torrentHash;
-    }
-
-    private static int getRandomFreePort() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(0)) {
-            return serverSocket.getLocalPort();
-        }
     }
 
 }

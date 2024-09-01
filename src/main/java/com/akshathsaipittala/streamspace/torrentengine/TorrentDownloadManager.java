@@ -62,6 +62,11 @@ public class TorrentDownloadManager {
 
     public void onComplete(String torrentHash) {
         downloads.deleteById(torrentHash);
+        var torrentClient = clients.get(torrentHash);
+        if (torrentClient.client.isStarted()) {
+            torrentClient.client.stop();
+            log.info("Torrent Client has been stopped {}", torrentHash);
+        }
         clients.remove(torrentHash);
     }
 

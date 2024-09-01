@@ -48,7 +48,7 @@ public class TorrentClient {
     private String torrentHash;
     private boolean running;
     private BtRuntime runtime;
-    private BtClient client;
+    public BtClient client;
     private Optional<SessionStateLogger> torrentStateLogger;
     private Options options;
     private final Indexer indexer;
@@ -129,7 +129,7 @@ public class TorrentClient {
                     // Set the custom filename for the file
                     file.getPathElements().forEach(fileName -> {
                                 if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv") || fileName.endsWith(".avi")) {
-                                    indexer.indexMovie(file, torrentName, fileName, torrentId);
+                                    indexer.indexMovie(file, torrentName, fileName, torrentId, "video/mp4");
                                     log.info("Video {}", fileName);
                                 } else if (fileName.endsWith(".mp3") || fileName.endsWith(".flac")) {
                                     // mediaIndexer.indexMusic(file, torrentName, fileName, torrentId);

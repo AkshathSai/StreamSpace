@@ -35,7 +35,7 @@ public class Indexer {
     final VideoRepository videoRepository;
     final MusicRepository musicRepository;
 
-    public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId) {
+    public void indexMovie(TorrentFile file, String torrentName, String fileName, TorrentId torrentId, String contentMimeType) {
         log.info("FileName {}", fileName);
         log.info("TorrentName {}", torrentName);
 
@@ -56,7 +56,7 @@ public class Indexer {
                     .setName(fileName)
                     .setCreated(LocalDateTime.now())
                     .setSummary(fileName)
-                    .setContentMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                    .setContentMimeType(contentMimeType)
                     .setContentId(contentDirectoryServices.getMoviesContentStore() + torrentName + "/" + fileName)
                     .setMovieCode(torrentId.toString().toUpperCase())
                     .setSource(SOURCE.TORRENT);

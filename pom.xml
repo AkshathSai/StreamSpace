@@ -5,24 +5,23 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.4</version>
+		<version>3.4.0-M3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.akshathsaipittala</groupId>
-	<artifactId>stream-space</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>streamspace</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
 	<name>stream-space</name>
 	<description>StreamSpace</description>
 	<properties>
 		<java.version>23</java.version>
 		<bt.version>1.10</bt.version>
 		<spring.content.version>3.0.14</spring.content.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -192,7 +191,8 @@
 						</exclude>
 					</excludes>
 					<image>
-						<name>akshathsaipittala/media-${project.artifactId}:${project.version}</name>
+						<!-- dockerHubUsername/nameOfTheApp:(Optional)tagNameOrVersionName-->
+						<name>akshathsaipittala/${project.artifactId}:${project.version}</name>
 						<builder>dashaun/builder:tiny</builder>
 					</image>
 					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
@@ -200,5 +200,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>

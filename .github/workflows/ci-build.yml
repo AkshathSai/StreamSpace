@@ -14,30 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['23']
-        maven: ['3.9.6']
-        os: ['ubuntu-22.04']
+        java: [ '23' ]
+        maven: [ '3.9.6' ]
+        os: [ 'ubuntu-22.04' ]
     name: Build (Java ${{ matrix.java }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-
     steps:
-      - name: Set up line endings
-        if: ${{ matrix.os == 'windows-2022' }}
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol crlf
-
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       - name: Set up Java ${{ matrix.java }}
         uses: actions/setup-java@v3
@@ -50,39 +34,19 @@ jobs:
         with:
           maven-version: ${{ matrix.maven }}
 
-      - name: Build and Package
-        id: build
-        run: mvn clean package -B
-        env:
-          MAVEN_OPTS: >-
-            -Xmx2g
-            -Dmaven.wagon.http.retryHandler.count=5
-            -Dmaven.wagon.httpconnectionManager.ttlSeconds=25
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+      - name: Build the JAR
+        run: mvn clean package -B -U
 
-      - name: Archive JAR
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: streamspace-jar
-          path: target/*.jar
+      - name: Verify JAR creation
+        run: ls -al target
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Create GitHub Release
+      - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
           name: "Release v${{ github.run_number }}"
           body: "Automated release for build #${{ github.run_number }}"
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -90,6 +54,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.jar
+          asset_path: target/streamspace-0.0.1.jar  # Update the JAR name as needed
           asset_name: streamspace-${{ github.run_number }}.jar
           asset_content_type: application/java-archive
+          

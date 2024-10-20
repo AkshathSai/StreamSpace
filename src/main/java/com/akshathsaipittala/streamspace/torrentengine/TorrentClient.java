@@ -45,7 +45,6 @@ import java.util.function.Supplier;
 @Slf4j
 public class TorrentClient {
 
-    private String torrentHash;
     private boolean running;
     private BtRuntime runtime;
     public BtClient client;
@@ -55,8 +54,7 @@ public class TorrentClient {
     private final DownloadProgressHandler downloadProgressHandler;
     private final TorrentDownloadManager torrentDownloadManager;
 
-    public TorrentClient(Options options, Indexer indexer, DownloadProgressHandler downloadProgressHandler, TorrentDownloadManager torrentDownloadManager, String torrentHash) {
-        this.torrentHash = torrentHash;
+    public TorrentClient(Options options, Indexer indexer, DownloadProgressHandler downloadProgressHandler, TorrentDownloadManager torrentDownloadManager) {
         this.options = options;
         this.indexer = indexer;
         this.downloadProgressHandler = downloadProgressHandler;

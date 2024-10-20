@@ -1,6 +1,5 @@
-package com.akshathsaipittala.streamspace.services;
+package com.akshathsaipittala.streamspace.helpers;
 
-import com.akshathsaipittala.streamspace.helpers.Preference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.ListCrudRepository;

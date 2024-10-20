@@ -2,7 +2,6 @@ package com.akshathsaipittala.streamspace.services;
 
 import com.akshathsaipittala.streamspace.helpers.*;
 import com.akshathsaipittala.streamspace.library.Indexer;
-import com.akshathsaipittala.streamspace.downloads.Downloads;
 import com.akshathsaipittala.streamspace.torrentengine.TorrentDownloadManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,10 +21,6 @@ public class BackgroundServices {
     @Lazy
     @Autowired
     private Indexer indexer;
-
-    @Lazy
-    @Autowired
-    private Downloads downloadTasksRepo;
 
     @Lazy
     @Autowired
@@ -48,7 +42,7 @@ public class BackgroundServices {
 
         // Index local media asynchronously
         indexer.indexLocalMedia(new HashSet<>(ContentDirectoryServices.mediaFolders.values()))
-                .thenRunAsync(this::startBackgroundDownloads) // Start background downloads once indexing is done
+                .thenRun(() -> torrentDownloadManager.startAllPendingDownloads()) // Start background downloads once indexing is done
                 .exceptionally(throwable -> { // Handle any errors during indexing or download initiation
                     log.error("Error during media indexing or starting background downloads", throwable);
                     return null; // Return null or handle the error as appropriate
@@ -56,20 +50,10 @@ public class BackgroundServices {
     }
 
     private void configurePreferences() {
-        List<Preference> features = List.of(
+        var features = List.of(
                 new Preference().setPrefId(1).setName("DARK_MODE_ENABLED")
         );
         userPreferences.saveAll(features);
-    }
-
-    private void startBackgroundDownloads() {
-        var downloadTasks = new ArrayList<>(downloadTasksRepo.findAll());
-        if (!downloadTasks.isEmpty()) {
-            log.info("Starting background downloads");
-            downloadTasks.forEach(downloadTask -> torrentDownloadManager.startDownload(downloadTask));
-            // Future Plan targeted for StructuredConcurrency Final release
-            // runAsStructuredConcurrent(downloadTasks);
-        }
     }
 
     /* private void runAsStructuredConcurrent(List<BackgroundDownloadTask> backgroundDownloadTasks) {

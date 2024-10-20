@@ -7,8 +7,7 @@
              th:attr="ws-connect=|/download-progress?torrentHash=${torrentHash}|">
 
             <div>
-                <strong role="status">Downloading</strong>&nbsp;<div aria-hidden="true"
-                                                                     class="spinner-border spinner-border-sm"></div>
+                <strong role="status">Downloading...</strong>
             </div>
 
             <div th:id="'download-stats-' + ${torrentHash}">

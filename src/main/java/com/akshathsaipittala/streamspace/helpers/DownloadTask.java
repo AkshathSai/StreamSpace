@@ -20,19 +20,16 @@ public class DownloadTask {
     private String movieCode;
     private double progress = 0;
     @Enumerated(EnumType.STRING)
-    private STATUS taskStatus;
-    @Enumerated(EnumType.STRING)
     private CONTENTTYPE mediaType;
     @Enumerated(EnumType.STRING)
     private DOWNLOADTYPE downloadType;
     @CreatedDate
     private LocalDateTime createdDate;
 
-    public DownloadTask(String torrentHash, String torrentName, String movieCode, STATUS taskStatus, CONTENTTYPE mediaType, DOWNLOADTYPE downloadType) {
+    public DownloadTask(String torrentHash, String torrentName, String movieCode, CONTENTTYPE mediaType, DOWNLOADTYPE downloadType) {
         this.torrentHash = torrentHash;
         this.torrentName = torrentName;
         this.movieCode = movieCode;
-        this.taskStatus = taskStatus;
         this.mediaType = mediaType;
         this.downloadType = downloadType;
         this.createdDate = LocalDateTime.now();

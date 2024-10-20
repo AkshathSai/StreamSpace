@@ -1,7 +1,7 @@
 package com.akshathsaipittala.streamspace.www;
 
 import com.akshathsaipittala.streamspace.helpers.Preference;
-import com.akshathsaipittala.streamspace.services.UserPreferences;
+import com.akshathsaipittala.streamspace.helpers.UserPreferences;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,6 @@ import java.util.Optional;
 public class SearchController {
 
     final YTSAPIClient ytsapiClient;
-    final APIBayClient apiBayClient;
     final UserPreferences userPreferences;
 
     @GetMapping("/yts")

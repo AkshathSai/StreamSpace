@@ -24,3 +24,43 @@
 
 </div>
 
+<input type="search"
+       class="form-control"
+       placeholder="YouTube Search"
+       aria-label="YouTube Search"
+       aria-describedby="basic-addon2"
+       id="youtube-search"
+       name="query"
+       hx-trigger="input changed delay:500ms, search"
+       hx-get="/yt/search"
+       hx-indicator=".globalProgress"
+       hx-target="#ytVideos"
+       hx-push-url="true"
+       autofocus
+>
+
+<div id="ytVideos">
+
+    <div th:fragment="ytVideos">
+
+        <div id="ytPlayer" th:fragment="ytPlayer"></div>
+
+        <div class="card mb-3" style="max-width: 540px;" th:each="video : ${videos}">
+            <div class="row g-0"
+                 hx:get="@{/yt/watch/{v}(v=${video.url})}"
+                 hx-target="#ytPlayer">
+                <div class="col-md-4">
+                    <img th:src="${video.thumbnailUrl}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${video.title}"></h5>
+                        <!--                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+                        <!--                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

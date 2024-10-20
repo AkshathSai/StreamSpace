@@ -3,7 +3,6 @@ package com.akshathsaipittala.streamspace.downloads;
 import com.akshathsaipittala.streamspace.helpers.DownloadTask;
 import com.akshathsaipittala.streamspace.helpers.CONTENTTYPE;
 import com.akshathsaipittala.streamspace.helpers.DOWNLOADTYPE;
-import com.akshathsaipittala.streamspace.helpers.STATUS;
 import com.akshathsaipittala.streamspace.torrentengine.TorrentDownloadManager;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
@@ -78,20 +77,16 @@ class DownloadsController {
             @RequestParam(value = "sequentialCheck", required = false) String sequentialCheck,
             @RequestParam(value = "torrentName", required = false) String torrentName,
             Model model) {
-
         log.info("Selected Option: {}", torrentHash);
         log.info("Strategy: {}", sequentialCheck);
         model.addAttribute("torrentHash", torrentHash);
 
         DownloadTask task;
-
         if (sequentialCheck != null && sequentialCheck.equals("on")) {
-            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.SEQUENTIAL);
+            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, CONTENTTYPE.VIDEO, DOWNLOADTYPE.SEQUENTIAL);
         } else {
-            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.VIDEO, DOWNLOADTYPE.RANDOMIZED);
+            task = new DownloadTask(torrentHash, torrentName !=null ? torrentName:torrentHash, torrentHash, CONTENTTYPE.VIDEO, DOWNLOADTYPE.RANDOMIZED);
         }
-
-        downloads.save(task);
         torrentDownloadManager.startDownload(task);
 
         return HtmxResponse
@@ -103,12 +98,9 @@ class DownloadsController {
     @HxRequest
     @PostMapping("/torrent/{torrentHash}")
     HtmxResponse downloadTorrent(@PathVariable String torrentHash) {
-
         log.info("Selected Option: {}", torrentHash);
 
-        DownloadTask task = new DownloadTask(torrentHash, torrentHash, torrentHash, STATUS.NEW, CONTENTTYPE.AUDIO, DOWNLOADTYPE.SEQUENTIAL);
-
-        downloads.save(task);
+        DownloadTask task = new DownloadTask(torrentHash, torrentHash, torrentHash, CONTENTTYPE.AUDIO, DOWNLOADTYPE.SEQUENTIAL);
         torrentDownloadManager.startDownload(task);
 
         return HtmxResponse

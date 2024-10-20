@@ -15,7 +15,7 @@
 	<name>stream-space</name>
 	<description>StreamSpace</description>
 	<properties>
-		<java.version>23</java.version>
+		<java.version>21</java.version>
 		<bt.version>1.10</bt.version>
 		<spring.content.version>3.0.14</spring.content.version>
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -190,12 +190,35 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<image>
-						<!-- dockerHubUsername/nameOfTheApp:(Optional)tagNameOrVersionName-->
+					<!--<image>
+						&lt;!&ndash; dockerHubUsername/nameOfTheApp:(Optional)tagNameOrVersionName&ndash;&gt;
 						<name>akshathsaipittala/${project.artifactId}:${project.version}</name>
 						<builder>dashaun/builder:tiny</builder>
 					</image>
-					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>-->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<from>
+						<image>arm64v8/eclipse-temurin:23-jre</image> <!-- Java 23 arm64 base image -->
+						<platforms>
+							<!--<platform>
+								<architecture>amd64</architecture>
+								<os>linux</os>
+							</platform>-->
+							<platform>
+								<architecture>arm64</architecture>
+								<os>linux</os>
+							</platform>
+						</platforms>
+					</from>
+					<to>
+						<image>akshathsaipittala/${project.artifactId}:${project.version}</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>
